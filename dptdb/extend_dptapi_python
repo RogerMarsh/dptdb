@@ -5,42 +5,30 @@
 
     dpt::APIRecordList __and__(dpt::APIRecordList &other) {
 
-        dpt::APIRecordList *rl, *s;
-        rl->Place(*($self));
-        s->Place(*($self));
-        s->Remove(other);
-        rl->Remove(*s);
-        return *rl;
+        return other;
 
     }
 
     dpt::APIRecordList __xor__(dpt::APIRecordList &other) {
 
-        dpt::APIRecordList *rl, *s;
-        rl->Place(*($self));
-        rl->Remove(other);
-        s->Place(other);
-        s->Remove(*($self));
-        rl->Place(*s);
-        return *rl;
+        return other;
 
     }
 
     dpt::APIRecordList __or__(dpt::APIRecordList &other) {
 
-        dpt::APIRecordList *rl;
-        rl->Place(*($self));
-        rl->Place(other);
-        return *rl;
+        return other;
 
     }
 
     dpt::APIRecordList* __iand__(dpt::APIRecordList &other) {
 
         dpt::APIRecordList *s;
-        s->Place(*($self));
+        s = new dpt::APIRecordList(other);
         s->Remove(other);
         $self->Remove(*s);
+        delete s;
+        s = NULL;
         return $self;
 
     }
@@ -48,10 +36,12 @@
     dpt::APIRecordList* __ixor__(dpt::APIRecordList &other) {
 
         dpt::APIRecordList *s;
-        s->Place(other);
+        s = new dpt::APIRecordList(other);
         s->Remove(*($self));
         $self->Remove(other);
         $self->Place(*s);
+        delete s;
+        s = NULL;
         return $self;
 
     }
@@ -65,3 +55,25 @@
 
 };
 
+%pythonprepend dpt::APIRecordList::__and__(dpt::APIRecordList &other) %{
+    newlist = APIRecordList(self)
+    s = APIRecordList(self)
+    s.Remove(other)
+    newlist.Remove(s)
+    other = newlist
+%}
+
+%pythonprepend dpt::APIRecordList::__xor__(dpt::APIRecordList &other) %{
+    newlist = APIRecordList(self)
+    newlist.Remove(other)
+    s = APIRecordList(other)
+    s.Remove(self)
+    newlist.Place(s)
+    other = newlist
+%}
+
+%pythonprepend dpt::APIRecordList::__or__(dpt::APIRecordList &other) %{
+    newlist = APIRecordList(self)
+    newlist.Place(other)
+    other = newlist
+%}
