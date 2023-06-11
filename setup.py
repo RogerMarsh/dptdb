@@ -213,7 +213,11 @@ def setup(
                     command = 'make'
 
                 sp = subprocess.Popen(
-                    [command, '-f', 'dptMakefile', clean_up], cwd='dptdb')
+                    [command,
+                     '-f',
+                     os.path.join('..', 'dptMakefile'),
+                     clean_up],
+                    cwd='dptdb')
                 
                 r = sp.wait()
                 if r != 0:
@@ -266,7 +270,7 @@ def setup(
                 '\n '.join(downloads),
                 '\nmanually if not already present.\n')))
     for distfile in downloads:
-        dfile = os.path.join('dptdb', distfile)
+        dfile = os.path.join(distfile)
         if not os.path.exists(dfile):
             durl = ''.join((dpt_downloads_from, distfile))
             try:
@@ -286,7 +290,7 @@ def setup(
                         'You may have to download this file manually.\n')))
                 return
 
-    distfile = os.path.join('dptdb', dpt_distribution_file)
+    distfile = os.path.join(dpt_distribution_file)
     if not os.path.exists(distfile):
         sys.stdout.write(''.join(('setup cannot find ', distfile, '\n')))
         return
@@ -352,7 +356,7 @@ def setup(
         elif absent:
             # extract files
             zf.extractall(path=_EXTRACT)
-            zf.extract('licence.txt', path='dptdb') # for ease of redistribution
+            zf.extract('licence.txt')
             ok = True
         elif present:
             ok = matched # all existing files must be unchanged
@@ -431,7 +435,7 @@ def setup(
         (os.path.join(
             _EXTRACT, 'sample projects', 'DPT with Python', 'dptapi_python.i'),
          os.path.join(_BUILD, 'dptapi_python.i'),
-         os.path.join('dptdb', 'extend_dptapi_python'),
+         os.path.join('extend_dptapi_python'),
          '%extend dpt::APIRoundedDouble {'),
         )
     for inp, outp, merge, splitter in dptapi_python_copy:
@@ -584,7 +588,7 @@ def setup(
         command,
         '-f',
         '/'.join(os.path.join(
-            '..', 'dptMakefile').split('\\')),
+            '..', '..', 'dptMakefile').split('\\')),
         'python']
 
     job.append(
@@ -688,10 +692,14 @@ def setup(
 
     if sys.platform == 'win32':
         long_description = open('README.txt').read()
+        packages = ['dptdb']
+        if sys.argv[1] == 'sdist':
+            packages.append('dptdb.test')
         setuptools.setup(
             name=name,
             version='.'.join(dptdb_version),
             long_description=long_description,
+            packages=packages,
             **attrs)
 
     # With the Microsoft Windows version of Python 3.6 and later the Wine job
@@ -713,6 +721,7 @@ def setup(
             name=name,
             version='.'.join(dptdb_version),
             long_description=long_description,
+            packages=['dptdb', 'dptdb.test'],
             **attrs)
 
     # The Wine job has not been known to fail for the reasons above on Pythons
@@ -828,21 +837,15 @@ def setup(
 
 if __name__ == '__main__':
     
+    # The packages argument is supplied in the setup() defined above.
     setup(
         description='DPT database API wrappers built using SWIG',
         author='Roger Marsh',
         author_email='roger.marsh@solentware.co.uk',
         url='http://www.solentware.co.uk',
-        packages=[
-            'dptdb',
-            'dptdb.test',
-            ],
         include_package_data=True,
         package_data={
-            '': ['licence.txt',
-                 '_dptapi.pyd',
-                 'DPT_V3R0_DOCS.ZIP',
-                 'CONTACT',
+            '': ['_dptapi.pyd',
                  ],
             },
         platforms='Microsoft Windows',

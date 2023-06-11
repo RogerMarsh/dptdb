@@ -24,7 +24,9 @@ if __name__ == '__main__':
     name = sys.argv.pop()
 
     long_description = open('README.txt').read()
-    
+    packages = ['dptdb']
+    if sys.argv[1] == 'sdist':
+        packages.append('dptdb.test')
     setuptools.setup(
         name=name,
         version=version,
@@ -32,16 +34,10 @@ if __name__ == '__main__':
         author='Roger Marsh',
         author_email='roger.marsh@solentware.co.uk',
         url='http://www.solentware.co.uk',
-        packages=[
-            'dptdb',
-            'dptdb.test',
-            ],
+        packages=packages,
         include_package_data=True,
         package_data={
-            '': ['licence.txt',
-                 '_dptapi.pyd',
-                 'DPT_V3R0_DOCS.ZIP',
-                 'CONTACT',
+            '': ['_dptapi.pyd',
                  ],
             },
         platforms='Microsoft Windows',
