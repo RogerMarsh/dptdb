@@ -29,11 +29,15 @@ Installation Instructions
 Microsoft Windows
 -----------------
 
+   The package can be installed for Pythons 2.7, 3.3, 3.4, 3.5, 3.6, and 3.7.
+
+   The package cannot be installed for Python 3.8.
+
    Build dependencies
 
       * `Python`_ 2.7 or later 
       * `setuptools`_
-      * `SWIG`_ 4.0.1 or later
+      * `SWIG`_ 2.0.8 or later
       * `MinGW Installation Manager`_
 
       Download and install the MinGW Installation Manager.
@@ -44,7 +48,7 @@ Microsoft Windows
 
       Download and install setuptools in Python if not already present.
 
-   Use 'regedit' to put the directory containing the MinGW runtime, usually C:\MinGW\bin, in the path.
+   Put the directory containing the MinGW runtime, usually C:\MinGW\bin, in the path.
 
    Install the package by typing
 
@@ -60,24 +64,20 @@ Microsoft Windows
 Wine
 ----
 
-    These installs were done on FreeBSD.  I do not know what happens elsewhere.
+   These installs were done on FreeBSD.  I do not know what happens elsewhere.
 
-    The package can be installed for Pythons 2.7, 3.3, 3.4, and 3.5, which are installed under Wine.
+   The package can be installed for Pythons 2.7, 3.3, 3.4, 3.5, and 3.6, which are installed under Wine.
 
-    The package cannot be installed for Pythons 3.7, and 3.8, which are installed under Wine.
+   The package cannot be installed for Pythons 3.7, and 3.8, which are installed under Wine.
 
-    For Python 3.6 it may matter whether the FreeBSD is i386 or amd64:
-
-        The package can be installed for Python 3.6 on FreeBSD 11.3 i386 with the emulators/wine port (on a 64-bit box).
-
-        The package cannot be installed for Python 3.6 on FreeBSD 12.1 amd64 with the emulators/i386-wine port.
+   For Python 3.4 and later, installed means a copy of a user-only install on Microsoft Windows.
 
    Build dependencies
 
       * `Wine`_ 
       * `Python`_ 2.7 or later (both host system and Microsoft Windows versions) 
       * `setuptools`_
-      * `SWIG`_ 4.0.1 or later
+      * `SWIG`_ 2.0.8 or later
       * `MinGW Installation Manager`_
       * 'GNU make'_ (called gmake on BSD systems, usually make otherwise)
 

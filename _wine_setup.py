@@ -24,9 +24,6 @@ if __name__ == '__main__':
     name = sys.argv.pop()
 
     long_description = open('README.txt').read()
-    packages = ['dptdb']
-    if sys.argv[1] == 'sdist':
-        packages.append('dptdb.test')
     setuptools.setup(
         name=name,
         version=version,
@@ -34,12 +31,9 @@ if __name__ == '__main__':
         author='Roger Marsh',
         author_email='roger.marsh@solentware.co.uk',
         url='http://www.solentware.co.uk',
-        packages=packages,
+        packages=['dptdb'],
         include_package_data=True,
-        package_data={
-            '': ['_dptapi.pyd',
-                 ],
-            },
+        package_data={'': ['_dptapi.pyd']},
         platforms='Microsoft Windows',
         long_description=long_description,
         license='BSD',
@@ -50,8 +44,6 @@ if __name__ == '__main__':
             'Programming Language :: Python :: 3.4',
             'Programming Language :: Python :: 3.5',
             'Programming Language :: Python :: 3.6',
-            'Programming Language :: Python :: 3.7',
-            'Programming Language :: Python :: 3.8',
             'Operating System :: Microsoft :: Windows',
             'Topic :: Database',
             'Topic :: Software Development',

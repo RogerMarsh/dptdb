@@ -140,7 +140,7 @@ clean_extract :
 	-rm _$(SWIG_DPTAPI).pyd
 	-rm $(SWIG_DPTAPI).py
 	-rm version.py
-	-rm licence.txt
+	-rm ../licence.txt
 	-rm -r dptbuild
 	-rm -r dptextract
 
@@ -154,7 +154,7 @@ clean_python_version :
 	-rm _$(SWIG_DPTAPI).pyd
 	-rm $(SWIG_DPTAPI).py
 	-rm version.py
-	-rm licence.txt
+	-rm ../licence.txt
 	-rm dptbuild/$(SWIG_DPTAPI)_$(SWIG_PYTHON)_wrap.cxx
 	-rm dptbuild/$(SWIG_DPTAPI)_$(SWIG_PYTHON)_wrap.o
 
@@ -164,7 +164,7 @@ clean_all_pythons :
 	-rm _$(SWIG_DPTAPI).pyd
 	-rm $(SWIG_DPTAPI).py
 	-rm version.py
-	-rm licence.txt
+	-rm ../licence.txt
 	-rm dptbuild/$(SWIG_DPTAPI)_$(SWIG_PYTHON)_wrap.cxx
 	-rm dptbuild/$(SWIG_DPTAPI)_$(SWIG_PYTHON)_wrap.o
 

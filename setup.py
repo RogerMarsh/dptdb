@@ -100,7 +100,7 @@ def setup(
     dpt_distribution_file='DPT_V3R0_DBMS.ZIP',
     dpt_documentation_file='DPT_V3R0_DOCS.ZIP',
     dpt_downloads_from='http://www.solentware.co.uk/files/',
-    path_to_swig=os.path.join('C:', 'swigwin-4.0.1'),
+    path_to_swig=os.path.join('C:', 'swigwin-2.0.8'),
     allow_36_and_later_hack=False,
     **attrs):
     """Extract DPT source code from distribution and call distutils.setup
@@ -212,10 +212,11 @@ def setup(
                 else:
                     command = 'make'
 
+                # Always in a POSIX shell at this point (Msys on Windows).
                 sp = subprocess.Popen(
                     [command,
                      '-f',
-                     os.path.join('..', 'dptMakefile'),
+                     posixpath.join('..', 'dptMakefile'),
                      clean_up],
                     cwd='dptdb')
                 
@@ -692,14 +693,10 @@ def setup(
 
     if sys.platform == 'win32':
         long_description = open('README.txt').read()
-        packages = ['dptdb']
-        if sys.argv[1] == 'sdist':
-            packages.append('dptdb.test')
         setuptools.setup(
             name=name,
             version='.'.join(dptdb_version),
             long_description=long_description,
-            packages=packages,
             **attrs)
 
     # With the Microsoft Windows version of Python 3.6 and later the Wine job
@@ -721,7 +718,6 @@ def setup(
             name=name,
             version='.'.join(dptdb_version),
             long_description=long_description,
-            packages=['dptdb', 'dptdb.test'],
             **attrs)
 
     # The Wine job has not been known to fail for the reasons above on Pythons
@@ -837,17 +833,14 @@ def setup(
 
 if __name__ == '__main__':
     
-    # The packages argument is supplied in the setup() defined above.
     setup(
         description='DPT database API wrappers built using SWIG',
         author='Roger Marsh',
         author_email='roger.marsh@solentware.co.uk',
         url='http://www.solentware.co.uk',
+        packages=['dptdb'],
         include_package_data=True,
-        package_data={
-            '': ['_dptapi.pyd',
-                 ],
-            },
+        package_data={'': ['_dptapi.pyd']},
         platforms='Microsoft Windows',
         license='BSD',
         classifiers=[
@@ -858,11 +851,11 @@ if __name__ == '__main__':
             'Programming Language :: Python :: 3.5',
             'Programming Language :: Python :: 3.6',
             'Programming Language :: Python :: 3.7',
-            'Programming Language :: Python :: 3.8',
             'Operating System :: Microsoft :: Windows',
             'Topic :: Database',
             'Topic :: Software Development',
             'Intended Audience :: Developers',
             'Development Status :: 7 - Inactive',
             ],
+        zip_safe=False,
         )
