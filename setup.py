@@ -70,6 +70,7 @@ import subprocess
 import zipfile
 import shutil
 import setuptools
+import platform
 _urllib_available = True
 try:
     import urllib.request
@@ -184,8 +185,9 @@ def setup(
         for a in sys.argv[1:]:
             if a.lower() == clean_up:
 
-                # GNU make is called gmake in *nix systems but make in msys.
-                if sys.platform != 'win32':
+                # GNU make is called gmake in BSD but usually make otherwise.
+                # Note wine is not available on OpenBSD.
+                if platform.system() in ('FreeBSD', 'OpenBSD', 'NetBSD'):
                     command = 'gmake'
                 else:
                     command = 'make'
@@ -484,8 +486,9 @@ def setup(
     # The arguments to this wrapper of the setuputils.setup() call allow some
     # flexibility to the build without using command line options.
 
-    # GNU make is called gmake in *nix systems but make in msys.
-    if sys.platform != 'win32':
+    # GNU make is called gmake in BSD but usually make otherwise.
+    # Note wine is not available on OpenBSD.
+    if platform.system() in ('FreeBSD', 'OpenBSD', 'NetBSD'):
         command = 'gmake'
     else:
         command = 'make'

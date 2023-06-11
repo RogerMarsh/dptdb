@@ -12,7 +12,7 @@ import sys
 import os
 import re
 
-_DPTDB_VERSION = '0.6.4'
+_DPTDB_VERSION = '0.7.0'
 
 
 def create_dpt_version_number_module():
@@ -30,14 +30,6 @@ def create_dpt_version_number_module():
         sys.stderr.write(
             'At most one of wine and pythonpackage can be specified')
         return
-
-    for arg in sys.argv:
-        if arg.startswith('PYTHON_VERSION='):
-            pyversion = arg[len('PYTHON_VERSION='):]
-            break
-    else:
-        pyversion = ''.join(
-            (str(sys.version_info[0]), str(sys.version_info[1])))
 
     version_line = re.compile(''.join((
         '\s*StoreEntry.*VERSDPT.*?(?P<version>((\d+\.)*\d+))')))

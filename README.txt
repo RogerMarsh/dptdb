@@ -14,9 +14,9 @@ DPT is a multi-user database system for Microsoft Windows.
 
 The Python application can be as simple as a single-threaded process embedding the DPT API.
 
-The package is available only as a source distribution.  It is built with the `MinGW`_ toolchain on Microsoft Windows, or a port of MinGW to an Operating System able to run `SWIG`_ under `Wine`_.
+The package is available only as a source distribution.  It is built with the `MinGW`_ toolchain and `SWIG`_, either on Microsoft Windows or on `Wine`_ on an operating system able to run `Wine`_.
 
-This version of the package is known to work with MinGW-6.3.0 but not with MinGW-5.3.0, MinGW-4.9.3, or MinGW-4.8.1.  The previous version of the package, dpt3.0-dptdb-0.6.3, is known to work with MinGW-5.3.0, MinGW-4.9.3, and MinGW-4.8.1; but not with MinGW-6.3.0.
+This version of the package is known to work with MinGW-6.3.0 but not with MinGW-5.3.0, MinGW-4.9.3, or MinGW-4.8.1.  Use dpt3.0-dptdb-0.6.5, or later 0.6.n versions, with earlier versions of MinGW if necessary.
 
 Setup will download the DPT API `source`_ and `documentation`_ zip files if an internet connection is available.
 
@@ -36,15 +36,19 @@ Microsoft Windows
       * `SWIG`_ 2.0.8 or later
       * `MinGW Installation Manager`_
 
-      Download and install SWIG and the MinGW Installation Manager.
+      Download and install the MinGW Installation Manager.
 
-      Follow the `MinGW`_ instructions to install MSYS and at least the gcc-g++ compiler suite.
+      Follow the `MinGW`_ instructions to install MSYS and at least the MinGW base and gcc-g++ compiler suite.
 
-      Download and install setuptools.
+      Download and install SWIG and Python.
+
+      Download and install setuptools in Python if not already present.
+
+   Use 'regedit' to put the directories containing the MinGW runtime in the path: usually C:\MinGW\lib\gcc\mingw32 and C:\MinGW\lib\gcc\mingw32\6.3.0 where the 6.3.0 is an example of a compiler version. 
 
    Install the package by typing
 
-       <path to>/python setup.py install
+       python setup.py install
 
    at the command prompt of an MSYS shell with setup.py in the current directory.
 
@@ -59,30 +63,37 @@ Wine
    Build dependencies
 
       * `Wine`_ 
-      * `Python`_ 2.6 or later 
+      * `Python`_ 2.6 or later (both host system and Microsoft Windows versions) 
       * `setuptools`_
       * `SWIG`_ 2.0.8 or later
-      * Port of MinGW to GNU/Linux, BSDs, etc
-
-      Download and install the port of MinGW.
+      * `MinGW Installation Manager`_
+      * 'GNU make'_ (called gmake on BSD systems, usually make otherwise)
 
       Download and install Wine.
 
+      Download and install the MinGW Installation Manager under Wine.
+
+      Follow the `MinGW`_ instructions to install at least the MinGW base and gcc-g++ compiler suite.  (MSYS is not needed because the host operating system provides those things.)
+
+      Download and install Python if not already present. (Your distribution almost certainly provides Python.)
+
+      Download and install GNU make if not already present. (Your distribution almost certainly provides GNU make.)
+
       Download and install Microsoft Windows versions of SWIG and Python under Wine.
 
-      Download and install setuptools in the Python installed under Wine.
+      Download and install setuptools in Python if not already present.
+
+      Download and install setuptools in the Python installed under Wine if not already present.
 
    At February 2016 I am not able to install Python 3.4 or Python 3.5 under Wine 1.8 on FreeBSD 10.1 but Python 3.3 is fine.  Installation of setuptools, mine is 12.5, on Python 3.3 works if the flavour of Windows reported by Wine is XP.  Changing it in an attempt to install Python 3.5 prevented installation of setuptools on Python 3.3.
+
+   Use 'wine regedit' to put the directories containing the MinGW runtime in the path: usually C:\MinGW\bin and C:\MinGW\lib\gcc\mingw32\6.3.0 where the 6.3.0 is an example of a compiler version. 
 
    Install the package by typing
 
        python setup.py install
 
-   at the command prompt of a shell with setup.py in the current directory.  You will probably need to indicate the version of Python under Wine using the PYTHON_VERSION option.  For example
-
-       python setup.py install PYTHON_VERSION=34
-
-   because the default, 33 at time of writing, will go out of date.
+   at the command prompt of a shell with setup.py in the current directory.
 
    Runtime dependencies
 
@@ -129,6 +140,8 @@ The figures are for a 2Gb 667MHz memory, 1.8GHz CPU, solid state drive, Microsof
 Restrictions
 ============
 
+dptdb cannot be built under the emulators/wine port on FreeBSD amd64.  If dptdb  does not build under the emulators/i386-wine port on FreeBSD amd64 (I beleive it should but have not succeeded doing so), use the emulators/wine port on FreeBSD i386, on either 32bit or 64bit hardware.
+
 When used under Wine, very large single-step loads will fail through running out of memory because the test to decide when to complete a chunk of the load and start a new one never says 'do so'.  One workaround is to do multi-step loads, potentially a lot slower as explained in `relnotes_V2RX.html`_ from DPT_V3R0_DOCS.ZIP, which was the only way to do this before version 2 release 14 of the DPT API.  Another is to split the load into small enough chunks somehow before invoking the single-step process for each chunk.
 
 The "Try to force 'multi-chunk' on 32Gb memory" option does enough index updating, see slowest option under `Sample code`_ for detail, to cause this failure under Wine on a 2Gb memory machine.
@@ -165,3 +178,4 @@ This package will work only on a Python built for the Microsoft Windows platform
 .. _MinGW: http://mingw.org
 .. _Wine: https://winehq.org
 .. _MinGW Installation Manager: http://sourceforge.net/projects/mingw/files/Installer/mingw-get-setup.exe/download
+.. _GNU make: https://www.gnu.org/software/make/

@@ -27,6 +27,17 @@
 ### use the target Python because it's installation fails at a late stage.
 ### It may be that the usable Python cannot be installed on Wine if deleted!
 
+### dpt3.0-dptdb-0.7.0 uses Wine to run the Microsoft Windows version of MinGW
+### on unix-like systems.  Previous versions assumed the presence of a port of
+### MinGW to the host operating system.  The mingw-get-setup and mingw-get
+### programs did not exist when this Makefile was written, making the port
+### option the easiest to do.
+### '$(CXX)' becomes '$(WINE) $(CXX)' following the way swig is run.
+### The opportunity is taken to replace 'dptapi' with '$(SWIG_DPTAPI)' to
+### highlight relationships.
+### The host 'sed' is used, rather than '$(WINE) sed', to avoid the backslash
+### minefield sown by the chain of shells .
+
 PYTHON_RUNNING_MAKE ?= 
 
 ### Fundamental settings for Python builds
@@ -67,7 +78,6 @@ DPT_RELEASE = Release
 
 ### SWIG settings
 
-SWIG_COMMAND ?= $(WINE) $(PATH_TO_SWIG)/swig
 SWIG_DPTAPI = dptapi
 
 ### Python settings
@@ -80,7 +90,7 @@ PYTHON_LIBS = -l$(PYTHON_LIBRARY) -L$(PATH_TO_PYTHON)$(PYTHON_VERSION)/libs
 
 ### Patches
 
-### No patching in this Makefile
+### No patch files applied in this Makefile
 
 ### Sources
 
@@ -126,18 +136,18 @@ copy : $(DPT_SRCS) $(DPT_INCS) $(DPTAPI_SRCS) $(DPTAPI_INCS) $(DPTAFX_SRCS) $(DP
 ### clean_extract implies clean_swig
 
 clean_extract :
-	-rm _dptapi.pyd
-	-rm dptapi.py
+	-rm _$(SWIG_DPTAPI).pyd
+	-rm $(SWIG_DPTAPI).py
 	-rm version.py
 	-rm licence.txt
 	-rm -r dptbuild
 	-rm -r dptextract
 
 clean_swig :
-	-rm _dptapi.pyd
-	-rm dptapi.py
-	-rm dptbuild/dptapi_$(SWIG_PYTHON)_wrap.cxx
-	-rm dptbuild/dptapi_$(SWIG_PYTHON)_wrap.o
+	-rm _$(SWIG_DPTAPI).pyd
+	-rm $(SWIG_DPTAPI).py
+	-rm dptbuild/$(SWIG_DPTAPI)_$(SWIG_PYTHON)_wrap.cxx
+	-rm dptbuild/$(SWIG_DPTAPI)_$(SWIG_PYTHON)_wrap.o
 
 ### The object file directory
 
@@ -161,13 +171,14 @@ $(PYTHON_API_VERSION) : $(PYTHON_API_DLL)
 $(SWIG_PYTHON) : copy $(SWIG_DPTAPI)_$(SWIG_PYTHON)_wrap.cxx $(DPT_RELEASE) $(DPT_OBJS) $(DPTAPI_OBJS) $(DPTAFX_OBJS) $(PYTHON_API_VERSION)
 
 ### install dptdb package in site-packages
-### python documentation suggests that distutils may be able to do the whole build
-### while admitting that its SWIG interface is flaky.
+### python documentation suggests that distutils may be able to do the whole
+### build while admitting that its SWIG interface is flaky.
 
-### setup.py gets this Makefile to do the build but does install and uninstall itself
+### setup.py gets this Makefile to do the build but does install and uninstall
+### itself.
 
 $(PYTHON_API_DLL) : $(SWIG_DPTAPI)_$(SWIG_PYTHON)_wrap.o
-	$(CXX) $(DPT_LDFLAGS) -o $@ $< $(DPTAPI_OBJS) $(DPT_OBJS) $(SWIG_LANG_LIBS)
+	$(WINE) $(CXX) $(DPT_LDFLAGS) -o $@ $< $(DPTAPI_OBJS) $(DPT_OBJS) $(SWIG_LANG_LIBS)
 
 ### Pattern rules DPT C++
 
@@ -230,18 +241,18 @@ else
 endif
 
 $(DPT_RELEASE)/%.o : $(DPT_SRC)/%.cpp
-	$(CXX) -c $(CXXEXTRA) $(CXXFLAGS) $(DPT_INCLUDE) $(DEFOPTS) -o $@ $<
+	$(WINE) $(CXX) -c $(CXXEXTRA) $(CXXFLAGS) $(DPT_INCLUDE) $(DEFOPTS) -o $@ $<
 
 $(DPT_RELEASE)/%.o : $(DPTAPI_SRC)/%.cpp
-	$(CXX) -c $(CXXEXTRA) $(CXXFLAGS) $(DPTAPI_INCLUDE) $(DEFOPTS) -o $@ $<
+	$(WINE) $(CXX) -c $(CXXEXTRA) $(CXXFLAGS) $(DPTAPI_INCLUDE) $(DEFOPTS) -o $@ $<
 
 $(DPT_RELEASE)/%.o : $(DPT_STDAFX)/%.cpp
-	$(CXX) -c $(CXXEXTRA) $(CXXFLAGS) $(DPTAFX_INCLUDE) $(DEFOPTS) -o $@ $<
+	$(WINE) $(CXX) -c $(CXXEXTRA) $(CXXFLAGS) $(DPTAFX_INCLUDE) $(DEFOPTS) -o $@ $<
 
 ### Pattern rules SWIG wrappers for dpt API version
 
 $(SWIG_DPTAPI)_$(SWIG_PYTHON)_wrap.cxx : $(SWIG_DPTAPI)_$(SWIG_PYTHON).i
-	$(SWIG_COMMAND) -c++ -$(SWIG_PYTHON) $(SWIG_LANG_OPTS) -o $@ -outdir .. -I$(DPTAPI_INC) $<
+	$(WINE) $(PATH_TO_SWIG)/swig -c++ -$(SWIG_PYTHON) $(SWIG_LANG_OPTS) -o $@ -outdir .. -I$(DPTAPI_INC) $<
 
 ### There is a clash between MinGW and Python on _hypot and hypot for cmath.
 ### www.freelists.org/post/nuitka-dev/error-hypot-has-not-been-declared,2 and
@@ -251,4 +262,4 @@ $(SWIG_DPTAPI)_$(SWIG_PYTHON)_wrap.cxx : $(SWIG_DPTAPI)_$(SWIG_PYTHON).i
 ### experience?) -D_hypot=hypot added to Swig wrapper build.
 
 $(SWIG_DPTAPI)_$(SWIG_PYTHON)_wrap.o : $(SWIG_DPTAPI)_$(SWIG_PYTHON)_wrap.cxx
-	$(CXX) -c $(CXXEXTRA) -D_hypot=hypot $(CXXFLAGS) $(SWIG_LANG_INCLUDE) $(DEFOPTS) -o $@ $<
+	$(WINE) $(CXX) -c $(CXXEXTRA) -D_hypot=hypot $(CXXFLAGS) $(SWIG_LANG_INCLUDE) $(DEFOPTS) -o $@ $<
