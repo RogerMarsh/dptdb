@@ -117,19 +117,16 @@ def setup(
     dpt_distribution_file='DPT_V3R0_DBMS.ZIP',
     dpt_documentation_file='DPT_V3R0_DOCS.ZIP',
     dpt_downloads_from='http://www.solentware.co.uk/files/',
-    path_to_swig=posixpath.join('C:', 'swigwin-4.0.1'),
     **attrs):
     """Extract DPT source code from distribution and call distutils.setup
 
     dpt_distribution_file is the default DPT distribution
     dpt_documentation_file is the default DPT documentation
     dpt_downloads_from is the site from which DPT files are downloaded
-    path_to_swig is the default location of the swig command
 
     The following command line arguments override these defaults:
     DPT_DIST       dpt_distribution_file
     DPT_DOCS       dpt_documentation_file
-    PATH_TO_SWIG   path_to_swig
 
     The other command line options are described below.
 
@@ -181,7 +178,6 @@ def setup(
     make_arguments = (
         'PATH_TO_PYTHON=',
         'MINGW345',
-        'PATH_TO_SWIG=',
         'DPT_DIST=',
         'DPT_DOCS=',
         'PYTHON_VERSION=',
@@ -258,10 +254,6 @@ def setup(
     for a in sys.argv[2:]:
         if a.startswith('DPT_DOCS='):
             dpt_documentation_file = a.split('=')[-1].strip()
-    
-    for a in sys.argv[2:]:
-        if a.startswith('PATH_TO_SWIG='):
-            path_to_swig = a.split('=')[-1].strip()
 
     mingw345 = False
     for a in sys.argv[2:]:
@@ -279,13 +271,7 @@ def setup(
             python_version = a
 
     # Get SWIG version number.
-    job = [
-        posixpath.join(
-            path_to_swig,
-            'swig',
-            ),
-        '-version',
-        ]
+    job = ['swig', '-version']
     sp = subprocess.Popen(job, stdout=subprocess.PIPE)
     r = sp.wait()
     if r != 0:
@@ -672,9 +658,6 @@ def setup(
              )))
     job.append(''.join(('OPTIONS=', '-O3')))
     job.append(''.join(('DEFINES=', '-DNDEBUG')))
-
-    # Swig not expected to be on PATH.
-    job.append(''.join(('PATH_TO_SWIG=', path_to_swig)))
 
     if mingw345:
         job.append(mingw345)

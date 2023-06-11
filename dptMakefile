@@ -51,7 +51,6 @@ PACKAGE_NAME = dptdb
 PYTHON_VERSION ?= 310
 PATH_TO_PYTHON ?= $(LOCALAPPDATA)/Programs/Python/Python$(PYTHON_VERSION)
 PYTHON_INCLUDE_SUFFIX ?= /include
-PATH_TO_SWIG ?= C:/swigwin-4.0.1
 PATH_TO_CXX ?= 
 COMPILER = g++
 SWIG_PYTHON = python
@@ -286,7 +285,7 @@ $(DPT_RELEASE)/%.o : $(DPT_STDAFX)/%.cpp
 ### Pattern rules SWIG wrappers for dpt API version
 
 $(SWIG_DPTAPI)_$(SWIG_PYTHON)_wrap.cxx : $(SWIG_DPTAPI)_$(SWIG_PYTHON).i
-	$(PATH_TO_SWIG)/swig -c++ -$(SWIG_PYTHON) $(SWIG_LANG_OPTS) -o $@ -outdir .. -I$(DPTAPI_INC) $<
+	swig -c++ -$(SWIG_PYTHON) $(SWIG_LANG_OPTS) -o $@ -outdir .. -I$(DPTAPI_INC) $<
 
 ### There is a clash between MinGW and Python on _hypot and hypot for cmath.
 ### www.freelists.org/post/nuitka-dev/error-hypot-has-not-been-declared,2 and
