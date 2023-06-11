@@ -73,9 +73,21 @@
 # follow the change in default Python locations between 3.4 and 3.5.
 # November 2019.
 
+# Added some subprocess.Popen() calls to get version numbers of mingw32-g++,
+# swig, and the target python, so an attempt to prevent accidental mixing of
+# subcomponents created by different versions of these applications can be made.
+# Path manipulation functions from posixpath, rather than os.path, are used in
+# places where it is known to be necessary.
+# December 2019.
+
+# The reaction of the target python to running the '[wine ]python -V' command
+# seems to be a good predictor of the outcome of 'import dptdb.dptapi' assuming
+# the installation is possible.
+# December 2019.
 
 import os
 import posixpath
+import ntpath
 import sys
 import subprocess
 import zipfile
@@ -100,7 +112,7 @@ def setup(
     dpt_distribution_file='DPT_V3R0_DBMS.ZIP',
     dpt_documentation_file='DPT_V3R0_DOCS.ZIP',
     dpt_downloads_from='http://www.solentware.co.uk/files/',
-    path_to_swig=posixpath.join('C:', 'swigwin-2.0.8'),
+    path_to_swig=posixpath.join('C:', 'swigwin-4.0.1'),
     **attrs):
     """Extract DPT source code from distribution and call distutils.setup
 
@@ -324,7 +336,9 @@ def setup(
         if r != 0:
             sys.stdout.write('Get target Python version fails\n')
             return
+        pipe_empty = True
         for l in sp.stdout.readlines():
+            pipe_empty = False
             l = l.decode()
             if l.startswith('Python'):
                 target_python = '.'.join(l.split()[-1].split('.')[:2])
@@ -334,8 +348,22 @@ def setup(
                      ))
                 break
         else:
-            sys.stdout.write('Unable to determine version of target Python\n')
-            return
+            if pipe_empty:
+
+                # Before Python 3.4 the pipe is empty: the version is output to
+                # the command session.
+                try:
+                    target_python, python_version = hack_target_and_version(
+                        path_to_python)
+                except:
+                    sys.stdout.write(
+                        'Unable to determine version of target Python\n')
+                    return
+
+            else:
+                sys.stdout.write(
+                    'Unable to determine version of target Python\n')
+                return
     elif wine:
         job = [
             'wine',
@@ -350,18 +378,38 @@ def setup(
         if r != 0:
             sys.stdout.write('Get target Python version fails\n')
             return
+        pipe_empty = True
         for l in sp.stdout.readlines():
+            pipe_empty = False
             l = l.decode()
             if l.startswith('Python'):
                 target_python = '.'.join(l.split()[-1].split('.')[:2])
                 break
         else:
-            sys.stdout.write(
-                "Unable to determine version of target Python by\n")
-            sys.stdout.write(' '.join(job) + '\n')
-            sys.stdout.write(
-                'If it can be installed the dptdb package will be unusable\n')
-            return
+            if pipe_empty:
+
+                # Before Python 3.4 the pipe is empty: the version is output to
+                # the command session.
+                try:
+                    target_python, python_version = hack_target_and_version(
+                        default_path_to_python(python_version))
+                except:
+                    sys.stdout.write(
+                        'Unable to determine version of target Python\n')
+                    sys.stdout.write(' '.join(job) + '\n')
+                    sys.stdout.write(''.join(
+                        ('If it can be installed the dptdb package will be ',
+                         'unusable\n')))
+                    return
+
+            else:
+                sys.stdout.write(
+                    'Unable to determine version of target Python\n')
+                sys.stdout.write(' '.join(job) + '\n')
+                sys.stdout.write(''.join(
+                    ('If it can be installed the dptdb package will be ',
+                     'unusable\n')))
+                return
     else:
 
         # On Microsoft Windows the Python version running this job is the
@@ -930,6 +978,28 @@ def python_library_version(version):
             ''.join([str(vi) for vi in sys.version_info[:2]])))
     else:
         return version
+
+
+def hack_target_and_version(path):
+    """Return version information deduced from 'python<version>.dll'in path.
+
+    Pythons before 3.4 give empty output pipe when asked for version.
+
+    The response to 'wine python -V' via Popen() was sent to command widget.
+
+    Caller must ensure this function is called only when it is certain the
+    'wine <path>/python -V' job succeeded.
+
+    """
+
+    # Replace the assumed leading 'C:/' with '~/.wine/drive_c' the default
+    # location for the user's emulation of Windows file structure.
+    p = ['~', '.wine', 'drive_c', ntpath.splitdrive(path)[-1].lstrip('/\\')]
+
+    for f in os.listdir(os.path.expanduser(os.path.join(*p))):
+        if f.startswith('python') and f.endswith('.dll'):
+            v = f.lstrip('python').rstrip('.dll')
+            return '.'.join(tuple(v)), '='.join(('PYTHON_VERSION', v))
 
 
 if __name__ == '__main__':

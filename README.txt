@@ -16,7 +16,13 @@ The Python application can be as simple as a single-threaded process embedding t
 
 The package is available only as a source distribution.  It is built with the `MinGW`_ toolchain and `SWIG`_, either on Microsoft Windows or on `Wine`_ on an operating system able to run `Wine`_.
 
-This version of the package is known to work with MinGW-6.3.0 but not with MinGW-5.3.0, MinGW-4.9.3, or MinGW-4.8.1.  Use dpt3.0-dptdb-0.6.5, or later 0.6.n versions, with earlier versions of MinGW if necessary.
+The package is known to work with MinGW-8.2.0 but not with MinGW-5.3.0, MinGW-4.9.3, or MinGW-4.8.1.  Use dpt3.0-dptdb-0.6.7, or later 0.6.n versions, with earlier versions of MinGW if necessary.
+
+At December 2019 this package cannot be used with Python 3.8 because the statement:
+
+import dptdb.dptapi
+
+fails.
 
 Setup will download the DPT API `source`_ and `documentation`_ zip files if an internet connection is available.
 
@@ -29,15 +35,15 @@ Installation Instructions
 Microsoft Windows
 -----------------
 
-   The package can be installed for Pythons 2.7, 3.3, 3.4, 3.5, 3.6, and 3.7.
+   The package can be installed and used with Pythons 2.7, 3.3, 3.4, 3.5, 3.6, and 3.7.
 
-   The package cannot be installed for Python 3.8.
+   The package can be installed but not used with Python 3.8.
 
    Build dependencies
 
       * `Python`_ 2.7 or later 
       * `setuptools`_
-      * `SWIG`_ 2.0.8 or later
+      * `SWIG`_ 4.0.1 or later
       * `MinGW Installation Manager`_
 
       Download and install the MinGW Installation Manager.
@@ -64,20 +70,24 @@ Microsoft Windows
 Wine
 ----
 
-   These installs were done on FreeBSD.  I do not know what happens elsewhere.
+   These installs were done on particular versions of FreeBSD.  I do not know what happens elsewhere.
 
-   The package can be installed for Pythons 2.7, 3.3, 3.4, 3.5, and 3.6, which are installed under Wine.
+   The package can be installed and used with Pythons 2.7, 3.3, 3.4, 3.5, 3.6, and 3.7, under the emulators/wine port on FreeBSD 11.3 i386.
 
-   The package cannot be installed for Pythons 3.7, and 3.8, which are installed under Wine.
+   The package can be installed but not used with Python 3.8 under the emulators/wine port on FreeBSD 11.3 i386.
 
-   For Python 3.4 and later, installed means a copy of a user-only install on Microsoft Windows.
+   The package can be installed and used with Pythons 2.7, 3.3, 3.4, and 3.5, under the emulators/i386-wine port on FreeBSD 12.1 amd64.
+
+   The package cannot be used with Pythons 3.6, 3.7, and 3.8, under the emulators/i386-wine port on FreeBSD 12.1 amd64.  The point of failure varies with version of Python.
+
+   For Python 3.4 and later, a user-only install on Microsoft Windows is copied to Wine.
 
    Build dependencies
 
       * `Wine`_ 
-      * `Python`_ 2.7 or later (both host system and Microsoft Windows versions) 
+      * `Python`_ 2.7 or later (Microsoft Windows versions under Wine) 
       * `setuptools`_
-      * `SWIG`_ 2.0.8 or later
+      * `SWIG`_ 4.0.1 or later
       * `MinGW Installation Manager`_
       * 'GNU make'_ (called gmake on BSD systems, usually make otherwise)
 
