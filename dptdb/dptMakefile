@@ -175,11 +175,28 @@ $(PYTHON_API_DLL) : $(SWIG_DPTAPI)_$(SWIG_PYTHON)_wrap.o
 ### build environment.  There are only a few files which do not comply, but do
 ### it always anyway for simplicity.
 
+### MinGW-6.3.0 on Windows builds fail through use of std::make_pair where
+### std::pair should be used.  Applying patch seems to leave the earlier
+### MinGW-4.8.1 and MinGW-5.3.0 builds in good condition.  Problem explained
+### at http://advogato.org/person/redi/diary/239.html found via
+### https://stackoverflow.com/questions/32443181/stdmake-pair-with-c-11
+### and there are many others (neither of these are the ones found first time).
+### MinGW-6.3.0 on Windows builds give warnings in two modules that 'in c++11
+### destructors default to noexcept'.  The warnings are retained in the two
+### classes affected by adding an edit to all DPT_SRC and DPT_INC files.
+### https://gcc.gnu.org/bugzilla/show_bug.cgi?id=56191 was sufficient as a
+### to the edit needed.
+
 $(DPT_SRC)/%.cpp : $(DPT_BASE)/$(DPT_SRC)/%.cpp
-	sed -e '/#include .*.h/s/\\/\//g' $< > $@
+	sed -e '/#include .*.h/s/\\/\//g' \
+	-e '/std::make_pair</s/make_//g' \
+	-e '/~AllocatedFile()/s/()/() noexcept(false)/g' \
+	-e '/~PagedFile()/s/()/() noexcept(false)/g' $< > $@
 
 $(DPT_INC)/%.h : $(DPT_BASE)/$(DPT_INC)/%.h
-	sed -e '/#include .*.h/s/\\/\//g' $< > $@
+	sed -e '/#include .*.h/s/\\/\//g' \
+	-e '/~AllocatedFile()/s/()/() noexcept(false)/g' \
+	-e '/~PagedFile()/s/()/() noexcept(false)/g' $< > $@
 
 $(DPTAPI_SRC)/%.cpp : $(DPT_BASE)/$(DPTAPI_SRC)/%.cpp
 	sed -e '/#include .*.h/s/\\/\//g' $< > $@
@@ -193,7 +210,7 @@ $(DPT_STDAFX)/%.cpp : $(DPT_BASE)/$(DPT_STDAFX)/%.cpp
 ### VC6++ and MinGW-3.4.5 do not require explicit #include directives for
 ### <string.h>, <limits.h> and <stdlib.h> but MinGW-4.8.1 does require them.
 ### <errno.h> added in February 2016 after upgrading FreeBSD mingw32 ports,
-### and finding it needed on Windows' build too.
+### and finding it needed on Windows' build using MinGW-5.3.0.
 ### Do this as well in stdafx.h.
 ### The make in the MinGW-3.4.5 environment is not able to deal with the
 ### 'else ifeq' construct, so always doing the '/' normalization helps a lot.
@@ -224,5 +241,12 @@ $(DPT_RELEASE)/%.o : $(DPT_STDAFX)/%.cpp
 $(SWIG_DPTAPI)_$(SWIG_PYTHON)_wrap.cxx : $(SWIG_DPTAPI)_$(SWIG_PYTHON).i
 	$(SWIG_COMMAND) -c++ -$(SWIG_PYTHON) $(SWIG_LANG_OPTS) -o $@ -outdir .. -I$(DPTAPI_INC) $<
 
+### There is a clash between MinGW and Python on _hypot and hypot for cmath.
+### www.freelists.org/post/nuitka-dev/error-hypot-has-not-been-declared,2 and
+### stackoverflow.com/questions/10660524/error-building-boost-...-gcc-4-7-0...
+### are two of many threads suggesting two possible workarounds.  (Why is
+### this project not affected until after MinGW-5.3.0 given Boost's 4.7.0
+### experience?) -D_hypot=hypot added to Swig wrapper build.
+
 $(SWIG_DPTAPI)_$(SWIG_PYTHON)_wrap.o : $(SWIG_DPTAPI)_$(SWIG_PYTHON)_wrap.cxx
-	$(CXX) -c $(CXXEXTRA) $(CXXFLAGS) $(SWIG_LANG_INCLUDE) $(DEFOPTS) -o $@ $<
+	$(CXX) -c $(CXXEXTRA) -D_hypot=hypot $(CXXFLAGS) $(SWIG_LANG_INCLUDE) $(DEFOPTS) -o $@ $<
