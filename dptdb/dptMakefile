@@ -8,7 +8,7 @@
 
 ### The default settings deal with a Microsoft Windows build or a Wine build. 
 ### When cross-compiling the Python include and library directories will be at
-### /home/user/windowsPythons/Python33
+### /home/user/.wine/drive_c/Python33
 ### rather than
 ### c:/Python33
 ### for example.
@@ -37,9 +37,10 @@ PATH_TO_PYTHON ?= C:/Python
 PYTHON_INCLUDE_SUFFIX ?= /include
 PATH_TO_SWIG ?= C:/swigwin-2.0.8
 PATH_TO_CXX ?= 
-COMPILER ?= mingw32-g++
+COMPILER = mingw32-g++
 SWIG_PYTHON = python
 GCC_VERSION_PATCHING ?= true
+WINE ?=
 
 ### Common settings
 
@@ -66,7 +67,7 @@ DPT_RELEASE = Release
 
 ### SWIG settings
 
-SWIG_COMMAND ?= $(PATH_TO_SWIG)/swig
+SWIG_COMMAND ?= $(WINE) $(PATH_TO_SWIG)/swig
 SWIG_DPTAPI = dptapi
 
 ### Python settings
@@ -114,32 +115,31 @@ DPTAFX_INCS = $(DPTAFX_NAMES:%=$(DPT_STDAFX)/%.h)
 
 ### Targets
 
-.PHONY : all copy clean clean_swig $(SWIG_PYTHON)
+.PHONY : all copy clean_extract clean_swig $(SWIG_PYTHON)
 
 all : $(SWIG_PYTHON)
 
 copy : $(DPT_SRCS) $(DPT_INCS) $(DPTAPI_SRCS) $(DPTAPI_INCS) $(DPTAFX_SRCS) $(DPTAFX_INCS)
 
-### No patching in this Makefile
+### Clean up targets
 
-clean :
-	-rm -r build
-	-rm -r dist
-	-rm MANIFEST
+### clean_extract implies clean_swig
+
+clean_extract :
 	-rm _dptapi.pyd
 	-rm dptapi.py
 	-rm version.py
 	-rm licence.txt
 	-rm -r dptbuild
+	-rm -r dptextract
 
 clean_swig :
-	-rm -r build
-	-rm MANIFEST
 	-rm _dptapi.pyd
 	-rm dptapi.py
-	-rm version.py
 	-rm dptbuild/dptapi_$(SWIG_PYTHON)_wrap.cxx
 	-rm dptbuild/dptapi_$(SWIG_PYTHON)_wrap.o
+
+### The object file directory
 
 $(DPT_RELEASE) :
 	-mkdir $(DPT_RELEASE)
@@ -156,9 +156,9 @@ $(PYTHON_API_DLL) : SWIG_LANG_LIBS = $(PYTHON_LIBS)
 $(PYTHON_API_DLL) : SWIG_LANG_DLL = $(PYTHON_API_DLL)
 
 $(PYTHON_API_VERSION) : $(PYTHON_API_DLL)
-	$(PYTHON_RUNNING_MAKE) ../build_helpers/dptversion.py
+	$(PYTHON_RUNNING_MAKE) ../../dptversion.py
 
-$(SWIG_PYTHON) : copy $(DPT_RELEASE) $(DPT_OBJS) $(DPTAPI_OBJS) $(DPTAFX_OBJS) $(PYTHON_API_VERSION)
+$(SWIG_PYTHON) : copy $(SWIG_DPTAPI)_$(SWIG_PYTHON)_wrap.cxx $(DPT_RELEASE) $(DPT_OBJS) $(DPTAPI_OBJS) $(DPTAFX_OBJS) $(PYTHON_API_VERSION)
 
 ### install dptdb package in site-packages
 ### python documentation suggests that distutils may be able to do the whole build
@@ -171,64 +171,40 @@ $(PYTHON_API_DLL) : $(SWIG_DPTAPI)_$(SWIG_PYTHON)_wrap.o
 
 ### Pattern rules DPT C++
 
+### Normalize path element separators in #include directives as '/' for *nix
+### build environment.  There are only a few files which do not comply, but do
+### it always anyway for simplicity.
+
 $(DPT_SRC)/%.cpp : $(DPT_BASE)/$(DPT_SRC)/%.cpp
-ifeq ($(GCC_VERSION_PATCHING),true)
-	cp $< $@
-else ifeq ($(GCC_VERSION_PATCHING),false)
-	cp $< $@
-else
 	sed -e '/#include .*.h/s/\\/\//g' $< > $@
-endif
 
 $(DPT_INC)/%.h : $(DPT_BASE)/$(DPT_INC)/%.h
-ifeq ($(GCC_VERSION_PATCHING),true)
-	cp $< $@
-else ifeq ($(GCC_VERSION_PATCHING),false)
-	cp $< $@
-else
 	sed -e '/#include .*.h/s/\\/\//g' $< > $@
-endif
 
 $(DPTAPI_SRC)/%.cpp : $(DPT_BASE)/$(DPTAPI_SRC)/%.cpp
-ifeq ($(GCC_VERSION_PATCHING),true)
-	cp $< $@
-else ifeq ($(GCC_VERSION_PATCHING),false)
-	cp $< $@
-else
 	sed -e '/#include .*.h/s/\\/\//g' $< > $@
-endif
 
 $(DPTAPI_INC)/%.h : $(DPT_BASE)/$(DPTAPI_INC)/%.h
-ifeq ($(GCC_VERSION_PATCHING),true)
-	cp $< $@
-else ifeq ($(GCC_VERSION_PATCHING),false)
-	cp $< $@
-else
 	sed -e '/#include .*.h/s/\\/\//g' $< > $@
-endif
 
 $(DPT_STDAFX)/%.cpp : $(DPT_BASE)/$(DPT_STDAFX)/%.cpp
-ifeq ($(GCC_VERSION_PATCHING),true)
-	cp $< $@
-else ifeq ($(GCC_VERSION_PATCHING),false)
-	cp $< $@
-else
 	sed -e '/#include .*.h/s/\\/\//g' $< > $@
-endif
+
+### VC6++ and MinGW-3.4.5 do not require explicit #include directives for
+### <string.h>, <limits.h> and <stdlib.h> but MinGW-4.8.1 does require them.
+### <errno.h> added in February 2016 after upgrading FreeBSD mingw32 ports,
+### and finding it needed on Windows' build too.
+### Do this as well in stdafx.h.
+### The make in the MinGW-3.4.5 environment is not able to deal with the
+### 'else ifeq' construct, so always doing the '/' normalization helps a lot.
 
 $(DPT_STDAFX)/%.h : $(DPT_BASE)/$(DPT_STDAFX)/%.h
-ifeq ($(GCC_VERSION_PATCHING),true)
-	cp $< $@
-else ifeq ($(GCC_VERSION_PATCHING),false)
-	sed -e '/#include <stdio.h>/s/#include <stdio.h>/#include <stdio.h>\
-#include <string.h>\
-#include <limits.h>\
-#include <stdlib.h>/g' $< > $@
-else ifeq ($(GCC_VERSION_PATCHING),nixtrue)
+ifeq ($(GCC_VERSION_PATCHING),false)
 	sed -e '/#include .*.h/s/\\/\//g' $< > $@
 else
 	sed -e '/#include .*.h/s/\\/\//g' \
 	-e '/#include <stdio.h>/s/#include <stdio.h>/#include <stdio.h>\
+#include <errno.h>\
 #include <string.h>\
 #include <limits.h>\
 #include <stdlib.h>/g' $< > $@
@@ -250,4 +226,3 @@ $(SWIG_DPTAPI)_$(SWIG_PYTHON)_wrap.cxx : $(SWIG_DPTAPI)_$(SWIG_PYTHON).i
 
 $(SWIG_DPTAPI)_$(SWIG_PYTHON)_wrap.o : $(SWIG_DPTAPI)_$(SWIG_PYTHON)_wrap.cxx
 	$(CXX) -c $(CXXEXTRA) $(CXXFLAGS) $(SWIG_LANG_INCLUDE) $(DEFOPTS) -o $@ $<
-

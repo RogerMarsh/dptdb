@@ -1,0 +1,67 @@
+%extend dpt::APIRecordList {
+
+    // Add the & ^ | &= ^= |= operators implemented with Place and Remove.
+    // __and__ __xor__ __or__ __iand__ __ixor__ and __ior__ in other words.
+
+    dpt::APIRecordList __and__(dpt::APIRecordList &other) {
+
+        dpt::APIRecordList *rl, *s;
+        rl->Place(*($self));
+        s->Place(*($self));
+        s->Remove(other);
+        rl->Remove(*s);
+        return *rl;
+
+    }
+
+    dpt::APIRecordList __xor__(dpt::APIRecordList &other) {
+
+        dpt::APIRecordList *rl, *s;
+        rl->Place(*($self));
+        rl->Remove(other);
+        s->Place(other);
+        s->Remove(*($self));
+        rl->Place(*s);
+        return *rl;
+
+    }
+
+    dpt::APIRecordList __or__(dpt::APIRecordList &other) {
+
+        dpt::APIRecordList *rl;
+        rl->Place(*($self));
+        rl->Place(other);
+        return *rl;
+
+    }
+
+    dpt::APIRecordList* __iand__(dpt::APIRecordList &other) {
+
+        dpt::APIRecordList *s;
+        s->Place(*($self));
+        s->Remove(other);
+        $self->Remove(*s);
+        return $self;
+
+    }
+
+    dpt::APIRecordList* __ixor__(dpt::APIRecordList &other) {
+
+        dpt::APIRecordList *s;
+        s->Place(other);
+        s->Remove(*($self));
+        $self->Remove(other);
+        $self->Place(*s);
+        return $self;
+
+    }
+
+    dpt::APIRecordList* __ior__(dpt::APIRecordList &other) {
+
+        $self->Place(other);
+        return $self;
+
+    }
+
+};
+
