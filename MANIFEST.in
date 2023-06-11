@@ -1,0 +1,13 @@
+# The source distribution of the DPT API.
+include DPT_V3R0_DBMS.ZIP
+# The dptdb package builders, excluding files included by default.
+include LICENCE
+include MANIFEST.in
+include dptMakefile
+include build_helpers/dptversion.py
+# The dptdb modules built from the source distribution.
+exclude _dptapi.pyd
+exclude dptapi.py
+exclude version.py
+# The licence extracted from the source distribution.
+exclude licence.txt
