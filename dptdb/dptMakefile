@@ -177,15 +177,15 @@ $(PYTHON_API_DLL) : $(SWIG_DPTAPI)_$(SWIG_PYTHON)_wrap.o
 
 ### MinGW-6.3.0 on Windows builds fail through use of std::make_pair where
 ### std::pair should be used.  Applying patch seems to leave the earlier
-### MinGW-4.8.1 and MinGW-5.3.0 builds in good condition.  Problem explained
+### MinGW-4.9.3 and MinGW-5.3.0 builds in good condition.  Problem explained
 ### at http://advogato.org/person/redi/diary/239.html found via
 ### https://stackoverflow.com/questions/32443181/stdmake-pair-with-c-11
 ### and there are many others (neither of these are the ones found first time).
 ### MinGW-6.3.0 on Windows builds give warnings in two modules that 'in c++11
-### destructors default to noexcept'.  The warnings are retained in the two
-### classes affected by adding an edit to all DPT_SRC and DPT_INC files.
-### https://gcc.gnu.org/bugzilla/show_bug.cgi?id=56191 was sufficient as a
-### to the edit needed.
+### destructors default to noexcept'.  The raise exception behaviour in the two
+### classes affected is retained by adding an edit to all DPT_SRC and DPT_INC
+### files.  https://gcc.gnu.org/bugzilla/show_bug.cgi?id=56191 was sufficient
+### as a hint to the edit needed.
 
 $(DPT_SRC)/%.cpp : $(DPT_BASE)/$(DPT_SRC)/%.cpp
 	sed -e '/#include .*.h/s/\\/\//g' \
@@ -208,7 +208,9 @@ $(DPT_STDAFX)/%.cpp : $(DPT_BASE)/$(DPT_STDAFX)/%.cpp
 	sed -e '/#include .*.h/s/\\/\//g' $< > $@
 
 ### VC6++ and MinGW-3.4.5 do not require explicit #include directives for
-### <string.h>, <limits.h> and <stdlib.h> but MinGW-4.8.1 does require them.
+### <string.h>, <limits.h> and <stdlib.h> but MinGW-4.x.x does require them.
+### (The next point implies 4.x.x is before 4.8.1 because the current port of)
+### (MinGW to FreeBSD at 2018-09-29 uses the 4.8.1 toolchain.)
 ### <errno.h> added in February 2016 after upgrading FreeBSD mingw32 ports,
 ### and finding it needed on Windows' build using MinGW-5.3.0.
 ### Do this as well in stdafx.h.

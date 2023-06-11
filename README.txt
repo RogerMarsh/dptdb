@@ -16,6 +16,8 @@ The Python application can be as simple as a single-threaded process embedding t
 
 The package is available only as a source distribution.  It is built with the `MinGW`_ toolchain on Microsoft Windows, or a port of MinGW to an Operating System able to run `SWIG`_ under `Wine`_.
 
+This version of the package is known to work with MinGW-6.3.0 but not with MinGW-5.3.0, MinGW-4.9.3, or MinGW-4.8.1.  The previous version of the package, dpt3.0-dptdb-0.6.3, is known to work with MinGW-5.3.0, MinGW-4.9.3, and MinGW-4.8.1; but not with MinGW-6.3.0.
+
 Setup will download the DPT API `source`_ and `documentation`_ zip files if an internet connection is available.
 
 There is no separate documentation for Python.
