@@ -41,24 +41,30 @@
 PYTHON_RUNNING_MAKE ?= 
 
 ### Fundamental settings for Python builds
+### The MinGW, Msys2, and Cygwin environments have the name g++ in common
+### for their compilers.
+### The build will be done with the Python in the Msys2 or Cygwin environment.
+### The Windows Python, an *.exe downloadable from python.org, cannot be used
+### and will be ignored. Currently set for Windows though.
 
 PACKAGE_NAME = dptdb
-PYTHON_VERSION ?= 33
-PATH_TO_PYTHON ?= C:/Python33
+PYTHON_VERSION ?= 310
+PATH_TO_PYTHON ?= $(LOCALAPPDATA)/Programs/Python/Python$(PYTHON_VERSION)
 PYTHON_INCLUDE_SUFFIX ?= /include
 PATH_TO_SWIG ?= C:/swigwin-4.0.1
 PATH_TO_CXX ?= 
-COMPILER = mingw32-g++
+COMPILER = g++
 SWIG_PYTHON = python
 GCC_VERSION_PATCHING ?= true
 WINE ?=
 
 ### Common settings
+### -fpermissive added for mingw32-10.3.0
 
 CXX = $(PATH_TO_CXX)$(COMPILER)
 DEFOPTS = $(DEFINES) $(OPTIONS)
 CXXEXTRA = \
-   -D_BBDBAPI
+   -D_BBDBAPI -fpermissive
 DPT_STDAFX = stdafx
 DPT_BASE ?= ../dptextract
 DPT_INCLUDE = -Iinclude -I$(DPT_STDAFX)
@@ -217,17 +223,26 @@ $(PYTHON_API_DLL) : $(SWIG_DPTAPI)_$(SWIG_PYTHON)_wrap.o
 ### classes affected is retained by adding an edit to all DPT_SRC and DPT_INC
 ### files.  https://gcc.gnu.org/bugzilla/show_bug.cgi?id=56191 was sufficient
 ### as a hint to the edit needed.
+### mingw32-10.3.0 fails binding 'non-const lvalue ...' in FindNext method.
+### MinGW-9.3.0 seems ok, like MinGW-8-*-*, in this respect.
 
 $(DPT_SRC)/%.cpp : $(DPT_BASE)/$(DPT_SRC)/%.cpp
 	sed -e '/#include .*.h/s/\\/\//g' \
 	-e '/std::make_pair</s/make_//g' \
 	-e '/~AllocatedFile()/s/()/() noexcept(false)/g' \
-	-e '/~PagedFile()/s/()/() noexcept(false)/g' $< > $@
+	-e '/~PagedFile()/s/()/() noexcept(false)/g' \
+	-e '/unsigned int irelrec = relrec;/s/unsigned int/size_t/g' \
+	-e '/unsigned int lastrec;/s/unsigned int/size_t/g' \
+	-e '/unsigned int temp;/s/unsigned int/size_t/g' \
+	-e '/unsigned int bit = 0;/s/unsigned int/size_t/g' \
+	-e '/unsigned int singlerec;/s/unsigned int/size_t/g' \
+	$< > $@
 
 $(DPT_INC)/%.h : $(DPT_BASE)/$(DPT_INC)/%.h
 	sed -e '/#include .*.h/s/\\/\//g' \
 	-e '/~AllocatedFile()/s/()/() noexcept(false)/g' \
-	-e '/~PagedFile()/s/()/() noexcept(false)/g' $< > $@
+	-e '/~PagedFile()/s/()/() noexcept(false)/g' \
+        $< > $@
 
 $(DPTAPI_SRC)/%.cpp : $(DPT_BASE)/$(DPTAPI_SRC)/%.cpp
 	sed -e '/#include .*.h/s/\\/\//g' $< > $@

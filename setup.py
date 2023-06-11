@@ -85,6 +85,11 @@
 # the installation is possible.
 # December 2019.
 
+# Building under Wine is likely not an option in the Msys2 and Cygwin
+# environments: but removal is for later when it is known the build can be
+# done with the Pythons in these distributions.  Ignoring the Microsoft
+# Windows Pyhon in other words.
+
 import os
 import posixpath
 import ntpath
@@ -193,7 +198,9 @@ def setup(
                           'clean_python_version',
                           'clean_all_pythons')
     
-    # Determine the WINE command line option for the 'make' job
+    # Determine the WINE command line option for the 'make' job.
+    # Msys2 and Cygwin environments also claim to be 'win32' but the
+    # non-Wine path must be taken.  Pretend Wine is not an option.
     wine = 'WINE=wine'
     if sys.platform == 'win32':
         wine = False
@@ -202,7 +209,7 @@ def setup(
         # under Wine from running under Microsoft Windows.
         # So just state the MSYS requirement for the record.
         sys.stdout.write(
-            'On Microsoft Windows this setup must be run in an MSYS shell.\n')
+            'On Microsoft Windows run this setup in an MSYS-like terminal.\n')
         sys.stdout.write(
             'Otherwise it is assumed the build will be done under Wine.\n')
 
@@ -300,7 +307,7 @@ def setup(
     # Get MinGW version number.
     job = [
         posixpath.join(
-            'mingw32-g++',
+            'g++',
             ),
         '--version',
         ]
@@ -313,7 +320,7 @@ def setup(
         return
     for l in sp.stdout.readlines():
         l = l.decode()
-        if l.startswith('mingw32-g++'):
+        if l.startswith('g++'):
             mingw_version = l.split()[-1]
             break
     else:
@@ -888,6 +895,11 @@ def setup(
     sys.argv[:] = argv
 
 
+def is_64bit():
+    """Return True if Python interpreter is 64 bit."""
+    return sys.maxsize > 2 ** 32
+
+
 def default_path_to_python(version):
     """Return default location of 32-bit python.exe for user install.
 
@@ -916,7 +928,7 @@ def default_path_to_python(version):
             [str(vi) for vi in sys.version_info[:2]])
     else:
         major_minor_version = version.split('=', 1)[-1]
-    if major_minor_version < '35':
+    if int(major_minor_version) < int('35'):
         return posixpath.join('C:', 'Python' + major_minor_version)
 
     # 'USERNAME' is on Windows but not Wine, unless explicitly created.
@@ -933,12 +945,14 @@ def default_path_to_python(version):
                        'Python')
     if os.path.exists(os.path.dirname(p)):
         return posixpath.join(
-            p, major_minor_version.join(('Python', '-32')))
+            p, major_minor_version.join(
+                ('Python', '' if is_64bit() else '-32')))
     return posixpath.join('C:',
                           'users',
                           user,
                           'AppData',
-                          major_minor_version.join(('Python', '-32')))
+                          major_minor_version.join(
+                              ('Python', '' if is_64bit() else '-32')))
 
 
 def get_include_files(directory):
