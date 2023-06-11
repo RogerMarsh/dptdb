@@ -31,9 +31,9 @@ Microsoft Windows
 
    Build dependencies
 
-      * `Python`_ 2.6 or later 
+      * `Python`_ 2.7 or later 
       * `setuptools`_
-      * `SWIG`_ 2.0.8 or later
+      * `SWIG`_ 4.0.1 or later
       * `MinGW Installation Manager`_
 
       Download and install the MinGW Installation Manager.
@@ -54,18 +54,30 @@ Microsoft Windows
 
    Runtime dependencies
 
-   * Python 2.6 or later provided the version (2.6 for example) is the same as the Python used to build dptdb.
+   * Python 2.7 or later provided the version (2.7 for example) is the same as the Python used to build dptdb.
    * The MinGW runtime used to build dptdb.
 
 Wine
 ----
 
+    These installs were done on FreeBSD.  I do not know what happens elsewhere.
+
+    The package can be installed for Pythons 2.7, 3.3, 3.4, and 3.5, which are installed under Wine.
+
+    The package cannot be installed for Pythons 3.7, and 3.8, which are installed under Wine.
+
+    For Python 3.6 it may matter whether the FreeBSD is i386 or amd64:
+
+        The package can be installed for Python 3.6 on FreeBSD 11.3 i386 with the emulators/wine port (on a 64-bit box).
+
+        The package cannot be installed for Python 3.6 on FreeBSD 12.1 amd64 with the emulators/i386-wine port.
+
    Build dependencies
 
       * `Wine`_ 
-      * `Python`_ 2.6 or later (both host system and Microsoft Windows versions) 
+      * `Python`_ 2.7 or later (both host system and Microsoft Windows versions) 
       * `setuptools`_
-      * `SWIG`_ 2.0.8 or later
+      * `SWIG`_ 4.0.1 or later
       * `MinGW Installation Manager`_
       * 'GNU make'_ (called gmake on BSD systems, usually make otherwise)
 
@@ -73,7 +85,7 @@ Wine
 
       Download and install the MinGW Installation Manager under Wine.
 
-      Follow the `MinGW`_ instructions to install at least the MinGW base and gcc-g++ compiler suite.  (MSYS is not needed because the host operating system provides those things.)
+      Follow the `MinGW`_ instructions to install at least the MinGW base and gcc-g++ compiler suite.
 
       Download and install Python if not already present. (Your distribution almost certainly provides Python.)
 
@@ -85,9 +97,7 @@ Wine
 
       Download and install setuptools in the Python installed under Wine if not already present.
 
-   At February 2016 I am not able to install Python 3.4 or Python 3.5 under Wine 1.8 on FreeBSD 10.1 but Python 3.3 is fine.  Installation of setuptools, mine is 12.5, on Python 3.3 works if the flavour of Windows reported by Wine is XP.  Changing it in an attempt to install Python 3.5 prevented installation of setuptools on Python 3.3.
-
-   Use 'wine regedit' to put the directories containing the MinGW runtime in the path: usually C:\MinGW\bin and C:\MinGW\lib\gcc\mingw32\6.3.0 where the 6.3.0 is an example of a compiler version. 
+   At Python 3.4 and later it is not possible to use the Windows installers to install Python under Wine.  Several problem forums suggest copying a 'user-only' install under Microsoft Windows to Wine as a workaround.
 
    Install the package by typing
 
@@ -95,9 +105,15 @@ Wine
 
    at the command prompt of a shell with setup.py in the current directory.
 
+   'python' should be the same version as the one under Wine where dptdb is being installed.  If this is not possible the command must be something like:
+
+       python3.8 setup.py install PATH_TO_PYTHON=C:/Python27 PYTHON_VERSION=27
+
+    The PATH_TO_PYTHON can be omitted if the Python on Wine is at it's default location for a 'user-only' install.  C:/Users/[user]/AppData is accepted as the default location if C:/Users/[user]/AppData/Local/Programs does not exist.
+
    Runtime dependencies
 
-   * Python 2.6 or later provided the version (2.6 for example) is the same as the Python used to build dptdb.
+   * Python 2.7 or later provided the version (2.7 for example) is the same as the Python used to build dptdb.
    * The MinGW runtime used to build dptdb.
 
 
@@ -140,8 +156,6 @@ The figures are for a 2Gb 667MHz memory, 1.8GHz CPU, solid state drive, Microsof
 Restrictions
 ============
 
-dptdb cannot be built under the emulators/wine port on FreeBSD amd64.  If dptdb  does not build under the emulators/i386-wine port on FreeBSD amd64 (I beleive it should but have not succeeded doing so), use the emulators/wine port on FreeBSD i386, on either 32bit or 64bit hardware.
-
 When used under Wine, very large single-step loads will fail through running out of memory because the test to decide when to complete a chunk of the load and start a new one never says 'do so'.  One workaround is to do multi-step loads, potentially a lot slower as explained in `relnotes_V2RX.html`_ from DPT_V3R0_DOCS.ZIP, which was the only way to do this before version 2 release 14 of the DPT API.  Another is to split the load into small enough chunks somehow before invoking the single-step process for each chunk.
 
 The "Try to force 'multi-chunk' on 32Gb memory" option does enough index updating, see slowest option under `Sample code`_ for detail, to cause this failure under Wine on a 2Gb memory machine.
@@ -158,7 +172,7 @@ You will need the `DPT API documentation`_ to use this package.  This is include
 
 The DPT documentation zip file is in a directory named like C:/Python27/Lib/site-packages/dpt3.0_dptdb-0.5-py2.7.egg/dptdb, using the example at the end of `Installation Instructions`_.
 
-The dptapi.py and _dptapi.pyd modules are built using `SWIG`_ and `MinGW`_ for a particular version of Python.  In particular a _dptapi.pyd built for Python 2.6 will work only on Python 2.6 and so on. 
+The dptapi.py and _dptapi.pyd modules are built using `SWIG`_ and `MinGW`_ for a particular version of Python.  In particular a _dptapi.pyd built for Python 2.7 will work only on Python 2.7 and so on. 
 
 The `DPT API distribution`_ contains independent scripts and instructions to build dptdb mentioning much earlier versions of the build dependencies.
 

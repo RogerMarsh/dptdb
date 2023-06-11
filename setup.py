@@ -101,6 +101,7 @@ def setup(
     dpt_documentation_file='DPT_V3R0_DOCS.ZIP',
     dpt_downloads_from='http://www.solentware.co.uk/files/',
     path_to_swig=os.path.join('C:', 'swigwin-4.0.1'),
+    allow_36_and_later_hack=False,
     **attrs):
     """Extract DPT source code from distribution and call distutils.setup
 
@@ -108,6 +109,7 @@ def setup(
     dpt_documentation_file is the default DPT documentation
     dpt_downloads_from is the site from which DPT files are downloaded
     path_to_swig is the default location of the swig command
+    allow_36_and_later_hack enables the hack copying to site-packages
 
     The following command line arguments override these defaults:
     DPT_DIST       dpt_distribution_file
@@ -660,9 +662,10 @@ def setup(
                 if len(v) in (2, 3):
                     dptdb_version = v
 
-    # Default should be same as PYTHON_VERSION in dptMakefile
+    # Default is version of Python running this script.
     if python_version is None:
-        python_version = '33'
+        python_version = ''.join(
+            [str(vi) for vi in sys.version_info[:2]])
     else:
         python_version = python_version.split('=')[-1]
     name = '-'.join((''.join(('dpt', version, '.', release)), 'dptdb'))
@@ -683,9 +686,34 @@ def setup(
             version='.'.join(dptdb_version),
             long_description=long_description,
             **attrs)
-    else:
 
-        # Do the setup() call in a Wine job.
+    # With the Microsoft Windows version of Python 3.6 and later the Wine job
+    # will fail in some way, for example:
+    # Unimplemented function api-ms-win-core-path-l1-1-0.dll.PathCchCan...izeEx
+    # on a 64bit box running FreeBSD 12.1 amd64 with emulators/i386-wine,
+    # without reaching if __name__ == '__main__' in the _wine_setup module.
+    # or:
+    # Creating tar archive
+    # 0009:fixme:file:GetFileInformationByHandleEx ...
+    # error: [WinError 120] Call not implemented: 'dpt3.0-dpt-0.7.2
+    # after entering the setuptools.setup(..) call im the _wine_setup module.
+    # This on a 64bit box running FreeBSD 11.3 i386 with emulators/wine.
+    # It does not matter which Python does the sdist command, so let the one
+    # running this script do it.
+    elif sys.argv[1] == 'sdist':
+        long_description = open('README.txt').read()
+        setuptools.setup(
+            name=name,
+            version='.'.join(dptdb_version),
+            long_description=long_description,
+            **attrs)
+
+    # The Wine job has not been known to fail for the reasons above on Pythons
+    # earlier than 3.6 so let it do the install command.
+    # 'python3.6 setup.py install' with MinGW-8.2.0
+    # works at FreeBSD 11.3 i386 with emulators/wine
+    # but not at FreeBSD 12.1 amd64 with emulators/i386-wine.
+    elif sys.argv[1] == 'install' and python_version < '36':
         job = [
             'wine',
             os.path.join(
@@ -697,7 +725,92 @@ def setup(
         job.append(name)
         job.append('.'.join(dptdb_version))
         sp = subprocess.Popen(job)
-        
+        r = sp.wait()
+        if r != 0:
+            sys.stdout.write('wine python setup.py ... fails\n')
+            return
+
+    # Assume the Wine job will fail for Python 3.6 and later.
+    # If this hack is enabled 'import dptdb' works, but 'import dptdb.dptapi'
+    # and equivalents fail stating 'libgcc_s_dw2-1.dll' and 'libstdc++-6.dll'
+    # cannot be found.  In Python27 the import finds them.
+    # Copy __init__.py, dptapi.py, _dptapi.pyd, and version.py from dptdb in
+    # the distribution to dptdb in <path_to_python>/Lib/site-packages.
+    # Check that dptdb does not exist in site-packages and that all four files
+    # are in the distribution before copying anything.
+    # All the potential destinations managed by setuptools are ignored, so
+    # there may be a 'dptdb' in an 'egg' which has not been spotted.
+    elif sys.argv[1] == 'install' and allow_36_and_later_hack:
+        site_packages = os.path.join(default_path_to_python(python_version),
+                                     'Lib',
+                                     'site-packages')
+        site_packages = os.path.expanduser(os.path.join(
+            '~', '.wine', 'drive_c',
+            os.path.join(*site_packages.split('/')[1:])))
+        if 'dptdb' in os.getcwd() and 'dptdb' not in os.listdir(site_packages):
+            source = os.path.join(os.getcwd(), 'dptdb')
+            destination = os.path.join(site_packages, 'dptdb')
+            files = set(os.listdir(source))
+            copy = True
+            copyfiles = '__init__.py', 'dptapi.py', '_dptapi.pyd', 'version.py'
+            for f in copyfiles:
+                if f not in files:
+                    copy = False
+                    break
+            if copy:
+                os.mkdir(destination)
+                for f in copyfiles:
+                    shutil.copy(os.path.join(source, f), destination)
+                sys.stdout.write(
+                    'Essential files in dptdb copied to site-packages.\n')
+                sys.stdout.write(
+                    "Existence of a 'dptdb' in an 'egg' was not checked.\n")
+            else:
+                sys.stdout.write(
+                    'Some expected files missing: nothing copied.\n')
+        else:
+            sys.stdout.write(
+                'Source dptdb missing or destination is in site-packages:\n')
+            sys.stdout.write('Nothing copied.\n')
+
+    # Assume the Wine job will fail for Python 3.6 and later.
+    # Refuse to do the install command.
+    elif sys.argv[1] == 'install':
+        sys.stdout.write(
+            '\nThe setup install command will fail at Python 3,6 and later.\n')
+        sys.stdout.write(
+            'The package build has probably succeeded, but there is little\n')
+        sys.stdout.write(
+            "point in copying to site-packages because 'import dptdb.dptapi'\n")
+        sys.stdout.write(
+            "will fail anyway.  The reports are 'libgcc_s_dw2-1.dll' and\n")
+        sys.stdout.write(
+            "'libstdc++-6.dll' cannot be found.  They are found when\n")
+        sys.stdout.write(
+            "Python 2.7, for example, does the import.\n")
+
+    # Not trying to mend the world.
+    # Let it succeed or fail as it wishes.
+    # For example:
+    # On a 64bit box running FreeBSD 11.3 i386 and emulators/wine the build
+    # command succeeds. The setup was run from 'unix' Python 3.6 targetting
+    # 'windows' Python 3.8.
+    # On a 64bit box running FreeBSD 12.1 amd64 and emulators/i386-wine the
+    # build command fails, but all the stuff before starting the job to run
+    # setuptools.setup() has been done. The setup was run from 'unix' Python
+    # 3.7 targetting 'windows' Python 3.7.
+    else:
+        job = [
+            'wine',
+            os.path.join(
+                default_path_to_python(python_version),
+                'python.exe',
+                ),
+            '_wine_setup.py']
+        job.extend(sys.argv[1:])
+        job.append(name)
+        job.append('.'.join(dptdb_version))
+        sp = subprocess.Popen(job)
         r = sp.wait()
         if r != 0:
             sys.stdout.write('wine python setup.py ... fails\n')
@@ -729,9 +842,13 @@ if __name__ == '__main__':
         license='BSD',
         classifiers=[
             'License :: OSI Approved :: BSD License',
-            'Programming Language :: Python :: 2.6',
             'Programming Language :: Python :: 2.7',
-            'Programming Language :: Python :: 3',
+            'Programming Language :: Python :: 3.3',
+            'Programming Language :: Python :: 3.4',
+            'Programming Language :: Python :: 3.5',
+            'Programming Language :: Python :: 3.6',
+            'Programming Language :: Python :: 3.7',
+            'Programming Language :: Python :: 3.8',
             'Operating System :: Microsoft :: Windows',
             'Topic :: Database',
             'Topic :: Software Development',
