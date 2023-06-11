@@ -44,7 +44,7 @@ Microsoft Windows
 
       Download and install setuptools in Python if not already present.
 
-   Use 'regedit' to put the directories containing the MinGW runtime in the path: usually C:\MinGW\lib\gcc\mingw32 and C:\MinGW\lib\gcc\mingw32\6.3.0 where the 6.3.0 is an example of a compiler version. 
+   Use 'regedit' to put the directories containing the MinGW runtime in the path: usually C:\MinGW\bin and C:\MinGW\lib\gcc\mingw32\6.3.0 where the 6.3.0 is an example of a compiler version. 
 
    Install the package by typing
 
