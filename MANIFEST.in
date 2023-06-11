@@ -16,3 +16,6 @@ include setup.py
 include _wine_setup.py
 # include build helpers in source distribution
 include dptversion.py
+# include additions to SWIG definition file
+include dptdb/extend_dptapi_python
+
