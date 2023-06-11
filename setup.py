@@ -100,7 +100,7 @@ def setup(
     dpt_distribution_file='DPT_V3R0_DBMS.ZIP',
     dpt_documentation_file='DPT_V3R0_DOCS.ZIP',
     dpt_downloads_from='http://www.solentware.co.uk/files/',
-    path_to_swig=os.path.join('C:', 'swigwin-2.0.8'),
+    path_to_swig=posixpath.join('C:', 'swigwin-2.0.8'),
     **attrs):
     """Extract DPT source code from distribution and call distutils.setup
 
@@ -263,7 +263,7 @@ def setup(
 
     # Get SWIG version number.
     job = [
-        os.path.join(
+        posixpath.join(
             path_to_swig,
             'swig',
             ),
@@ -287,7 +287,7 @@ def setup(
 
     # Get MinGW version number.
     job = [
-        os.path.join(
+        posixpath.join(
             'mingw32-g++',
             ),
         '--version',
@@ -301,7 +301,7 @@ def setup(
         return
     for l in sp.stdout.readlines():
         l = l.decode()
-        if l.startswith('mingw32-g++.exe'):
+        if l.startswith('mingw32-g++'):
             mingw_version = l.split()[-1]
             break
     else:
@@ -311,7 +311,7 @@ def setup(
     # Get target Python version number.
     if path_to_python:
         job = [
-            os.path.join(
+            posixpath.join(
                 path_to_python.split('=', 1)[-1],
                 'python',
                 ),
@@ -339,7 +339,7 @@ def setup(
     elif wine:
         job = [
             'wine',
-            os.path.join(
+            posixpath.join(
                 default_path_to_python(python_version),
                 'python',
                 ),
@@ -380,7 +380,10 @@ def setup(
     version_file = os.path.join('dptdb', 'version.py')
     if os.path.isfile(version_file):
         for nv in open(version_file):
-            n, v = [s.strip() for s in nv.split('=')]
+            nvl = [s.strip() for s in nv.split('=')]
+            if len(nvl) == 1:
+                continue
+            n, v = nvl
             if n == '_Swig':
                 if vs[n] == v:
                     del vs[n]
@@ -730,8 +733,10 @@ def setup(
     rv = []
     for nv in open(version_file):
         rv.append(nv)
-        nv = [v.strip() for v in nv.split('=')]
-        n, v = nv
+        nvl = [v.strip() for v in nv.split('=')]
+        if len(nvl) == 1:
+            continue
+        n, v = nvl
         if n == '_dpt_version':
             v = v[1:-1].split('.')
             if len(v) == 2:

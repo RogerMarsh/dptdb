@@ -39,7 +39,10 @@ def record_dpt_and_dptdb_versions():
     version_file = os.path.join('..', 'version.py')
     if os.path.isfile(version_file):
         for nv in open(version_file):
-            n, v = [s.strip() for s in nv.split('=')]
+            nvl = [s.strip() for s in nv.split('=')]
+            if len(nvl) == 1:
+                continue
+            n, v = nvl
             if n == '_Swig':
                 vs['_Swig'] = v
             elif n == '_MinGW':
@@ -71,7 +74,12 @@ def remove_Python_and_SWIG_versions():
     rv = []
     if os.path.isfile(version_file):
         for nv in open(version_file):
-            n, v = [s.strip() for s in nv.split('=')]
+            nvl = [s.strip() for s in nv.split('=')]
+            if len(nvl) == 1:
+                if len(nvl[0]):
+                    rv.append(nv)
+                continue
+            n, v = nvl
             if n == '_Swig':
                 continue
             elif n == '_Python':
