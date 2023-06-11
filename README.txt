@@ -44,7 +44,7 @@ Microsoft Windows
 
       Download and install setuptools in Python if not already present.
 
-   Use 'regedit' to put the directories containing the MinGW runtime in the path: usually C:\MinGW\bin and C:\MinGW\lib\gcc\mingw32\6.3.0 where the 6.3.0 is an example of a compiler version. 
+   Use 'regedit' to put the directory containing the MinGW runtime, usually C:\MinGW\bin, in the path.
 
    Install the package by typing
 
@@ -98,6 +98,8 @@ Wine
       Download and install setuptools in the Python installed under Wine if not already present.
 
    At Python 3.4 and later it is not possible to use the Windows installers to install Python under Wine.  Several problem forums suggest copying a 'user-only' install under Microsoft Windows to Wine as a workaround.
+
+   Use 'regedit' to put the directory containing the MinGW runtime, usually C:\MinGW\bin, in the path.
 
    Install the package by typing
 

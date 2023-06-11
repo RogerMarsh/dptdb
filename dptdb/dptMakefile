@@ -125,7 +125,7 @@ DPTAFX_INCS = $(DPTAFX_NAMES:%=$(DPT_STDAFX)/%.h)
 
 ### Targets
 
-.PHONY : all copy clean_extract clean_swig $(SWIG_PYTHON)
+.PHONY : all copy clean_extract clean_swig clean_python_version clean_all_pythons $(SWIG_PYTHON)
 
 all : $(SWIG_PYTHON)
 
@@ -133,7 +133,8 @@ copy : $(DPT_SRCS) $(DPT_INCS) $(DPTAPI_SRCS) $(DPTAPI_INCS) $(DPTAFX_SRCS) $(DP
 
 ### Clean up targets
 
-### clean_extract implies clean_swig
+### clean_extract implies clean_swig, and clean_python_version.
+### clean_all_pythons imlies clean_python_version.
 
 clean_extract :
 	-rm _$(SWIG_DPTAPI).pyd
@@ -146,6 +147,24 @@ clean_extract :
 clean_swig :
 	-rm _$(SWIG_DPTAPI).pyd
 	-rm $(SWIG_DPTAPI).py
+	-rm dptbuild/$(SWIG_DPTAPI)_$(SWIG_PYTHON)_wrap.cxx
+	-rm dptbuild/$(SWIG_DPTAPI)_$(SWIG_PYTHON)_wrap.o
+
+clean_python_version :
+	-rm _$(SWIG_DPTAPI).pyd
+	-rm $(SWIG_DPTAPI).py
+	-rm version.py
+	-rm licence.txt
+	-rm dptbuild/$(SWIG_DPTAPI)_$(SWIG_PYTHON)_wrap.cxx
+	-rm dptbuild/$(SWIG_DPTAPI)_$(SWIG_PYTHON)_wrap.o
+
+clean_all_pythons :
+	-rm -r ../dist
+	-rm -r ../dpt3.0_$(PACKAGE_NAME).egg-info
+	-rm _$(SWIG_DPTAPI).pyd
+	-rm $(SWIG_DPTAPI).py
+	-rm version.py
+	-rm licence.txt
 	-rm dptbuild/$(SWIG_DPTAPI)_$(SWIG_PYTHON)_wrap.cxx
 	-rm dptbuild/$(SWIG_DPTAPI)_$(SWIG_PYTHON)_wrap.o
 

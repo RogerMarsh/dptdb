@@ -12,7 +12,7 @@ import sys
 import os
 import re
 
-_DPTDB_VERSION = '0.7.2'
+_DPTDB_VERSION = '0.7.3'
 
 
 def create_dpt_version_number_module():

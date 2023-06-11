@@ -172,9 +172,16 @@ def setup(
         'PYTHON_VERSION=',
         )
 
-    # In dptMakefile clean_extract should imply clean_swig without it being a
-    # pre-requisite relationship.
-    clean_up_arguments = ('clean_extract', 'clean_swig')
+    # In dptMakefile both clean_extract and clean_all_pythons should imply
+    # clean_python_version and clean_swig without there being a pre-requisite
+    # relationship.
+    # clean_extract clears out the inputs leaving any distribution files alone.
+    # clean_all_pythons clears out all the distribution files created leaving
+    # the inputs alone.
+    clean_up_arguments = ('clean_extract',
+                          'clean_swig',
+                          'clean_python_version',
+                          'clean_all_pythons')
     
     # Determine the WINE command line option for the 'make' job
     wine = 'WINE=wine'
