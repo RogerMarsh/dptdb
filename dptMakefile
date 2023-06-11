@@ -232,6 +232,7 @@ $(DPT_SRC)/%.cpp : $(DPT_BASE)/$(DPT_SRC)/%.cpp
 	-e '/unsigned int temp;/s/unsigned int/size_t/g' \
 	-e '/unsigned int bit = 0;/s/unsigned int/size_t/g' \
 	-e '/unsigned int singlerec;/s/unsigned int/size_t/g' \
+        -e '/addr > 0/s/addr/(unsigned long)addr/g' \
 	$< > $@
 
 $(DPT_INC)/%.h : $(DPT_BASE)/$(DPT_INC)/%.h
