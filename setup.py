@@ -197,21 +197,19 @@ def setup(
                           'clean_swig',
                           'clean_python_version',
                           'clean_all_pythons')
-    
-    # Determine the WINE command line option for the 'make' job.
-    # Msys2 and Cygwin environments also claim to be 'win32' but the
-    # non-Wine path must be taken.  Pretend Wine is not an option.
-    wine = 'WINE=wine'
-    if sys.platform == 'win32':
-        wine = False
 
-        # The problem here is finding a reliable test to distinguish running
-        # under Wine from running under Microsoft Windows.
-        # So just state the MSYS requirement for the record.
-        sys.stdout.write(
-            'On Microsoft Windows run this setup in an MSYS-like terminal.\n')
-        sys.stdout.write(
-            'Otherwise it is assumed the build will be done under Wine.\n')
+    # The problem here is finding a reliable test to distinguish running
+    # under Wine, Msys, Msys2, or Cygwin from running under Microsoft
+    # Windows.
+    # So just state the Msys2 requirement for the record.
+    sys.stdout.write(
+        'Run this setup in an Msys2-like terminal on Microsoft Windows.\n')
+    sys.stdout.write(
+        sys.platform.join(('Platform is ', '.\n')))
+    
+    # Wine, Msys, Msys2, Cygwin, and Microsoft Windows all report 'win32'.
+    if sys.platform != 'win32':
+        return
 
     if len(sys.argv) < 2:
         sys.stdout.write('Please specify a setup command to setup.py\n')
@@ -288,8 +286,6 @@ def setup(
             ),
         '-version',
         ]
-    if wine:
-        job.insert(0, 'wine')
     sp = subprocess.Popen(job, stdout=subprocess.PIPE)
     r = sp.wait()
     if r != 0:
@@ -311,8 +307,6 @@ def setup(
             ),
         '--version',
         ]
-    if wine:
-        job.insert(0, 'wine')
     sp = subprocess.Popen(job, stdout=subprocess.PIPE)
     r = sp.wait()
     if r != 0:
@@ -336,8 +330,6 @@ def setup(
                 ),
             '-V',
             ]
-        if wine:
-            job.insert(0, 'wine')
         sp = subprocess.Popen(job, stdout=subprocess.PIPE)
         r = sp.wait()
         if r != 0:
@@ -355,68 +347,9 @@ def setup(
                      ))
                 break
         else:
-            if pipe_empty:
-
-                # Before Python 3.4 the pipe is empty: the version is output to
-                # the command session.
-                try:
-                    target_python, python_version = hack_target_and_version(
-                        path_to_python)
-                except:
-                    sys.stdout.write(
-                        'Unable to determine version of target Python\n')
-                    return
-
-            else:
-                sys.stdout.write(
-                    'Unable to determine version of target Python\n')
-                return
-    elif wine:
-        job = [
-            'wine',
-            posixpath.join(
-                default_path_to_python(python_version),
-                'python',
-                ),
-            '-V',
-            ]
-        sp = subprocess.Popen(job, stdout=subprocess.PIPE)
-        r = sp.wait()
-        if r != 0:
-            sys.stdout.write('Get target Python version fails\n')
+            sys.stdout.write(
+                'Unable to determine version of target Python\n')
             return
-        pipe_empty = True
-        for l in sp.stdout.readlines():
-            pipe_empty = False
-            l = l.decode()
-            if l.startswith('Python'):
-                target_python = '.'.join(l.split()[-1].split('.')[:2])
-                break
-        else:
-            if pipe_empty:
-
-                # Before Python 3.4 the pipe is empty: the version is output to
-                # the command session.
-                try:
-                    target_python, python_version = hack_target_and_version(
-                        default_path_to_python(python_version))
-                except:
-                    sys.stdout.write(
-                        'Unable to determine version of target Python\n')
-                    sys.stdout.write(' '.join(job) + '\n')
-                    sys.stdout.write(''.join(
-                        ('If it can be installed the dptdb package will be ',
-                         'unusable\n')))
-                    return
-
-            else:
-                sys.stdout.write(
-                    'Unable to determine version of target Python\n')
-                sys.stdout.write(' '.join(job) + '\n')
-                sys.stdout.write(''.join(
-                    ('If it can be installed the dptdb package will be ',
-                     'unusable\n')))
-                return
     else:
 
         # On Microsoft Windows the Python version running this job is the
@@ -745,15 +678,8 @@ def setup(
 
     if mingw345:
         job.append(mingw345)
-    if wine:
-        job.append(wine)
     if path_to_python:
         job.append(path_to_python)
-        job.append(python_library_version(python_version))
-    elif wine:
-        job.append(''.join((
-            'PATH_TO_PYTHON=',
-            default_path_to_python(python_version))))
         job.append(python_library_version(python_version))
     else:
 
@@ -833,64 +759,12 @@ def setup(
                 del sys.argv[e]
                 break
 
-    if sys.platform == 'win32':
-        long_description = open('README.txt').read()
-        setuptools.setup(
-            name=name,
-            version='.'.join(dptdb_version),
-            long_description=long_description,
-            **attrs)
-
-    # With the Microsoft Windows version of Python 3.6 and later the Wine job
-    # will fail in some way, for example:
-    # Unimplemented function api-ms-win-core-path-l1-1-0.dll.PathCchCan...izeEx
-    # on a 64bit box running FreeBSD 12.1 amd64 with emulators/i386-wine,
-    # without reaching if __name__ == '__main__' in the _wine_setup module.
-    # or:
-    # Creating tar archive
-    # 0009:fixme:file:GetFileInformationByHandleEx ...
-    # error: [WinError 120] Call not implemented: 'dpt3.0-dpt-0.7.2
-    # after entering the setuptools.setup(..) call im the _wine_setup module.
-    # This on a 64bit box running FreeBSD 11.3 i386 with emulators/wine.
-    # It does not matter which Python does the sdist command, so let the one
-    # running this script do it.
-    elif sys.argv[1] == 'sdist':
-        long_description = open('README.txt').read()
-        setuptools.setup(
-            name=name,
-            version='.'.join(dptdb_version),
-            long_description=long_description,
-            **attrs)
-
-    # The Wine job has not been known to fail for the reasons above on Pythons
-    # earlier than 3.6 so let it do the install command.
-    # 'python3.6 setup.py install' with MinGW-8.2.0
-    # works at FreeBSD 11.3 i386 with emulators/wine
-    # but not at FreeBSD 12.1 amd64 with emulators/i386-wine.
-    # On a 64bit box running FreeBSD 11.3 i386 and emulators/wine the build
-    # command succeeds. The setup was run from 'unix' Python 3.6 targetting
-    # 'windows' Python 3.8.
-    # On a 64bit box running FreeBSD 12.1 amd64 and emulators/i386-wine the
-    # build command fails, but all the stuff before starting the job to run
-    # setuptools.setup() has been done. The setup was run from 'unix' Python
-    # 3.7 targetting 'windows' Python 3.7.
-    else:
-        job = ['wine',
-               os.path.join(
-                   default_path_to_python(python_version)
-                   if path_to_python is None
-                   else path_to_python,
-                   'python.exe',
-                   ),
-               '_wine_setup.py']
-        job.extend(sys.argv[1:])
-        job.append(name)
-        job.append('.'.join(dptdb_version))
-        sp = subprocess.Popen(job)
-        r = sp.wait()
-        if r != 0:
-            sys.stdout.write('wine python setup.py ... fails\n')
-            return
+    long_description = open('README.txt').read()
+    setuptools.setup(
+        name=name,
+        version='.'.join(dptdb_version),
+        long_description=long_description,
+        **attrs)
 
     sys.argv[:] = argv
 
@@ -992,28 +866,6 @@ def python_library_version(version):
             ''.join([str(vi) for vi in sys.version_info[:2]])))
     else:
         return version
-
-
-def hack_target_and_version(path):
-    """Return version information deduced from 'python<version>.dll'in path.
-
-    Pythons before 3.4 give empty output pipe when asked for version.
-
-    The response to 'wine python -V' via Popen() was sent to command widget.
-
-    Caller must ensure this function is called only when it is certain the
-    'wine <path>/python -V' job succeeded.
-
-    """
-
-    # Replace the assumed leading 'C:/' with '~/.wine/drive_c' the default
-    # location for the user's emulation of Windows file structure.
-    p = ['~', '.wine', 'drive_c', ntpath.splitdrive(path)[-1].lstrip('/\\')]
-
-    for f in os.listdir(os.path.expanduser(os.path.join(*p))):
-        if f.startswith('python') and f.endswith('.dll'):
-            v = f.lstrip('python').rstrip('.dll')
-            return '.'.join(tuple(v)), '='.join(('PYTHON_VERSION', v))
 
 
 if __name__ == '__main__':

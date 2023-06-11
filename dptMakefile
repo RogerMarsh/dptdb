@@ -56,7 +56,6 @@ PATH_TO_CXX ?=
 COMPILER = g++
 SWIG_PYTHON = python
 GCC_VERSION_PATCHING ?= true
-WINE ?=
 
 ### Common settings
 ### -fpermissive added for mingw32-10.3.0
@@ -204,7 +203,7 @@ $(SWIG_PYTHON) : copy $(SWIG_DPTAPI)_$(SWIG_PYTHON)_wrap.cxx $(DPT_RELEASE) $(DP
 ### itself.
 
 $(PYTHON_API_DLL) : $(SWIG_DPTAPI)_$(SWIG_PYTHON)_wrap.o
-	$(WINE) $(CXX) $(DPT_LDFLAGS) -o $@ $< $(DPTAPI_OBJS) $(DPT_OBJS) $(SWIG_LANG_LIBS)
+	$(CXX) $(DPT_LDFLAGS) -o $@ $< $(DPTAPI_OBJS) $(DPT_OBJS) $(SWIG_LANG_LIBS)
 
 ### Pattern rules DPT C++
 
@@ -276,18 +275,18 @@ else
 endif
 
 $(DPT_RELEASE)/%.o : $(DPT_SRC)/%.cpp
-	$(WINE) $(CXX) -c $(CXXEXTRA) $(CXXFLAGS) $(DPT_INCLUDE) $(DEFOPTS) -o $@ $<
+	$(CXX) -c $(CXXEXTRA) $(CXXFLAGS) $(DPT_INCLUDE) $(DEFOPTS) -o $@ $<
 
 $(DPT_RELEASE)/%.o : $(DPTAPI_SRC)/%.cpp
-	$(WINE) $(CXX) -c $(CXXEXTRA) $(CXXFLAGS) $(DPTAPI_INCLUDE) $(DEFOPTS) -o $@ $<
+	$(CXX) -c $(CXXEXTRA) $(CXXFLAGS) $(DPTAPI_INCLUDE) $(DEFOPTS) -o $@ $<
 
 $(DPT_RELEASE)/%.o : $(DPT_STDAFX)/%.cpp
-	$(WINE) $(CXX) -c $(CXXEXTRA) $(CXXFLAGS) $(DPTAFX_INCLUDE) $(DEFOPTS) -o $@ $<
+	$(CXX) -c $(CXXEXTRA) $(CXXFLAGS) $(DPTAFX_INCLUDE) $(DEFOPTS) -o $@ $<
 
 ### Pattern rules SWIG wrappers for dpt API version
 
 $(SWIG_DPTAPI)_$(SWIG_PYTHON)_wrap.cxx : $(SWIG_DPTAPI)_$(SWIG_PYTHON).i
-	$(WINE) $(PATH_TO_SWIG)/swig -c++ -$(SWIG_PYTHON) $(SWIG_LANG_OPTS) -o $@ -outdir .. -I$(DPTAPI_INC) $<
+	$(PATH_TO_SWIG)/swig -c++ -$(SWIG_PYTHON) $(SWIG_LANG_OPTS) -o $@ -outdir .. -I$(DPTAPI_INC) $<
 
 ### There is a clash between MinGW and Python on _hypot and hypot for cmath.
 ### www.freelists.org/post/nuitka-dev/error-hypot-has-not-been-declared,2 and
@@ -297,4 +296,4 @@ $(SWIG_DPTAPI)_$(SWIG_PYTHON)_wrap.cxx : $(SWIG_DPTAPI)_$(SWIG_PYTHON).i
 ### experience?) -D_hypot=hypot added to Swig wrapper build.
 
 $(SWIG_DPTAPI)_$(SWIG_PYTHON)_wrap.o : $(SWIG_DPTAPI)_$(SWIG_PYTHON)_wrap.cxx
-	$(WINE) $(CXX) -c $(CXXEXTRA) -D_hypot=hypot $(CXXFLAGS) $(SWIG_LANG_INCLUDE) $(DEFOPTS) -o $@ $<
+	$(CXX) -c $(CXXEXTRA) -D_hypot=hypot $(CXXFLAGS) $(SWIG_LANG_INCLUDE) $(DEFOPTS) -o $@ $<
