@@ -101,7 +101,6 @@ def setup(
     dpt_documentation_file='DPT_V3R0_DOCS.ZIP',
     dpt_downloads_from='http://www.solentware.co.uk/files/',
     path_to_swig=os.path.join('C:', 'swigwin-2.0.8'),
-    allow_36_and_later_hack=False,
     **attrs):
     """Extract DPT source code from distribution and call distutils.setup
 
@@ -109,7 +108,6 @@ def setup(
     dpt_documentation_file is the default DPT documentation
     dpt_downloads_from is the site from which DPT files are downloaded
     path_to_swig is the default location of the swig command
-    allow_36_and_later_hack enables the hack copying to site-packages
 
     The following command line arguments override these defaults:
     DPT_DIST       dpt_distribution_file
@@ -217,7 +215,8 @@ def setup(
                     [command,
                      '-f',
                      posixpath.join('..', 'dptMakefile'),
-                     clean_up],
+                     clean_up,
+                     ''.join(('PYTHON_RUNNING_MAKE=', sys.executable))],
                     cwd='dptdb')
                 
                 r = sp.wait()
@@ -261,6 +260,159 @@ def setup(
     for a in sys.argv[2:]:
         if a.startswith('PYTHON_VERSION='):
             python_version = a
+
+    # Get SWIG version number.
+    job = [
+        os.path.join(
+            path_to_swig,
+            'swig',
+            ),
+        '-version',
+        ]
+    if wine:
+        job.insert(0, 'wine')
+    sp = subprocess.Popen(job, stdout=subprocess.PIPE)
+    r = sp.wait()
+    if r != 0:
+        sys.stdout.write('Get SWIG version fails\n')
+        return
+    for l in sp.stdout.readlines():
+        l = l.decode()
+        if l.startswith('SWIG Version'):
+            swig_version = l.split()[-1]
+            break
+    else:
+        sys.stdout.write('Unable to determine version of SWIG\n')
+        return
+
+    # Get MinGW version number.
+    job = [
+        os.path.join(
+            'mingw32-g++',
+            ),
+        '--version',
+        ]
+    if wine:
+        job.insert(0, 'wine')
+    sp = subprocess.Popen(job, stdout=subprocess.PIPE)
+    r = sp.wait()
+    if r != 0:
+        sys.stdout.write('Get MinGW version fails\n')
+        return
+    for l in sp.stdout.readlines():
+        l = l.decode()
+        if l.startswith('mingw32-g++.exe'):
+            mingw_version = l.split()[-1]
+            break
+    else:
+        sys.stdout.write('Unable to determine version of MinGW c++ compiler\n')
+        return
+
+    # Get target Python version number.
+    if path_to_python:
+        job = [
+            os.path.join(
+                path_to_python.split('=', 1)[-1],
+                'python',
+                ),
+            '-V',
+            ]
+        if wine:
+            job.insert(0, 'wine')
+        sp = subprocess.Popen(job, stdout=subprocess.PIPE)
+        r = sp.wait()
+        if r != 0:
+            sys.stdout.write('Get target Python version fails\n')
+            return
+        for l in sp.stdout.readlines():
+            l = l.decode()
+            if l.startswith('Python'):
+                target_python = '.'.join(l.split()[-1].split('.')[:2])
+                python_version = '='.join(
+                    ('PYTHON_VERSION',
+                     ''.join(target_python.split('.')),
+                     ))
+                break
+        else:
+            sys.stdout.write('Unable to determine version of target Python\n')
+            return
+    elif wine:
+        job = [
+            'wine',
+            os.path.join(
+                default_path_to_python(python_version),
+                'python',
+                ),
+            '-V',
+            ]
+        sp = subprocess.Popen(job, stdout=subprocess.PIPE)
+        r = sp.wait()
+        if r != 0:
+            sys.stdout.write('Get target Python version fails\n')
+            return
+        for l in sp.stdout.readlines():
+            l = l.decode()
+            if l.startswith('Python'):
+                target_python = '.'.join(l.split()[-1].split('.')[:2])
+                break
+        else:
+            sys.stdout.write(
+                "Unable to determine version of target Python by\n")
+            sys.stdout.write(' '.join(job) + '\n')
+            sys.stdout.write(
+                'If it can be installed the dptdb package will be unusable\n')
+            return
+    else:
+
+        # On Microsoft Windows the Python version running this job is the
+        # target Python.
+        try:
+            target_python = '.'.join(sys.version.split()[0].split('.')[:2])
+        except:
+            sys.stdout.write('Unable to determine version of target Python\n')
+            return
+
+    # Check Python, SWIG, and MinGW version numbers against version.py.
+    vs = {'_Swig': swig_version.join(("'", "'")),
+          '_MinGW': mingw_version.join(("'", "'")),
+          '_Python': target_python.join(("'", "'"))}
+    np = set()
+    version_file = os.path.join('dptdb', 'version.py')
+    if os.path.isfile(version_file):
+        for nv in open(version_file):
+            n, v = [s.strip() for s in nv.split('=')]
+            if n == '_Swig':
+                if vs[n] == v:
+                    del vs[n]
+                np.add(n)
+            elif n == '_MinGW':
+                if vs[n] == v:
+                    del vs[n]
+                np.add(n)
+            elif n == '_Python':
+                if vs[n] == v:
+                    del vs[n]
+                np.add(n)
+        if np.intersection(vs):
+            sys.stdout.write(
+                ''.join(('Current build software versions do not match build ',
+                         'versions recorded in version.py\n')))
+            for k, v in vs.items():
+                sys.stdout.write(' '.join((k[1:], v)) + '\n')
+            return
+    else:
+        f = open(version_file, 'w')
+        try:
+            f.write(' = '.join(('_Swig' , vs['_Swig'])))
+            f.write(os.linesep)
+            f.write(' = '.join(('_MinGW' , vs['_MinGW'])))
+            f.write(os.linesep)
+            f.write(' = '.join(('_Python', vs['_Python'])))
+            f.write(os.linesep)
+        finally:
+            f.close()
+    del vs
+    del np
 
     downloads = (dpt_distribution_file, dpt_documentation_file)
     if not _urllib_available:
@@ -484,96 +636,6 @@ def setup(
                 f.close()
             del f
 
-
-    def get_source_files(directory):
-        """Return list of *.cpp source files without extension.""" 
-        files =[]
-        for f in os.listdir(directory):
-            if os.path.isfile(os.path.join(directory, f)):
-                p, e = os.path.splitext(f)
-                if e in ('.cpp',):
-                    files.append(p)
-        return files
-
-
-    def get_include_files(directory):
-        """Return list of *.h source files without extension.""" 
-        files =[]
-        for f in os.listdir(directory):
-            if os.path.isfile(os.path.join(directory, f)):
-                p, e = os.path.splitext(f)
-                if e in ('.h',):
-                    files.append(p)
-        return files
-
-
-    def default_path_to_python(python_version):
-        """Return default location of 32-bit python.exe for user install.
-
-        Before Python 3.5 series this is C:/PythonNM.
-        After Python 3.4 series this is:
-        C:/Users/<user>/AppData/Local/Programs/Python/PythonNM-32 on Windows
-        and:
-        C:/Users/<user>/AppData/PythonNM-32 on Wine for two reasons.
-
-        On Wine the ../Local hierarchy may not exist.  Perhaps it should not,
-        or perhaps it is created first time something is installed.  Installing
-        Python on Wine does not work for Python 3.5 and later, and one option
-        is to install Python for user-only on Windows and copy PythonNM-32 to
-        Wine.
-
-        """
-        # posixpath, not os.path, to handle the 'C:' components correctly.
-        # On Windows the job is running in a msys shell, so it is posix rules
-        # which must be used.
-
-        if python_version is None:
-            major_minor_version = ''.join(
-                [str(vi) for vi in sys.version_info[:2]])
-        else:
-            major_minor_version = python_version.split('=', 1)[-1]
-        if major_minor_version < '35':
-            return posixpath.join('C:', 'Python' + major_minor_version)
-
-        # 'USERNAME' is on Windows but not Wine, unless explicitly created.
-        user = os.getenv('USERNAME') or os.getenv('USER')
-
-        # 'users' not 'Users' because it is 'users' on Wine, where the case
-        # matters, and 'Users' on Windows where the case does not matter.
-        p = posixpath.join('C:',
-                           'users',
-                           user,
-                           'AppData',
-                           'Local',
-                           'Programs',
-                           'Python')
-        if os.path.exists(os.path.dirname(p)):
-            return posixpath.join(
-                p, major_minor_version.join(('Python', '-32')))
-        return posixpath.join('C:',
-                              'users',
-                              user,
-                              'AppData',
-                              major_minor_version.join(('Python', '-32')))
-
-    
-    def python_library_version(python_version):
-        """Return version number for python<major minor version>.lib.
-
-        The swig build in the makefile uses this to construct the file name.
-
-        When python_version is None assume the same version of Python will do
-        the build as is running this script.
-
-        """
-        if python_version is None:
-            return '='.join((
-                'PYTHON_VERSION',
-                ''.join([str(vi) for vi in sys.version_info[:2]])))
-        else:
-            return python_version
-
-
     # Use make -f dptMakefile python ... for C++ build of DPT API.
     # The arguments to this wrapper of the setuputils.setup() call allow some
     # flexibility to the build without using command line options.
@@ -658,28 +720,48 @@ def setup(
         sys.stdout.write('Build C++ extension module fails\n')
         return
 
+    # Get DPT and dptdb version information from version.py, and see if Python
+    # and SWIG version information is absent but MinGW version is absent.  It
+    # is correct to put the current Python and SWIG version information in
+    # version.py here.
     version = release = '0'
     dptdb_version = ('0', '0')
-    version_file = os.path.join('..', 'version.py')
-    for nv in open(os.path.join('dptdb', 'version.py')):
+    py_swig_mingw = set()
+    rv = []
+    for nv in open(version_file):
+        rv.append(nv)
         nv = [v.strip() for v in nv.split('=')]
-        if len(nv) == 2:
-            n, v = nv
-            if n == '_dpt_version':
-                v = v[1:-1].split('.')
-                if len(v) == 2:
-                    version, release = v
-            elif n == '_dptdb_version':
-                v = v[1:-1].split('.')
-                if len(v) in (2, 3):
-                    dptdb_version = v
+        n, v = nv
+        if n == '_dpt_version':
+            v = v[1:-1].split('.')
+            if len(v) == 2:
+                version, release = v
+        elif n == '_dptdb_version':
+            v = v[1:-1].split('.')
+            if len(v) in (2, 3):
+                dptdb_version = v
+        elif n == '_Swig':
+            py_swig_mingw.add(n)
+        elif n == '_Python':
+            py_swig_mingw.add(n)
+        elif n == '_MinGW':
+            py_swig_mingw.add(n)
+    if ('_Python' not in py_swig_mingw and
+        '_Swig' not in py_swig_mingw and
+        '_MinGW' in py_swig_mingw):
+        rv.append(' = '.join(('_Swig', swig_version.join(("'", "'")))) + '\n')
+        rv.append(' = '.join(('_Python',
+                              target_python.join(("'", "'")))) + '\n')
+        os.remove(version_file)
+        f = open(version_file, 'w')
+        try:
+            for l in rv:
+                f.write(l)
+        finally:
+            f.close()
+    del py_swig_mingw
+    del rv
 
-    # Default is version of Python running this script.
-    if python_version is None:
-        python_version = ''.join(
-            [str(vi) for vi in sys.version_info[:2]])
-    else:
-        python_version = python_version.split('=')[-1]
     name = '-'.join((''.join(('dpt', version, '.', release)), 'dptdb'))
 
     # Remove 'make' arguments from sys.argv before setup() call.
@@ -725,85 +807,6 @@ def setup(
     # 'python3.6 setup.py install' with MinGW-8.2.0
     # works at FreeBSD 11.3 i386 with emulators/wine
     # but not at FreeBSD 12.1 amd64 with emulators/i386-wine.
-    elif sys.argv[1] == 'install' and python_version < '36':
-        job = [
-            'wine',
-            os.path.join(
-                default_path_to_python(python_version),
-                'python.exe',
-                ),
-            '_wine_setup.py']
-        job.extend(sys.argv[1:])
-        job.append(name)
-        job.append('.'.join(dptdb_version))
-        sp = subprocess.Popen(job)
-        r = sp.wait()
-        if r != 0:
-            sys.stdout.write('wine python setup.py ... fails\n')
-            return
-
-    # Assume the Wine job will fail for Python 3.6 and later.
-    # If this hack is enabled 'import dptdb' works, but 'import dptdb.dptapi'
-    # and equivalents fail stating 'libgcc_s_dw2-1.dll' and 'libstdc++-6.dll'
-    # cannot be found.  In Python27 the import finds them.
-    # Copy __init__.py, dptapi.py, _dptapi.pyd, and version.py from dptdb in
-    # the distribution to dptdb in <path_to_python>/Lib/site-packages.
-    # Check that dptdb does not exist in site-packages and that all four files
-    # are in the distribution before copying anything.
-    # All the potential destinations managed by setuptools are ignored, so
-    # there may be a 'dptdb' in an 'egg' which has not been spotted.
-    elif sys.argv[1] == 'install' and allow_36_and_later_hack:
-        site_packages = os.path.join(default_path_to_python(python_version),
-                                     'Lib',
-                                     'site-packages')
-        site_packages = os.path.expanduser(os.path.join(
-            '~', '.wine', 'drive_c',
-            os.path.join(*site_packages.split('/')[1:])))
-        if 'dptdb' in os.getcwd() and 'dptdb' not in os.listdir(site_packages):
-            source = os.path.join(os.getcwd(), 'dptdb')
-            destination = os.path.join(site_packages, 'dptdb')
-            files = set(os.listdir(source))
-            copy = True
-            copyfiles = '__init__.py', 'dptapi.py', '_dptapi.pyd', 'version.py'
-            for f in copyfiles:
-                if f not in files:
-                    copy = False
-                    break
-            if copy:
-                os.mkdir(destination)
-                for f in copyfiles:
-                    shutil.copy(os.path.join(source, f), destination)
-                sys.stdout.write(
-                    'Essential files in dptdb copied to site-packages.\n')
-                sys.stdout.write(
-                    "Existence of a 'dptdb' in an 'egg' was not checked.\n")
-            else:
-                sys.stdout.write(
-                    'Some expected files missing: nothing copied.\n')
-        else:
-            sys.stdout.write(
-                'Source dptdb missing or destination is in site-packages:\n')
-            sys.stdout.write('Nothing copied.\n')
-
-    # Assume the Wine job will fail for Python 3.6 and later.
-    # Refuse to do the install command.
-    elif sys.argv[1] == 'install':
-        sys.stdout.write(
-            '\nThe setup install command will fail at Python 3,6 and later.\n')
-        sys.stdout.write(
-            'The package build has probably succeeded, but there is little\n')
-        sys.stdout.write(
-            "point in copying to site-packages because 'import dptdb.dptapi'\n")
-        sys.stdout.write(
-            "will fail anyway.  The reports are 'libgcc_s_dw2-1.dll' and\n")
-        sys.stdout.write(
-            "'libstdc++-6.dll' cannot be found.  They are found when\n")
-        sys.stdout.write(
-            "Python 2.7, for example, does the import.\n")
-
-    # Not trying to mend the world.
-    # Let it succeed or fail as it wishes.
-    # For example:
     # On a 64bit box running FreeBSD 11.3 i386 and emulators/wine the build
     # command succeeds. The setup was run from 'unix' Python 3.6 targetting
     # 'windows' Python 3.8.
@@ -812,13 +815,14 @@ def setup(
     # setuptools.setup() has been done. The setup was run from 'unix' Python
     # 3.7 targetting 'windows' Python 3.7.
     else:
-        job = [
-            'wine',
-            os.path.join(
-                default_path_to_python(python_version),
-                'python.exe',
-                ),
-            '_wine_setup.py']
+        job = ['wine',
+               os.path.join(
+                   default_path_to_python(python_version)
+                   if path_to_python is None
+                   else path_to_python,
+                   'python.exe',
+                   ),
+               '_wine_setup.py']
         job.extend(sys.argv[1:])
         job.append(name)
         job.append('.'.join(dptdb_version))
@@ -829,6 +833,98 @@ def setup(
             return
 
     sys.argv[:] = argv
+
+
+def default_path_to_python(version):
+    """Return default location of 32-bit python.exe for user install.
+
+    version is either 'PYTHON_VERSION=nm' or 'nm'.
+    version.split('=', 1)[-1] produces 'nm' in each case.
+
+    Before Python 3.5 series this is C:/PythonNM.
+    After Python 3.4 series this is:
+    C:/Users/<user>/AppData/Local/Programs/Python/PythonNM-32 on Windows
+    and:
+    C:/Users/<user>/AppData/PythonNM-32 on Wine for two reasons.
+
+    On Wine the ../Local hierarchy may not exist.  Perhaps it should not,
+    or perhaps it is created first time something is installed.  Installing
+    Python on Wine does not work for Python 3.5 and later, and one option
+    is to install Python for user-only on Windows and copy PythonNM-32 to
+    Wine.
+
+    """
+    # posixpath, not os.path, to handle the 'C:' components correctly.
+    # On Windows the job is running in a msys shell, so it is posix rules
+    # which must be used.
+
+    if version is None:
+        major_minor_version = ''.join(
+            [str(vi) for vi in sys.version_info[:2]])
+    else:
+        major_minor_version = version.split('=', 1)[-1]
+    if major_minor_version < '35':
+        return posixpath.join('C:', 'Python' + major_minor_version)
+
+    # 'USERNAME' is on Windows but not Wine, unless explicitly created.
+    user = os.getenv('USERNAME') or os.getenv('USER')
+
+    # 'users' not 'Users' because it is 'users' on Wine, where the case
+    # matters, and 'Users' on Windows where the case does not matter.
+    p = posixpath.join('C:',
+                       'users',
+                       user,
+                       'AppData',
+                       'Local',
+                       'Programs',
+                       'Python')
+    if os.path.exists(os.path.dirname(p)):
+        return posixpath.join(
+            p, major_minor_version.join(('Python', '-32')))
+    return posixpath.join('C:',
+                          'users',
+                          user,
+                          'AppData',
+                          major_minor_version.join(('Python', '-32')))
+
+
+def get_include_files(directory):
+    """Return list of *.h source files without extension.""" 
+    files =[]
+    for f in os.listdir(directory):
+        if os.path.isfile(os.path.join(directory, f)):
+            p, e = os.path.splitext(f)
+            if e in ('.h',):
+                files.append(p)
+    return files
+
+
+def get_source_files(directory):
+    """Return list of *.cpp source files without extension.""" 
+    files =[]
+    for f in os.listdir(directory):
+        if os.path.isfile(os.path.join(directory, f)):
+            p, e = os.path.splitext(f)
+            if e in ('.cpp',):
+                files.append(p)
+    return files
+
+
+def python_library_version(version):
+    """Return version number for python<major minor version>.lib.
+
+    The swig build in the makefile uses this to construct the file name.
+
+    When version is None assume the same version of Python will do
+    the build as is running this script.
+
+    """
+    if version is None:
+        return '='.join((
+            'PYTHON_VERSION',
+            ''.join([str(vi) for vi in sys.version_info[:2]])))
+    else:
+        return version
 
 
 if __name__ == '__main__':

@@ -149,24 +149,25 @@ clean_swig :
 	-rm $(SWIG_DPTAPI).py
 	-rm dptbuild/$(SWIG_DPTAPI)_$(SWIG_PYTHON)_wrap.cxx
 	-rm dptbuild/$(SWIG_DPTAPI)_$(SWIG_PYTHON)_wrap.o
+	$(PYTHON_RUNNING_MAKE) ../dptversion.py clean_swig
 
 clean_python_version :
 	-rm _$(SWIG_DPTAPI).pyd
 	-rm $(SWIG_DPTAPI).py
-	-rm version.py
 	-rm ../licence.txt
 	-rm dptbuild/$(SWIG_DPTAPI)_$(SWIG_PYTHON)_wrap.cxx
 	-rm dptbuild/$(SWIG_DPTAPI)_$(SWIG_PYTHON)_wrap.o
+	$(PYTHON_RUNNING_MAKE) ../dptversion.py clean_python_version
 
 clean_all_pythons :
 	-rm -r ../dist
 	-rm -r ../dpt3.0_$(PACKAGE_NAME).egg-info
 	-rm _$(SWIG_DPTAPI).pyd
 	-rm $(SWIG_DPTAPI).py
-	-rm version.py
 	-rm ../licence.txt
 	-rm dptbuild/$(SWIG_DPTAPI)_$(SWIG_PYTHON)_wrap.cxx
 	-rm dptbuild/$(SWIG_DPTAPI)_$(SWIG_PYTHON)_wrap.o
+	$(PYTHON_RUNNING_MAKE) ../dptversion.py clean_all_pythons
 
 ### The object file directory
 
