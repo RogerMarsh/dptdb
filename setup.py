@@ -145,12 +145,6 @@ def setup(
     Another instance of this kind was spotted at MinGW-6.3.0 related to the
     C++11 standard it seems.
 
-    PATH_TO_PYTHON
-    Use this when building under Microsoft Windows if Python is not installed
-    directly in the default location.  C:\Python34 for 3.4 versions of Python.
-    If the D: drive were used instead then PATH_TO_PYTHON=D:\Python is the
-    setting, without the version number which goes in PYTHON_VERSION if needed.
-
     PYTHON_VERSION
     Used to pick out the python<major minor version>.lib filewhen creating the
     _dptapi.pyd file: PYTHON_VERSION=27 for example.
@@ -176,11 +170,9 @@ def setup(
 
     """
     make_arguments = (
-        'PATH_TO_PYTHON=',
         'MINGW345',
         'DPT_DIST=',
         'DPT_DOCS=',
-        'PYTHON_VERSION=',
         )
 
     # In dptMakefile both clean_extract and clean_all_pythons should imply
@@ -260,16 +252,6 @@ def setup(
         if a.lower() == 'mingw345':
             mingw345 = 'GCC_VERSION_PATCHING=false'
 
-    path_to_python = None
-    for a in sys.argv[2:]:
-        if a.startswith('PATH_TO_PYTHON='):
-            path_to_python = a
-
-    python_version = None
-    for a in sys.argv[2:]:
-        if a.startswith('PYTHON_VERSION='):
-            python_version = a
-
     # Get SWIG version number.
     job = ['swig', '-version']
     sp = subprocess.Popen(job, stdout=subprocess.PIPE)
@@ -308,43 +290,11 @@ def setup(
         return
 
     # Get target Python version number.
-    if path_to_python:
-        job = [
-            posixpath.join(
-                path_to_python.split('=', 1)[-1],
-                'python',
-                ),
-            '-V',
-            ]
-        sp = subprocess.Popen(job, stdout=subprocess.PIPE)
-        r = sp.wait()
-        if r != 0:
-            sys.stdout.write('Get target Python version fails\n')
-            return
-        pipe_empty = True
-        for l in sp.stdout.readlines():
-            pipe_empty = False
-            l = l.decode()
-            if l.startswith('Python'):
-                target_python = '.'.join(l.split()[-1].split('.')[:2])
-                python_version = '='.join(
-                    ('PYTHON_VERSION',
-                     ''.join(target_python.split('.')),
-                     ))
-                break
-        else:
-            sys.stdout.write(
-                'Unable to determine version of target Python\n')
-            return
-    else:
-
-        # On Microsoft Windows the Python version running this job is the
-        # target Python.
-        try:
-            target_python = '.'.join(sys.version.split()[0].split('.')[:2])
-        except:
-            sys.stdout.write('Unable to determine version of target Python\n')
-            return
+    try:
+        target_python = '.'.join(sys.version.split()[0].split('.')[:2])
+    except:
+        sys.stdout.write('Unable to determine version of target Python\n')
+        return
 
     # Check Python, SWIG, and MinGW version numbers against version.py.
     vs = {'_Swig': swig_version.join(("'", "'")),
@@ -661,21 +611,10 @@ def setup(
 
     if mingw345:
         job.append(mingw345)
-    if path_to_python:
-        job.append(path_to_python)
-        job.append(python_library_version(python_version))
-    else:
 
-        # On Microsoft Windows force make to use the Python version running
-        # this job because this job will do the setuptools.setup() call.
-        if python_version:
-            sys.stdout.write(''.join((
-                python_version, ' ignored on Microsoft Windows', '\n')))
-
-        job.append(''.join((
-            'PATH_TO_PYTHON=',
-            default_path_to_python(None))))
-        job.append(python_library_version(None))
+    # On Msys2 in Microsoft Windows force make to use the Python version
+    # running this job because this job will do the setuptools.setup() call.
+    job.append(python_library_version(None))
 
     # For creating version number module only: not used in the swig build.
     job.append(''.join(('PYTHON_RUNNING_MAKE=', sys.executable)))
@@ -846,7 +785,7 @@ def python_library_version(version):
     if version is None:
         return '='.join((
             'PYTHON_VERSION',
-            ''.join([str(vi) for vi in sys.version_info[:2]])))
+            '.'.join([str(vi) for vi in sys.version_info[:2]])))
     else:
         return version
 
