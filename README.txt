@@ -14,15 +14,13 @@ DPT is a multi-user database system for Microsoft Windows.
 
 The Python application can be as simple as a single-threaded process embedding the DPT API.
 
-The package is available only as a source distribution.  It is built with the `MinGW`_ toolchain and `SWIG`_, either on Microsoft Windows or on `Wine`_ on an operating system able to run `Wine`_.
+The package is available only as a source distribution.  It is built on Microsoft Windows in a `Msys2`_ environment using the mingw-w64-i686-gcc, mingw-w64-i686-python, and swig, ports.
 
-The package is known to work with MinGW-8.2.0 but not with MinGW-5.3.0, MinGW-4.9.3, or MinGW-4.8.1.  Use dpt3.0-dptdb-0.6.7, or later 0.6.n versions, with earlier versions of MinGW if necessary.
+Versions of dptdb earlier than 0.8 are built in a `MinGW`_ environment, but will not work at Python 3.8 or later even if a build succeeds.
 
-At December 2019 this package cannot be used with Python 3.8 because the statement:
+The package can be used with the mingw-w64-i686-python port on Microsoft Windows.
 
-import dptdb.dptapi
-
-fails.
+The package cannot be used with any Python version installed by a Microsoft Python installer.
 
 Setup will download the DPT API `source`_ and `documentation`_ zip files if an internet connection is available.
 
@@ -32,106 +30,33 @@ There is no separate documentation for Python.
 Installation Instructions
 =========================
 
-Microsoft Windows
------------------
-
-   The package can be installed and used with Pythons 2.7, 3.3, 3.4, 3.5, 3.6, and 3.7.
-
-   The package can be installed but not used with Python 3.8.
+   The package can be installed and used with the mingw-w64-i686-python port in a `Msys2`_ environment on Microsoft Windows.
 
    Build dependencies
 
       * `Python`_ 2.7 or later 
-      * `setuptools`_
       * `SWIG`_ 4.0.1 or later
-      * `MinGW Installation Manager`_
+      * `Msys2`_
 
-      Download and install the MinGW Installation Manager.
+      Download and install the `Msys2`_ environment.
 
-      Follow the `MinGW`_ instructions to install MSYS and at least the MinGW base and gcc-g++ compiler suite.
+      Follow the `Msys2`_ instructions to install Msys2.
 
-      Download and install SWIG and Python.
-
-      Download and install setuptools in Python if not already present.
-
-   Put the directory containing the MinGW runtime, usually C:\MinGW\bin, in the path.
+      Install SWIG and Python using the pacman utility.
 
    Install the package by typing
 
-       python setup.py install
+       python setup.py install --user
 
-   at the command prompt of an MSYS shell with setup.py in the current directory.
-
-   Runtime dependencies
-
-   * Python 2.7 or later provided the version (2.7 for example) is the same as the Python used to build dptdb.
-   * The MinGW runtime used to build dptdb.
-
-Wine
-----
-
-   These installs were done on particular versions of FreeBSD.  I do not know what happens elsewhere.
-
-   The package can be installed and used with Pythons 2.7, 3.3, 3.4, 3.5, 3.6, and 3.7, under the emulators/wine port on FreeBSD 11.3 i386.
-
-   The package can be installed but not used with Python 3.8 under the emulators/wine port on FreeBSD 11.3 i386.
-
-   The package can be installed and used with Pythons 2.7, 3.3, 3.4, and 3.5, under the emulators/i386-wine port on FreeBSD 12.1 amd64.
-
-   The package cannot be used with Pythons 3.6, 3.7, and 3.8, under the emulators/i386-wine port on FreeBSD 12.1 amd64.  The point of failure varies with version of Python.
-
-   For Python 3.4 and later, a user-only install on Microsoft Windows is copied to Wine.
-
-   Build dependencies
-
-      * `Wine`_ 
-      * `Python`_ 2.7 or later (Microsoft Windows versions under Wine) 
-      * `setuptools`_
-      * `SWIG`_ 4.0.1 or later
-      * `MinGW Installation Manager`_
-      * 'GNU make'_ (called gmake on BSD systems, usually make otherwise)
-
-      Download and install Wine.
-
-      Download and install the MinGW Installation Manager under Wine.
-
-      Follow the `MinGW`_ instructions to install at least the MinGW base and gcc-g++ compiler suite.
-
-      Download and install Python if not already present. (Your distribution almost certainly provides Python.)
-
-      Download and install GNU make if not already present. (Your distribution almost certainly provides GNU make.)
-
-      Download and install Microsoft Windows versions of SWIG and Python under Wine.
-
-      Download and install setuptools in Python if not already present.
-
-      Download and install setuptools in the Python installed under Wine if not already present.
-
-   At Python 3.4 and later it is not possible to use the Windows installers to install Python under Wine.  Several problem forums suggest copying a 'user-only' install under Microsoft Windows to Wine as a workaround.
-
-   Use 'regedit' to put the directory containing the MinGW runtime, usually C:\MinGW\bin, in the path.
-
-   Install the package by typing
-
-       python setup.py install
-
-   at the command prompt of a shell with setup.py in the current directory.
-
-   'python' should be the same version as the one under Wine where dptdb is being installed.  If this is not possible the command must be something like:
-
-       python3.8 setup.py install PATH_TO_PYTHON=C:/Python27 PYTHON_VERSION=27
-
-    The PATH_TO_PYTHON can be omitted if the Python on Wine is at it's default location for a 'user-only' install.  C:/Users/[user]/AppData is accepted as the default location if C:/Users/[user]/AppData/Local/Programs does not exist.
+   at the command prompt of a MINGW32 shell with setup.py in the current directory.
 
    Runtime dependencies
 
-   * Python 2.7 or later provided the version (2.7 for example) is the same as the Python used to build dptdb.
-   * The MinGW runtime used to build dptdb.
-
+   * `Msys2`_ environment with the mingw-w64-i686-python port used to build dptdb.
 
 A directory named like dpt3.0_dptdb-0.5-py2.7.egg is put in site-packages by the install command.  The name means version 0.5 of dptdb for Python 2.7 wrapping version 3.0 of the DPT API.  This directory contains the dptdb and EGG-INFO directories.
 
-The DPT documentation zip file is in the dptdb directory.
+The DPT documentation zip file is in the source distribution.
 
 
 Sample code
@@ -143,13 +68,7 @@ This can be run on Microsoft Windows by typing
 
    python pydpt-test.py
 
-at the command prompt of a shell with pydpt-test.py in the current directory.
-
-The equivalent command to run the sample application under Wine is
-
-   wine python pydpt-test.py
-
-at the command prompt of a shell with pydpt-test.py in the current directory.
+at the command prompt of a MINGW32 shell with pydpt-test.py in the current directory.
 
 You may need to use '<path to python>/python pydpt-test.py' if several versions of Python are installed.
 
@@ -168,11 +87,7 @@ The figures are for a 2Gb 667MHz memory, 1.8GHz CPU, solid state drive, Microsof
 Restrictions
 ============
 
-When used under Wine, very large single-step loads will fail through running out of memory because the test to decide when to complete a chunk of the load and start a new one never says 'do so'.  One workaround is to do multi-step loads, potentially a lot slower as explained in `relnotes_V2RX.html`_ from DPT_V3R0_DOCS.ZIP, which was the only way to do this before version 2 release 14 of the DPT API.  Another is to split the load into small enough chunks somehow before invoking the single-step process for each chunk.
-
-The "Try to force 'multi-chunk' on 32Gb memory" option does enough index updating, see slowest option under `Sample code`_ for detail, to cause this failure under Wine on a 2Gb memory machine.
-
-This is known to happen on FreeBSD.  It is possible it does not happen on other Operating Systems able to run Wine.
+It is not known if dptdb is now usable in a `Msys2`_ environment under `Wine`_, or if the restrictions which affected the old versions built in a `MinGW`_ environment would be relevant.
 
 
 Notes
@@ -184,11 +99,9 @@ You will need the `DPT API documentation`_ to use this package.  This is include
 
 The DPT documentation zip file is in a directory named like C:/Python27/Lib/site-packages/dpt3.0_dptdb-0.5-py2.7.egg/dptdb, using the example at the end of `Installation Instructions`_.
 
-The dptapi.py and _dptapi.pyd modules are built using `SWIG`_ and `MinGW`_ for a particular version of Python.  In particular a _dptapi.pyd built for Python 2.7 will work only on Python 2.7 and so on. 
+A _dptapi.pyd built for Python 2.7 will work only on Python 2.7 and so on. 
 
 The `DPT API distribution`_ contains independent scripts and instructions to build dptdb mentioning much earlier versions of the build dependencies.
-
-This package will work only on a Python built for the Microsoft Windows platform.
 
 
 .. _DPT API documentation: http://solentware.co.uk/files/DPT_V3R0_DOCS.ZIP
@@ -198,10 +111,8 @@ This package will work only on a Python built for the Microsoft Windows platform
 .. _DPT_V3R0_DBMS.ZIP: http://solentware.co.uk/files/DPT_V3R0_DBMS.ZIP
 .. _DPT API distribution: http://solentware.co.uk/files/DPT_V3R0_DBMS.ZIP
 .. _source: http://solentware.co.uk/files/DPT_V3R0_DBMS.ZIP
+.. _Msys2: http://msys2.org
 .. _Python: https://python.org
-.. _setuptools:  https://pypi.python.org/pypi/setuptools
 .. _SWIG: http://swig.org
 .. _MinGW: http://mingw.org
 .. _Wine: https://winehq.org
-.. _MinGW Installation Manager: http://sourceforge.net/projects/mingw/files/Installer/mingw-get-setup.exe/download
-.. _GNU make: https://www.gnu.org/software/make/
