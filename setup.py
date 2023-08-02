@@ -804,12 +804,7 @@ if __name__ == '__main__':
         license='BSD',
         classifiers=[
             'License :: OSI Approved :: BSD License',
-            'Programming Language :: Python :: 2.7',
-            'Programming Language :: Python :: 3.3',
-            'Programming Language :: Python :: 3.4',
-            'Programming Language :: Python :: 3.5',
-            'Programming Language :: Python :: 3.6',
-            'Programming Language :: Python :: 3.7',
+            'Programming Language :: Python',
             'Operating System :: Microsoft :: Windows',
             'Topic :: Database',
             'Topic :: Software Development',
