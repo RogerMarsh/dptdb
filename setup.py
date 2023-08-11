@@ -509,59 +509,6 @@ def setup(
             finally:
                 f.close()
             del f
-    dptapi_python_copy = (
-        # dptMakefile references to dptapi_python.i are awkward because of the
-        # punctuation characters in the path name.
-        (os.path.join(
-            _EXTRACT, 'sample projects', 'DPT with Python', 'dptapi_python.i'),
-         os.path.join(_BUILD, 'dptapi_python.i'),
-         os.path.join('extend_dptapi_python'),
-         '%extend dpt::APIRoundedDouble {'),
-        )
-    for inp, outp, merge, splitter in dptapi_python_copy:
-        f = open(merge)
-        try:
-            mft = f.read()
-        finally:
-            f.close()
-        del f
-        if os.path.isfile(outp):
-            f = open(inp)
-            try:
-                pft = f.read()
-            finally:
-                f.close()
-            f = open(outp)
-            try:
-                eft = f.read()
-            finally:
-                f.close()
-            spft = pft.split(splitter, 1)
-            if len(spft) != 2:
-                ok = False
-            elif ''.join((spft[0], mft, splitter, spft[-1])) != eft:
-                ok = False
-        else:
-            f = open(inp)
-            try:
-                spft = f.read().split(splitter)
-                if len(spft) == 2:
-                    if len(os.path.dirname(outp)):
-                        try:
-                            os.makedirs(os.path.dirname(outp))#, exist_ok=True)
-                        except OSError:
-                            pass # assume target directory already exists
-                    fo = open(outp, 'w')
-                    try:
-                        fo.write(''.join((spft[0], mft, splitter, spft[-1])))
-                    finally:
-                        fo.close()
-                    del fo
-                else:
-                    ok = False
-            finally:
-                f.close()
-            del f
 
     # Use make -f dptMakefile python ... for C++ build of DPT API.
     # The arguments to this wrapper of the setuputils.setup() call allow some

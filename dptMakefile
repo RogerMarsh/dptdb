@@ -81,6 +81,8 @@ DPT_RELEASE = Release
 ### SWIG settings
 
 SWIG_DPTAPI = dptapi
+SWIG_INTERFACE = dptapi_python.i
+SWIG_EXTRACT = $(DPT_BASE)/sample\ projects/DPT\ with\ Python/$(SWIG_INTERFACE)
 
 ### Python settings
 
@@ -127,11 +129,11 @@ DPTAFX_INCS = $(DPTAFX_NAMES:%=$(DPT_STDAFX)/%.h)
 
 ### Targets
 
-.PHONY : all copy clean_extract clean_swig clean_python_version clean_all_pythons $(SWIG_PYTHON)
+.PHONY : all copy copy_swig clean_extract clean_swig clean_python_version clean_all_pythons $(SWIG_PYTHON)
 
 all : $(SWIG_PYTHON)
 
-copy : $(DPT_SRCS) $(DPT_INCS) $(DPTAPI_SRCS) $(DPTAPI_INCS) $(DPTAFX_SRCS) $(DPTAFX_INCS)
+copy : copy_swig $(DPT_SRCS) $(DPT_INCS) $(DPTAPI_SRCS) $(DPTAPI_INCS) $(DPTAFX_SRCS) $(DPTAFX_INCS)
 
 ### Clean up targets
 
@@ -249,6 +251,10 @@ $(DPTAPI_INC)/%.h : $(DPT_BASE)/$(DPTAPI_INC)/%.h
 
 $(DPT_STDAFX)/%.cpp : $(DPT_BASE)/$(DPT_STDAFX)/%.cpp
 	sed -e '/#include .*.h/s/\\/\//g' $< > $@
+
+copy_swig :
+	sed -e '/APIRoundedDouble_SetNum/s/_/\./g' \
+	$(DPT_BASE)/sample\ projects/DPT\ with\ Python/$(SWIG_INTERFACE) > $(SWIG_INTERFACE)
 
 ### VC6++ and MinGW-3.4.5 do not require explicit #include directives for
 ### <string.h>, <limits.h> and <stdlib.h> but MinGW-4.x.x does require them.
