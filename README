@@ -1,0 +1,87 @@
+===============================
+Build dpt3.0-dptdb from Archive
+===============================
+
+.. contents::
+
+
+Description
+===========
+
+dpt3.0-dptdb is a Python interface to the DPT DBMS version 3 release 0 built using SWIG.
+
+This project, which builds dpt3.0-dptdb, is called dptdb.
+
+These makefiles build dpt3.0-dptdb from copies of the source extracted from DPT_V3R0_DBMS.ZIP after editing so it can be built on the toolchains in Visual Studio Developer Command Prompt 2017 and Msys2.
+
+The default output is Python packages in wheel (*.whl) format.
+
+The makefiles are able to install the Python packages on the box on which they are run.
+
+The Visual Studio build succeeds only at the c++14 standard.
+
+The Msys2 build succeeds at all the c++ standards supported: c++98, c++03, c++11, c++14, c++17, c++20, and c++23.
+
+
+
+Documentation
+=============
+
+The DPT documentation is extracted from DPT_V3R0_DOCS.ZIP and placed at dpt/extract/docs_v3r0/.
+
+
+
+Using the Makefiles
+===================
+
+Two sets of makefiles exist: one with the prefix 'v3r0_msys2' and the other 'v3r0_vs<year>_<standard>' where only 'v3r0_vs2017_c++14' ones will succeed.  (The other *vs* makefiles were created while figuring what worked.)
+
+Do 'make -f fetch.Makefile' in a Msys2 shell to extract the archives.  (The makefile is able to fetch the archives but does not need to because they are included in the dptdb download.)
+
+Then either
+
+do 'make -f v3r0_msys2_c++14.Makefile' in a Msys2 mingw32 shell,
+
+or
+
+do 'make -f v3r0_vs2017_c++14_copy.Makefile' in a Msys2 shell to apply patches to fix source code which does not compile on this Visual Studio C++ version,
+
+and then do 'nmake -f v3r0_vs2017_c++14_build.Nmakefile' in a Developer Command Prompt for VS 2017 shell.
+
+The descriptions of 'x86 Native Tools Command Prompt for VS 2017' and 'x64_x86 Cross Tools Command Prompt for VS 2017' suggest these can be used instead of 'Developer Command Prompt for VS 2017'.
+
+The Msys2 environment is needed, even for Visual Studio builds, to use the 'sed' utility to edit the DPT DBMS source code.
+
+
+
+dpt3.0-dptdb Installation Instructions
+======================================
+
+Run 'py -X.Y-32 -m pip install --user dpt3.0-dptdb' to install a version built with Visual Studio available on PyPI.  ('X.Y' will be something like '3.10' and the whole '-X.Y-32' can be omitted if the default Python is a 32-bit one.)
+
+Alternatively follow the 'Using the Makefiles' instructions but the final step is run 'nmake -f v3r0_vs2017_c++14_build.Nmakefile local-install' (not 'nmake -f v3r0_vs2017_c++14_build.Nmakefile').
+
+To install dpt3.0-dptdb in Msys2 follow the 'Using the Makefiles' instructions but the final step is run 'make -f v3r0_msys2_c++14.Makefile local-install' (not 'make -f v3r0_msys2_c++14.Makefile').
+
+
+
+dpt3.0-dptdb Wheel Name
+=======================
+
+Both the Msys2 and Visual Studio Developer Command Prompt 2017 build name the wheel 'dpt3.0_dptdb-1.0.0.dev0-py3-none-any.whl'.
+
+After consulting 'packaging.python.org' on 'Python Tag', 'ABI Tag' and 'Platform Tag'; and finding that sys.implementation.name is 'cpython' for both, and that 'distutils.util.get_platform()' is 'mingw_i686' for Msys2 and 'win32' for VS; it seems that better wheel names would be:
+
+    'dpt3.0_dptdb-1.0.0.dev0-py310-none-mingw_i686.whl' for the Msys2 file,
+    'dpt3.0_dptdb-1.0.0.dev0-py310-none-win32.whl' for the VS file,
+
+assuming Python 3.10 is used to generate the dptapi.py file via SWIG and the _dptapi.pyd C++ DLL.  Perhaps '-none-' should be '-cp-'.
+
+The version remains '1.0.0.dev0' until the correct wheel names, and way of applying them, are found.
+
+
+
+Contact
+=======
+
+A copy of the contact details is in the package-template/pyproject.toml file.

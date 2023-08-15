@@ -1,0 +1,328 @@
+# Build V3R0 with c++ in a Microsoft VS Developer Command Prompt.
+
+# Compiler settings.
+
+PATH_TO_CXX = 
+COMPILER = cl
+
+# Include this file in a makefile that defines these variables:
+# TOOL_CHAIN
+# TOOL_CHAIN_VERSION
+# CPPSTANDARD
+
+# V3R0 extract and build folders.
+
+DPT = dpt
+EXTRACT = $(DPT)\extract
+BUILD = $(DPT)\$(TOOL_CHAIN)$(TOOL_CHAIN_VERSION)_$(CPPSTANDARD)
+V3R0 = $(BUILD)\v3r0
+V3R0_SRC = $(V3R0)\source
+V3R0_INC = $(V3R0)\include
+DPT_LICENCE = licence.txt
+V3R0API_SRC = $(V3R0_SRC)\dbapi
+V3R0API_INC = $(V3R0_INC)\dbapi
+V3R0_STDAFX = $(V3R0)\stdafx
+V3R0_OBJECT = $(V3R0)\object
+V3R0API_OBJECT = $(V3R0_OBJECT)\dbapi
+V3R0STDAFX_OBJECT = $(V3R0_OBJECT)\stdafx
+V3R0SWIG_OBJECT = $(V3R0_OBJECT)\swig
+SWIG_INTERFACE = dptapi_python.i
+V3R0_SWIG = $(V3R0)\swig
+V3R0_SWIG_INTERFACE = $(V3R0_SWIG)\$(SWIG_INTERFACE)
+
+# Main targets (phony build targets are defined near the build targets).
+
+#all : object_directory object_files
+all : wrapper
+
+# Build Swig interface for V3R0 in Microsoft Visual Studio Command Line.
+
+# Object file names.
+
+OBJS = $(V3R0_OBJECT)\access.obj \
+        $(V3R0_OBJECT)\atom.obj \
+        $(V3R0_OBJECT)\atomback.obj \
+        $(V3R0_OBJECT)\audit.obj \
+        $(V3R0_OBJECT)\bbfloat.obj \
+        $(V3R0_OBJECT)\bbstdio.obj \
+        $(V3R0_OBJECT)\bbthread.obj \
+        $(V3R0_OBJECT)\bitmap3.obj \
+        $(V3R0_OBJECT)\bmset.obj \
+        $(V3R0_OBJECT)\btree.obj \
+        $(V3R0_OBJECT)\buffer.obj \
+        $(V3R0_OBJECT)\buffhandle.obj \
+        $(V3R0_OBJECT)\buffmgmt.obj \
+        $(V3R0_OBJECT)\cfr.obj \
+        $(V3R0_OBJECT)\charconv.obj \
+        $(V3R0_OBJECT)\checkpt.obj \
+        $(V3R0_OBJECT)\core.obj \
+        $(V3R0_OBJECT)\ctxtdef.obj \
+        $(V3R0_OBJECT)\ctxtopen.obj \
+        $(V3R0_OBJECT)\ctxtspec.obj \
+        $(V3R0_OBJECT)\dataconv.obj \
+        $(V3R0_OBJECT)\dbctxt.obj \
+        $(V3R0_OBJECT)\dbcursor.obj \
+        $(V3R0_OBJECT)\dbf_data.obj \
+        $(V3R0_OBJECT)\dbf_ebm.obj \
+        $(V3R0_OBJECT)\dbf_field.obj \
+        $(V3R0_OBJECT)\dbf_find.obj \
+        $(V3R0_OBJECT)\dbf_idiag.obj \
+        $(V3R0_OBJECT)\dbf_index.obj \
+        $(V3R0_OBJECT)\dbf_ival.obj \
+        $(V3R0_OBJECT)\dbf_join.obj \
+        $(V3R0_OBJECT)\dbf_rlt.obj \
+        $(V3R0_OBJECT)\dbf_tableb.obj \
+        $(V3R0_OBJECT)\dbf_tabled.obj \
+        $(V3R0_OBJECT)\dbfile.obj \
+        $(V3R0_OBJECT)\dbserv.obj \
+        $(V3R0_OBJECT)\dbstatus.obj \
+        $(V3R0_OBJECT)\du1step.obj \
+        $(V3R0_OBJECT)\except.obj \
+        $(V3R0_OBJECT)\except_rlc.obj \
+        $(V3R0_OBJECT)\fastload.obj \
+        $(V3R0_OBJECT)\fastunload.obj \
+        $(V3R0_OBJECT)\fieldatts.obj \
+        $(V3R0_OBJECT)\fieldinfo.obj \
+        $(V3R0_OBJECT)\fieldname.obj \
+        $(V3R0_OBJECT)\fieldval.obj \
+        $(V3R0_OBJECT)\file.obj \
+        $(V3R0_OBJECT)\filehandle.obj \
+        $(V3R0_OBJECT)\findspec.obj \
+        $(V3R0_OBJECT)\findwork.obj \
+        $(V3R0_OBJECT)\foundset.obj \
+        $(V3R0_OBJECT)\frecset.obj \
+        $(V3R0_OBJECT)\garbage.obj \
+        $(V3R0_OBJECT)\group.obj \
+        $(V3R0_OBJECT)\grpserv.obj \
+        $(V3R0_OBJECT)\handles.obj \
+        $(V3R0_OBJECT)\hash.obj \
+        $(V3R0_OBJECT)\inverted.obj \
+        $(V3R0_OBJECT)\iowrappers.obj \
+        $(V3R0_OBJECT)\lineio.obj \
+        $(V3R0_OBJECT)\liocons.obj \
+        $(V3R0_OBJECT)\lioshare.obj \
+        $(V3R0_OBJECT)\liostdio.obj \
+        $(V3R0_OBJECT)\loaddiag.obj \
+        $(V3R0_OBJECT)\lockable.obj \
+        $(V3R0_OBJECT)\lockspecial.obj \
+        $(V3R0_OBJECT)\merge.obj \
+        $(V3R0_OBJECT)\msgini.obj \
+        $(V3R0_OBJECT)\msgref.obj \
+        $(V3R0_OBJECT)\msgroute.obj \
+        $(V3R0_OBJECT)\page_a.obj \
+        $(V3R0_OBJECT)\page_b.obj \
+        $(V3R0_OBJECT)\page_e.obj \
+        $(V3R0_OBJECT)\page_f.obj \
+        $(V3R0_OBJECT)\page_i.obj \
+        $(V3R0_OBJECT)\page_l.obj \
+        $(V3R0_OBJECT)\page_m.obj \
+        $(V3R0_OBJECT)\page_p.obj \
+        $(V3R0_OBJECT)\page_t.obj \
+        $(V3R0_OBJECT)\page_v.obj \
+        $(V3R0_OBJECT)\page_x.obj \
+        $(V3R0_OBJECT)\pagebase.obj \
+        $(V3R0_OBJECT)\pagebitmap.obj \
+        $(V3R0_OBJECT)\paged_io.obj \
+        $(V3R0_OBJECT)\pageixval.obj \
+        $(V3R0_OBJECT)\pageslotrec.obj \
+        $(V3R0_OBJECT)\parmini.obj \
+        $(V3R0_OBJECT)\parmized.obj \
+        $(V3R0_OBJECT)\parmref.obj \
+        $(V3R0_OBJECT)\parmref1.obj \
+        $(V3R0_OBJECT)\parmvr.obj \
+        $(V3R0_OBJECT)\parsing.obj \
+        $(V3R0_OBJECT)\pattern.obj \
+        $(V3R0_OBJECT)\progress.obj \
+        $(V3R0_OBJECT)\rawpage.obj \
+        $(V3R0_OBJECT)\reccopy.obj \
+        $(V3R0_OBJECT)\recdata.obj \
+        $(V3R0_OBJECT)\reclist.obj \
+        $(V3R0_OBJECT)\record.obj \
+        $(V3R0_OBJECT)\recovery.obj \
+        $(V3R0_OBJECT)\recset.obj \
+        $(V3R0_OBJECT)\resource.obj \
+        $(V3R0_OBJECT)\rsvwords.obj \
+        $(V3R0_OBJECT)\scope.obj \
+        $(V3R0_OBJECT)\seqfile.obj \
+        $(V3R0_OBJECT)\seqserv.obj \
+        $(V3R0_OBJECT)\sortrec.obj \
+        $(V3R0_OBJECT)\sortset.obj \
+        $(V3R0_OBJECT)\sortspec.obj \
+        $(V3R0_OBJECT)\statized.obj \
+        $(V3R0_OBJECT)\statref.obj \
+        $(V3R0_OBJECT)\statref1.obj \
+        $(V3R0_OBJECT)\statview.obj \
+        $(V3R0_OBJECT)\stlextra.obj \
+        $(V3R0_OBJECT)\sysfile.obj \
+        $(V3R0_OBJECT)\update.obj \
+        $(V3R0_OBJECT)\valdirect.obj \
+        $(V3R0_OBJECT)\valset.obj \
+        $(V3R0_OBJECT)\winutil.obj
+
+
+AFX_OBJS = $(V3R0STDAFX_OBJECT)\stdafx.obj
+
+
+API_OBJS = $(V3R0API_OBJECT)\access_api.obj \
+        $(V3R0API_OBJECT)\bmset_api.obj \
+        $(V3R0API_OBJECT)\core_api.obj \
+        $(V3R0API_OBJECT)\ctxtspec_api.obj \
+        $(V3R0API_OBJECT)\cursor_api.obj \
+        $(V3R0API_OBJECT)\dbctxt_api.obj \
+        $(V3R0API_OBJECT)\dbserv_api.obj \
+        $(V3R0API_OBJECT)\fieldatts_api.obj \
+        $(V3R0API_OBJECT)\fieldinfo_api.obj \
+        $(V3R0API_OBJECT)\fieldval_api.obj \
+        $(V3R0API_OBJECT)\findspec_api.obj \
+        $(V3R0API_OBJECT)\floatnum_api.obj \
+        $(V3R0API_OBJECT)\foundset_api.obj \
+        $(V3R0API_OBJECT)\grpserv_api.obj \
+        $(V3R0API_OBJECT)\msgroute_api.obj \
+        $(V3R0API_OBJECT)\parmvr_api.obj \
+        $(V3R0API_OBJECT)\reccopy_api.obj \
+        $(V3R0API_OBJECT)\reclist_api.obj \
+        $(V3R0API_OBJECT)\record_api.obj \
+        $(V3R0API_OBJECT)\recread_api.obj \
+        $(V3R0API_OBJECT)\recset_api.obj \
+        $(V3R0API_OBJECT)\seqfile_api.obj \
+        $(V3R0API_OBJECT)\seqserv_api.obj \
+        $(V3R0API_OBJECT)\sortset_api.obj \
+        $(V3R0API_OBJECT)\sortspec_api.obj \
+        $(V3R0API_OBJECT)\statview_api.obj \
+        $(V3R0API_OBJECT)\valdirect_api.obj \
+        $(V3R0API_OBJECT)\valset_api.obj
+
+
+# Source file names.
+
+# Source file names are implied by 'OBJS', 'AFX_OBS' and API_OBJS.
+
+# The build directory 'V3R0' is created in v3r0_vs_<std>_copy.Makefile.
+
+$(V3R0_OBJECT) : $(V3R0)
+	mkdir $(V3R0_OBJECT)
+
+$(V3R0STDAFX_OBJECT) : $(V3R0_OBJECT)
+	mkdir $(V3R0STDAFX_OBJECT)
+
+$(V3R0API_OBJECT) : $(V3R0_OBJECT)
+	mkdir $(V3R0API_OBJECT)
+
+$(V3R0SWIG_OBJECT) : $(V3R0_OBJECT)
+	mkdir $(V3R0SWIG_OBJECT)
+
+# Copy package template directory for build and distribution.
+
+V3R0_PACKAGE = $(V3R0)\package
+V3R0_PACKAGE_DPTDB = $(V3R0_PACKAGE)\src\dptdb
+
+$(V3R0_PACKAGE) : package-template
+	xcopy /s /e package-template $(V3R0_PACKAGE)\\
+
+# Compiler settings.
+
+CXX = $(PATH_TO_CXX)$(COMPILER)
+DEFOPTS = $(DEFINES) $(OPTIONS)
+CXXEXTRA = -D_BBDBAPI -EHsc -nologo -std:$(CPPSTANDARD)
+V3R0_LDFLAGS = -dll
+
+### Build includes (-I) options for compiler.
+
+V3R0_INCLUDE = -I$(V3R0_INC) -I$(V3R0_STDAFX)
+V3R0AFX_INCLUDE = -I$(V3R0_INC) -I$(V3R0_STDAFX)
+V3R0API_INCLUDE = -I$(V3R0_INC) -I$(V3R0API_INC) -I$(V3R0_STDAFX)
+
+# Pattern rules V3R0 C++.
+
+{$(V3R0_SRC)}.cpp{$(V3R0_OBJECT)}.obj:
+	@-$(CXX) -c $(CXXEXTRA) $(CXXFLAGS) $(V3R0_INCLUDE) $(DEFOPTS) -Fo$(V3R0_OBJECT)\ $<
+
+{$(V3R0_STDAFX)}.cpp{$(V3R0STDAFX_OBJECT)}.obj:
+	@-$(CXX) -c $(CXXEXTRA) $(CXXFLAGS) $(V3R0AFX_INCLUDE) $(DEFOPTS) -Fo$(V3R0STDAFX_OBJECT)\ $<
+
+{$(V3R0API_SRC)}.cpp{$(V3R0API_OBJECT)}.obj:
+	@-$(CXX) -c $(CXXEXTRA) $(CXXFLAGS) $(V3R0API_INCLUDE) $(DEFOPTS) -Fo$(V3R0API_OBJECT)\ $<
+
+# Build targets (.PHONY).
+
+object_directory : $(V3R0STDAFX_OBJECT) $(V3R0API_OBJECT) $(V3R0SWIG_OBJECT)
+
+object_files : $(OBJS) $(AFX_OBJS) $(API_OBJS)
+
+# SWIG wrapper rules.
+# Comments on 'sed' edits for the MinGW (sourceforge.net/projects/mingw),
+# not MinGW-w64 (mingw-w64.org), toolchain are removed compared with the
+# replaced dptMakefile.
+# sourceforge.net/projects/mingw refers to osdn.net/projects/mingw which
+# does not exist at 2023-08-09, and mingw-w64.org distinguishes itself from
+# mingw.org, an earlier home for sourceforge.net/projects/mingw I believe.
+# See dptdb versions earlier than 0.9 if it seems they might be relevant.
+
+# There is a clash between MinGW and Python on _hypot and hypot for cmath.
+# www.freelists.org/post/nuitka-dev/error-hypot-has-not-been-declared,2 and
+# stackoverflow.com/questions/10660524/error-building-boost-...-gcc-4-7-0...
+# are two of many threads suggesting two possible workarounds.  (Why is
+# this project not affected until after MinGW-5.3.0 given Boost's 4.7.0
+# experience?) -D_hypot=hypot added to Swig wrapper build.
+
+# At 2023-08-09 the swig workaround for hypot clash was seen in generated
+# dptapi_python_wrap.cxx so the -D_hypot=hypot is removed.
+
+PYTHON_NAME = Python
+SWIG_PYTHON = python
+PYTHON_MAJOR = 3
+PYTHON_MINOR = 10
+PYTHON_MAJOR_MINOR = $(PYTHON_MAJOR)$(PYTHON_MINOR)
+PYTHON_32_OR_64 = -32
+PYTHON_VERSION = $(PYTHON_MAJOR_MINOR)$(PYTHON_32_OR_64)
+PY_MINUS_MAJOR_DOT_MINOR_32_OR_64 = -$(PYTHON_MAJOR).$(PYTHON_MINOR)$(PYTHON_32_OR_64)
+PATH_TO_SWIG_WITHOUT_VERSION = C:\swigwin-
+SWIG_VERSION = 4.0.1
+PATH_TO_SWIG = $(PATH_TO_SWIG_WITHOUT_VERSION)$(SWIG_VERSION)
+SWIG_DPTAPI = dptapi
+PYTHON_API_DLL = _$(SWIG_DPTAPI).pyd
+
+# Library is python310.dll and header is Python.h for version 3.10 of Python.
+# This is different naming than for unix Pythons.
+# PYTHON_LIBS_DIRECTORY)\python3.lib is assumed equivalent to SYSTEM_LIBRARY
+# in the 'v3r0_msys2_build.Mk' version of this makefile in it's effect on the
+# outcome.
+# '*_wrap.o' like unix is fine too, but everything else is the usual '*.obj'.
+# Keep the 'WRAP_O' name to fit the Msys2 and Msys (mingw.org) versions. 
+# PYTHON_INCLUDE_DIRECTORY, not PYTHON_INCLUDE like in v3r0_msys2_build.Mk, as
+# an '-I' argument for the WRAP_O target's action.
+# 'cl -ld -link' fails
+# 'cl : Command line error D8003 : missing source filename'
+# but there is no source file to supply with the rules as they are.
+# So use 'link' in the action to make the '.pyd' file.
+# AFX_OBJS could be removed from the '.pyd' file rule because it does not
+# cause stdafx.o to be included in the dptMakefile for versions of dptdb
+# earlier than 1.0; without apparent bad effects.  It looks like a problem
+# to be fixed in dptMakefile and do the same here.
+
+PYTHON_HEADER = $(PYTHON_NAME).h
+PYTHON_VERSION_DIRECTORY = $(LOCALAPPDATA)\Programs\$(PYTHON_NAME)\$(PYTHON_NAME)$(PYTHON_VERSION)
+PYTHON_INCLUDE_DIRECTORY = $(PYTHON_VERSION_DIRECTORY)\include
+PYTHON_INCLUDE = $(PYTHON_INCLUDE_DIRECTORY)\$(PYTHON_HEADER)
+PYTHON_LIBS_DIRECTORY = $(PYTHON_VERSION_DIRECTORY)\libs
+PYTHON_LIBRARY = $(PYTHON_LIBS_DIRECTORY)\$(SWIG_PYTHON)$(PYTHON_MAJOR_MINOR).lib
+
+WRAP_CXX = $(V3R0_SWIG)\$(SWIG_DPTAPI)_$(SWIG_PYTHON)_wrap.cxx
+WRAP_O = $(V3R0SWIG_OBJECT)\$(SWIG_DPTAPI)_$(SWIG_PYTHON)_wrap.obj
+
+$(WRAP_CXX) : $(V3R0_PACKAGE) $(V3R0_SWIG)\$(SWIG_INTERFACE)
+	$(PATH_TO_SWIG)\swig -c++ -$(SWIG_PYTHON) -o $(WRAP_CXX) -outdir $(V3R0_PACKAGE_DPTDB) -I$(V3R0API_INC) $(V3R0_SWIG)\$(SWIG_INTERFACE)
+
+$(WRAP_O) : $(WRAP_CXX)
+	-$(CXX) -c $(CXXEXTRA) $(CXXFLAGS) $(V3R0API_INCLUDE) -I$(PYTHON_INCLUDE_DIRECTORY) -Fo$@ $(WRAP_CXX)
+
+# The .pyd file built from SWIG.
+
+$(V3R0_PACKAGE_DPTDB)\$(PYTHON_API_DLL) : object_directory object_files $(WRAP_O)
+	link $(V3R0_LDFLAGS) -out:$@ $(WRAP_O) $(API_OBJS) $(OBJS) $(PYTHON_LIBRARY)
+
+wrapper : $(V3R0_PACKAGE_DPTDB)\$(PYTHON_API_DLL)
+	py $(PY_MINUS_MAJOR_DOT_MINOR_32_OR_64) -m build --no-isolation $(V3R0_PACKAGE)
+
+local-install : wrapper
+	py $(PY_MINUS_MAJOR_DOT_MINOR_32_OR_64) -m pip install --user --no-index --find-links $(V3R0_PACKAGE)\dist dpt3.0_dptdb

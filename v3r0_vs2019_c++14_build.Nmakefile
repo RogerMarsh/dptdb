@@ -1,0 +1,18 @@
+# Build V3R0 in Microsoft VS Developer 2019 Command Prompt at c++14.
+
+# The nmake makefile for use in 'Developer Command Prompt for VS 2019'.
+# Not known if it is suitable for earlier or later VS versions.
+
+# Build directory suffix.
+# Usually indicates the c++ standard. eg: 'c++14'.
+# Must be same as given in the 'copy' makefile which created the build
+# directory.
+
+TOOL_CHAIN = vs
+TOOL_CHAIN_VERSION = 2019
+CPPSTANDARD = c++14
+
+# Build.
+
+!INCLUDE Mk\v3r0_vs_build.Nmk
+
