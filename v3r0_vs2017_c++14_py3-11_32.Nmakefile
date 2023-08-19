@@ -1,4 +1,4 @@
-# Build V3R0 in Microsoft VS Developer 2017 Command Prompt at c++17.
+# Build V3R0 in Microsoft VS Developer 2017 Command Prompt at c++14.
 
 # The nmake makefile for use in 'Developer Command Prompt for VS 2017'.
 # Not known if it is suitable for earlier or later VS versions.
@@ -10,11 +10,19 @@
 
 TOOL_CHAIN = vs
 TOOL_CHAIN_VERSION = 2017
-CPPSTANDARD = c++17
+CPPSTANDARD = c++14
+PYTHON_MAJOR = 3
+PYTHON_MINOR = 11
+PYTHON_32_OR_64 = -32
 
-# Build.
+# Assume wrappers for all Python versions are built with same SWIG version.
 
-all : object_directory object_files
+!INCLUDE Mk\v3r0_vs_swig.Nmk
+
+# Build Python wrapper with SWIG.
+
+all : wrapper
 
 !INCLUDE Mk\v3r0_vs_build.Nmk
+!INCLUDE Mk\v3r0_vs_python.Nmk
 

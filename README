@@ -46,7 +46,7 @@ or
 
 do 'make -f v3r0_vs2017_c++14_copy.Makefile' in a Msys2 shell to apply patches to fix source code which does not compile on this Visual Studio C++ version,
 
-and then do 'nmake -f v3r0_vs2017_c++14_build.Nmakefile' in a Developer Command Prompt for VS 2017 shell.
+and then do 'nmake -f v3r0_vs2017_c++14_pyX-Y_32.Nmakefile' in a Developer Command Prompt for VS 2017 shell, replacing X by the Python major version and Y by the Python minor version.
 
 The descriptions of 'x86 Native Tools Command Prompt for VS 2017' and 'x64_x86 Cross Tools Command Prompt for VS 2017' suggest these can be used instead of 'Developer Command Prompt for VS 2017'.
 
@@ -59,7 +59,7 @@ dpt3.0-dptdb Installation Instructions
 
 Run 'py -X.Y-32 -m pip install --user dpt3.0-dptdb' to install a version built with Visual Studio available on PyPI.  ('X.Y' will be something like '3.10' and the whole '-X.Y-32' can be omitted if the default Python is a 32-bit one.)
 
-Alternatively follow the 'Using the Makefiles' instructions but the final step is run 'nmake -f v3r0_vs2017_c++14_build.Nmakefile local-install' (not 'nmake -f v3r0_vs2017_c++14_build.Nmakefile').
+Alternatively follow the 'Using the Makefiles' instructions but the final step is run 'nmake -f v3r0_vs2017_c++14_pyX-Y_32.Nmakefile local-install' (not 'nmake -f v3r0_vs2017_c++14_pyX-Y_32.Nmakefile') where X-Y is something like '3-10'.
 
 To install dpt3.0-dptdb in Msys2 follow the 'Using the Makefiles' instructions but the final step is run 'make -f v3r0_msys2_c++14.Makefile local-install' (not 'make -f v3r0_msys2_c++14.Makefile').
 

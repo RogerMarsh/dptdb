@@ -1,0 +1,6 @@
+# Build V3R0 with c++ in a Microsoft VS Developer Command Prompt.
+
+# SWIG version settings.
+
+PATH_TO_SWIG_WITHOUT_VERSION = C:\swigwin-
+SWIG_VERSION = 4.0.1

@@ -25,17 +25,6 @@ V3R0_STDAFX = $(V3R0)\stdafx
 V3R0_OBJECT = $(V3R0)\object
 V3R0API_OBJECT = $(V3R0_OBJECT)\dbapi
 V3R0STDAFX_OBJECT = $(V3R0_OBJECT)\stdafx
-V3R0SWIG_OBJECT = $(V3R0_OBJECT)\swig
-SWIG_INTERFACE = dptapi_python.i
-V3R0_SWIG = $(V3R0)\swig
-V3R0_SWIG_INTERFACE = $(V3R0_SWIG)\$(SWIG_INTERFACE)
-
-# Main targets (phony build targets are defined near the build targets).
-
-#all : object_directory object_files
-all : wrapper
-
-# Build Swig interface for V3R0 in Microsoft Visual Studio Command Line.
 
 # Object file names.
 
@@ -208,17 +197,6 @@ $(V3R0STDAFX_OBJECT) : $(V3R0_OBJECT)
 $(V3R0API_OBJECT) : $(V3R0_OBJECT)
 	mkdir $(V3R0API_OBJECT)
 
-$(V3R0SWIG_OBJECT) : $(V3R0_OBJECT)
-	mkdir $(V3R0SWIG_OBJECT)
-
-# Copy package template directory for build and distribution.
-
-V3R0_PACKAGE = $(V3R0)\package
-V3R0_PACKAGE_DPTDB = $(V3R0_PACKAGE)\src\dptdb
-
-$(V3R0_PACKAGE) : package-template
-	xcopy /s /e package-template $(V3R0_PACKAGE)\\
-
 # Compiler settings.
 
 CXX = $(PATH_TO_CXX)$(COMPILER)
@@ -245,84 +223,7 @@ V3R0API_INCLUDE = -I$(V3R0_INC) -I$(V3R0API_INC) -I$(V3R0_STDAFX)
 
 # Build targets (.PHONY).
 
-object_directory : $(V3R0STDAFX_OBJECT) $(V3R0API_OBJECT) $(V3R0SWIG_OBJECT)
+object_directory : $(V3R0STDAFX_OBJECT) $(V3R0API_OBJECT)
 
 object_files : $(OBJS) $(AFX_OBJS) $(API_OBJS)
 
-# SWIG wrapper rules.
-# Comments on 'sed' edits for the MinGW (sourceforge.net/projects/mingw),
-# not MinGW-w64 (mingw-w64.org), toolchain are removed compared with the
-# replaced dptMakefile.
-# sourceforge.net/projects/mingw refers to osdn.net/projects/mingw which
-# does not exist at 2023-08-09, and mingw-w64.org distinguishes itself from
-# mingw.org, an earlier home for sourceforge.net/projects/mingw I believe.
-# See dptdb versions earlier than 0.9 if it seems they might be relevant.
-
-# There is a clash between MinGW and Python on _hypot and hypot for cmath.
-# www.freelists.org/post/nuitka-dev/error-hypot-has-not-been-declared,2 and
-# stackoverflow.com/questions/10660524/error-building-boost-...-gcc-4-7-0...
-# are two of many threads suggesting two possible workarounds.  (Why is
-# this project not affected until after MinGW-5.3.0 given Boost's 4.7.0
-# experience?) -D_hypot=hypot added to Swig wrapper build.
-
-# At 2023-08-09 the swig workaround for hypot clash was seen in generated
-# dptapi_python_wrap.cxx so the -D_hypot=hypot is removed.
-
-PYTHON_NAME = Python
-SWIG_PYTHON = python
-PYTHON_MAJOR = 3
-PYTHON_MINOR = 10
-PYTHON_MAJOR_MINOR = $(PYTHON_MAJOR)$(PYTHON_MINOR)
-PYTHON_32_OR_64 = -32
-PYTHON_VERSION = $(PYTHON_MAJOR_MINOR)$(PYTHON_32_OR_64)
-PY_MINUS_MAJOR_DOT_MINOR_32_OR_64 = -$(PYTHON_MAJOR).$(PYTHON_MINOR)$(PYTHON_32_OR_64)
-PATH_TO_SWIG_WITHOUT_VERSION = C:\swigwin-
-SWIG_VERSION = 4.0.1
-PATH_TO_SWIG = $(PATH_TO_SWIG_WITHOUT_VERSION)$(SWIG_VERSION)
-SWIG_DPTAPI = dptapi
-PYTHON_API_DLL = _$(SWIG_DPTAPI).pyd
-
-# Library is python310.dll and header is Python.h for version 3.10 of Python.
-# This is different naming than for unix Pythons.
-# PYTHON_LIBS_DIRECTORY)\python3.lib is assumed equivalent to SYSTEM_LIBRARY
-# in the 'v3r0_msys2_build.Mk' version of this makefile in it's effect on the
-# outcome.
-# '*_wrap.o' like unix is fine too, but everything else is the usual '*.obj'.
-# Keep the 'WRAP_O' name to fit the Msys2 and Msys (mingw.org) versions. 
-# PYTHON_INCLUDE_DIRECTORY, not PYTHON_INCLUDE like in v3r0_msys2_build.Mk, as
-# an '-I' argument for the WRAP_O target's action.
-# 'cl -ld -link' fails
-# 'cl : Command line error D8003 : missing source filename'
-# but there is no source file to supply with the rules as they are.
-# So use 'link' in the action to make the '.pyd' file.
-# AFX_OBJS could be removed from the '.pyd' file rule because it does not
-# cause stdafx.o to be included in the dptMakefile for versions of dptdb
-# earlier than 1.0; without apparent bad effects.  It looks like a problem
-# to be fixed in dptMakefile and do the same here.
-
-PYTHON_HEADER = $(PYTHON_NAME).h
-PYTHON_VERSION_DIRECTORY = $(LOCALAPPDATA)\Programs\$(PYTHON_NAME)\$(PYTHON_NAME)$(PYTHON_VERSION)
-PYTHON_INCLUDE_DIRECTORY = $(PYTHON_VERSION_DIRECTORY)\include
-PYTHON_INCLUDE = $(PYTHON_INCLUDE_DIRECTORY)\$(PYTHON_HEADER)
-PYTHON_LIBS_DIRECTORY = $(PYTHON_VERSION_DIRECTORY)\libs
-PYTHON_LIBRARY = $(PYTHON_LIBS_DIRECTORY)\$(SWIG_PYTHON)$(PYTHON_MAJOR_MINOR).lib
-
-WRAP_CXX = $(V3R0_SWIG)\$(SWIG_DPTAPI)_$(SWIG_PYTHON)_wrap.cxx
-WRAP_O = $(V3R0SWIG_OBJECT)\$(SWIG_DPTAPI)_$(SWIG_PYTHON)_wrap.obj
-
-$(WRAP_CXX) : $(V3R0_PACKAGE) $(V3R0_SWIG)\$(SWIG_INTERFACE)
-	$(PATH_TO_SWIG)\swig -c++ -$(SWIG_PYTHON) -o $(WRAP_CXX) -outdir $(V3R0_PACKAGE_DPTDB) -I$(V3R0API_INC) $(V3R0_SWIG)\$(SWIG_INTERFACE)
-
-$(WRAP_O) : $(WRAP_CXX)
-	-$(CXX) -c $(CXXEXTRA) $(CXXFLAGS) $(V3R0API_INCLUDE) -I$(PYTHON_INCLUDE_DIRECTORY) -Fo$@ $(WRAP_CXX)
-
-# The .pyd file built from SWIG.
-
-$(V3R0_PACKAGE_DPTDB)\$(PYTHON_API_DLL) : object_directory object_files $(WRAP_O)
-	link $(V3R0_LDFLAGS) -out:$@ $(WRAP_O) $(API_OBJS) $(OBJS) $(PYTHON_LIBRARY)
-
-wrapper : $(V3R0_PACKAGE_DPTDB)\$(PYTHON_API_DLL)
-	py $(PY_MINUS_MAJOR_DOT_MINOR_32_OR_64) -m build --no-isolation $(V3R0_PACKAGE)
-
-local-install : wrapper
-	py $(PY_MINUS_MAJOR_DOT_MINOR_32_OR_64) -m pip install --user --no-index --find-links $(V3R0_PACKAGE)\dist dpt3.0_dptdb
