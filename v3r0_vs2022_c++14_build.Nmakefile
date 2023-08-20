@@ -1,7 +1,11 @@
-# Build V3R0 in Microsoft VS 2022 Developer Command Prompt at c++14.
+# Build V3R0 in Microsoft VS 2022 x86 Native Tools Command Prompt at c++14.
 
-# The nmake makefile for use in 'Developer Command Prompt for VS 2022'.
-# Not known if it is suitable for earlier or later VS versions.
+# The makefile naming convention arose from using Developer Command Prompt
+# to do the initial work getting 32 bit DPT running again.
+
+# A consequence is appending '_32' to the Python element of the name, if
+# there is one, for x86 (32 bit) builds; but '_64' to the Visual Studio
+# element of the name for x64 (64 bit) builds.
 
 # Build directory suffix.
 # Usually indicates the c++ standard. eg: 'c++14'.
