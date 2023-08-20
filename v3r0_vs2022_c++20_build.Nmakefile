@@ -1,4 +1,4 @@
-# Build V3R0 in Microsoft VS Developer 2022 Command Prompt at c++20.
+# Build V3R0 in Microsoft VS 2022 Developer Command Prompt at c++20.
 
 # The nmake makefile for use in 'Developer Command Prompt for VS 2022'.
 # Not known if it is suitable for earlier or later VS versions.
