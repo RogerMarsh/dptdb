@@ -1,0 +1,24 @@
+# Build V3R0 in Microsoft VS 2017 x64 Native Tools Command Prompt at c++14.
+
+# The makefile naming convention arose from using Developer Command Prompt
+# to do the initial work getting 32 bit DPT running again.
+
+# A consequence is the naming convention for these makefiles appends '_32'
+# to the Python element of the name for x86 (32 bit) builds, but '_64' to
+# the Visual Studio element of the name for x64 (64 bit) builds.
+
+# Build directory suffix.
+# Usually indicates the c++ standard. eg: 'c++14'.
+# Must be same as given in the 'copy' makefile which created the build
+# directory.
+
+TOOL_CHAIN = vs
+TOOL_CHAIN_VERSION = 2017_64
+CPPSTANDARD = c++14
+
+# Build.
+
+all : object_directory object_files
+
+!INCLUDE Mk\v3r0_vs_build.Nmk
+
