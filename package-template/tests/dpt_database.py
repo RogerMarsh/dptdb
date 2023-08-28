@@ -3,12 +3,31 @@
 # License: BSD license
 
 """Provide class which defines, creates and deletes a database."""
+import sys
 import os
 import shutil
     
 from dptdb import dptapi
 
 import filespec
+
+# See documentation for platform module.
+is_64bits = sys.maxsize > 2 ** 32
+
+
+def directory_with_bitness():
+    """Return directory with 'bitness' of Python interpreter appended.
+
+    Used by 'run_test_*' modules to get a default directory name.
+
+    """
+    directory = os.environ.get(
+        "TEMP",
+        os.environ.get("TMP",os.environ.get("HOME")),
+    )
+    return os.path.join(
+        directory, "dptdb_test" + ("64" if is_64bits else "32"),
+    )
 
 
 class DPTDatabase:
@@ -33,8 +52,8 @@ class DPTDatabase:
         msgctl = os.path.join(self.dptsys, 'msgctl.ini')
         audit = os.path.join(self.dptsys, 'audit.txt')
 
-        # Use CONSOLE rather than sysprint because SYSPRNT is not fully released
-        # unless Python is restarted as a new command line command.
+        # Use CONSOLE rather than sysprint because SYSPRNT is not fully
+        # released unless Python is restarted as a new command line command.
         # To see CONSOLE run this script by python.exe rather than pythonw.exe
         sysprint = "CONSOLE"
 
@@ -84,7 +103,7 @@ class DPTDatabase:
                 disp = os.path.exists(value[filespec.FILE])
                 if not disp and self.deferred:
                     raise RuntimeError(
-                        "Cannot oppen non-existent file for deferred update"
+                        "Cannot open non-existent file for deferred update"
                     )
                 if disp:
                     self.database_services.Allocate(
@@ -98,22 +117,24 @@ class DPTDatabase:
                         value[filespec.FILE],
                         dptapi.FILEDISP_NEW,
                     )
+                    records_per_page = value[
+                        filespec.FILEDESC
+                    ][filespec.BRECPPG]
+                    table_b_size = value[
+                        filespec.DEFAULT_RECORDS
+                    ] // records_per_page
+                    self.database_services.Create(value[filespec.DDNAME],
+                              table_b_size,
+                              records_per_page,
+                              -1,
+                              -1,
+                              table_b_size * value[
+                                  filespec.BTOD_FACTOR
+                              ] + value[filespec.BTOD_CONSTANT],
+                              -1,
+                              -1,
+                              dptapi.FILEORG_UNORD_RRN)
                 self.allocated.add(key)
-                records_per_page = value[filespec.FILEDESC][filespec.BRECPPG]
-                table_b_size = value[
-                    filespec.DEFAULT_RECORDS
-                ] * records_per_page
-                self.database_services.Create(value[filespec.DDNAME],
-                          table_b_size,
-                          records_per_page,
-                          -1,
-                          -1,
-                          table_b_size * value[
-                              filespec.BTOD_FACTOR
-                          ] + value[filespec.BTOD_CONSTANT],
-                          -1,
-                          -1,
-                          dptapi.FILEORG_UNORD_RRN)
                 cs = dptapi.APIContextSpecification(value[filespec.DDNAME])
                 oc = dsoc(cs)
                 if not disp:
@@ -156,8 +177,8 @@ class DPTDatabase:
         self.contexts.clear()
         self.database_services.CloseAllContexts(force=True)
 
-    def delete(self):
-        """Delete DPT database services."""
+    def __delete(self, delete_directory=False):
+        """Delete DPT database services and directory if delete_directory."""
         if self.database_services is None:
             return
         self.close_contexts()
@@ -167,6 +188,27 @@ class DPTDatabase:
         self.database_services.Destroy()
         try:
             os.chdir(pycwd)
-            shutil.rmtree(self.directory)
+            if delete_directory:
+                shutil.rmtree(self.directory)
         finally:
             self.database_services = None
+
+    def delete(self):
+        """Delete DPT database services and database directory."""
+        self.__delete(delete_directory=True)
+
+    def close_database(self):
+        """Delete DPT database services but not database directory."""
+        self.__delete(delete_directory=False)
+
+    def add_record(self, context, record=()):
+        """Store record in context with fields in given order.
+
+        The record argument must be iterable with items containing two
+        elements: field and value.
+
+        """
+        template = dptapi.APIStoreRecordTemplate()
+        for field, value in record:
+            template.Append(field, dptapi.APIFieldValue(value))
+        context.StoreRecord(template)
