@@ -17,7 +17,11 @@ import add_records
 
 
 def run_test_one_file_no_fields(
-    default_records=200, brecppg=50, btod_factor=1, deferred=False
+    default_records=200,
+    brecppg=50,
+    btod_factor=1,
+    deferred=False,
+    modulus=None,
 ):
     """Add records to database with one file and no fields.
 
@@ -33,14 +37,19 @@ def run_test_one_file_no_fields(
             btod_factor=btod_factor,
         ),
         records=record_tuples.one_file_no_fields(
-            default_records=default_records
+            default_records=default_records,
+            modulus=modulus,
         ),
         deferred=deferred,
     )
 
 
 def run_test_one_file_one_field(
-    default_records=200, brecppg=50, btod_factor=1, deferred=False
+    default_records=200,
+    brecppg=50,
+    btod_factor=1,
+    deferred=False,
+    modulus=None,
 ):
     """Add records to database with one file and one field.
 
@@ -56,14 +65,19 @@ def run_test_one_file_one_field(
             btod_factor=btod_factor,
         ),
         records=record_tuples.one_file_one_field(
-            default_records=default_records
+            default_records=default_records,
+            modulus=modulus,
         ),
         deferred=deferred,
     )
 
 
 def run_test_one_field_ordered(
-    default_records=200, brecppg=50, btod_factor=1, deferred=False
+    default_records=200,
+    brecppg=50,
+    btod_factor=1,
+    deferred=False,
+    modulus=None,
 ):
     """Add records to database with one file and one ordered field.
 
@@ -79,14 +93,19 @@ def run_test_one_field_ordered(
             btod_factor=btod_factor,
         ),
         records=record_tuples.one_field_ordered(
-            default_records=default_records
+            default_records=default_records,
+            modulus=modulus,
         ),
         deferred=deferred,
     )
 
 
 def run_test_two_field_one_ordered(
-    default_records=200, brecppg=50, btod_factor=1, deferred=False
+    default_records=200,
+    brecppg=50,
+    btod_factor=1,
+    deferred=False,
+    modulus=None,
 ):
     """Add records to database one file, two fields one ordered.
 
@@ -102,14 +121,19 @@ def run_test_two_field_one_ordered(
             btod_factor=btod_factor,
         ),
         records=record_tuples.two_field_one_ordered(
-            default_records=default_records
+            default_records=default_records,
+            modulus=modulus,
         ),
         deferred=deferred,
     )
 
 
 def run_test_two_field_one_invisible(
-    default_records=200, brecppg=50, btod_factor=1, deferred=False
+    default_records=200,
+    brecppg=50,
+    btod_factor=1,
+    deferred=False,
+    modulus=None,
 ):
     """Add records to database one file, two fields one invisible.
 
@@ -127,14 +151,19 @@ def run_test_two_field_one_invisible(
             btod_factor=btod_factor,
         ),
         records=record_tuples.two_field_one_invisible(
-            default_records=default_records
+            default_records=default_records,
+            modulus=modulus,
         ),
         deferred=deferred,
     )
 
 
 def run_test_three_field_one_invisible(
-    default_records=200, brecppg=50, btod_factor=1, deferred=False
+    default_records=200,
+    brecppg=50,
+    btod_factor=1,
+    deferred=False,
+    modulus=None,
 ):
     """Add records to database one file, three fields one invisible.
 
@@ -152,14 +181,19 @@ def run_test_three_field_one_invisible(
             btod_factor=btod_factor,
         ),
         records=record_tuples.three_field_one_invisible(
-            default_records=default_records
+            default_records=default_records,
+            modulus=modulus,
         ),
         deferred=deferred,
     )
 
 
 def run_test_data_data_ord_inv(
-    default_records=200, brecppg=50, btod_factor=1, deferred=False
+    default_records=200,
+    brecppg=50,
+    btod_factor=1,
+    deferred=False,
+    modulus=None,
 ):
     """Add records to database one file, four fields one invisible.
 
@@ -177,7 +211,8 @@ def run_test_data_data_ord_inv(
             btod_factor=btod_factor,
         ),
         records=record_tuples.data_data_ord_inv(
-            default_records=default_records
+            default_records=default_records,
+            modulus=modulus,
         ),
         deferred=deferred,
     )

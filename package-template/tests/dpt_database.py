@@ -120,9 +120,14 @@ class DPTDatabase:
                     records_per_page = value[
                         filespec.FILEDESC
                     ][filespec.BRECPPG]
-                    table_b_size = value[
-                        filespec.DEFAULT_RECORDS
-                    ] // records_per_page
+                    table_b_size, extra = divmod(
+                        value[
+                            filespec.DEFAULT_RECORDS
+                        ],
+                        records_per_page,
+                    )
+                    if extra:
+                        table_b_size += 1
                     self.database_services.Create(value[filespec.DDNAME],
                               table_b_size,
                               records_per_page,

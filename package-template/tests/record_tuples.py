@@ -7,8 +7,10 @@ import filespec as fs
 import file_definitions as fd
 
 
-def one_file_no_fields(default_records=200):
+def one_file_no_fields(default_records=200, modulus=None):
     """Return an iterator which returns default_records empty value sets."""
+    if modulus is None:
+        modulus = default_records
 
     def value_set():
         for i in range(default_records):
@@ -17,71 +19,86 @@ def one_file_no_fields(default_records=200):
     return value_set
 
 
-def one_file_one_field(default_records=200):
+def one_file_one_field(default_records=200, modulus=None):
     """Return an iterator which returns default_records empty value sets."""
+    if modulus is None:
+        modulus = default_records
 
     def value_set():
         fld = fs.FileSpec.field_name(fd.FLD)
         for i in range(default_records):
-            yield ((fld, str(i) + fd.FLD),)
+            yield ((fld, str(i % modulus) + fd.FLD),)
 
     return value_set
 
 
-def one_field_ordered(default_records=200):
+def one_field_ordered(default_records=200, modulus=None):
     """Return an iterator which returns default_records empty value sets."""
+    if modulus is None:
+        modulus = default_records
 
     def value_set():
         fld = fs.FileSpec.field_name(fd.FLD)
         for i in range(default_records):
-            yield ((fld, str(i) + fd.FLD),)
+            yield ((fld, str(i % modulus) + fd.FLD),)
 
     return value_set
 
 
-def two_field_one_ordered(default_records=200):
+def two_field_one_ordered(default_records=200, modulus=None):
     """Return an iterator which returns default_records empty value sets."""
+    if modulus is None:
+        modulus = default_records
 
     def value_set():
         fld = fs.FileSpec.field_name(fd.FLD)
         fldord = fs.FileSpec.field_name(fd.FLDORD)
         for i in range(default_records):
-            yield ((fld, str(i) + fd.FLD), (fldord, str(i) + fd.FLDORD),)
+            j = i % modulus
+            yield ((fld, str(j) + fd.FLD), (fldord, str(j) + fd.FLDORD),)
 
     return value_set
 
 
-def two_field_one_invisible(default_records=200):
+def two_field_one_invisible(default_records=200, modulus=None):
     """Return an iterator which returns default_records empty value sets."""
+    if modulus is None:
+        modulus = default_records
 
     def value_set():
         fld = fs.FileSpec.field_name(fd.FLD)
         fldinv = fs.FileSpec.field_name(fd.FLDINV)
         for i in range(default_records):
-            yield ((fld, str(i) + fd.FLD), (fldinv, str(i) + fd.FLDINV),)
+            j = i % modulus
+            yield ((fld, str(j) + fd.FLD), (fldinv, str(j) + fd.FLDINV),)
 
     return value_set
 
 
-def three_field_one_invisible(default_records=200):
+def three_field_one_invisible(default_records=200, modulus=None):
     """Return an iterator which returns default_records empty value sets."""
+    if modulus is None:
+        modulus = default_records
 
     def value_set():
         fld = fs.FileSpec.field_name(fd.FLD)
         fldord = fs.FileSpec.field_name(fd.FLDORD)
         fldinv = fs.FileSpec.field_name(fd.FLDINV)
         for i in range(default_records):
+            j = i % modulus
             yield (
-                (fld, str(i) + fd.FLD),
-                (fldord, str(i) + fd.FLDORD),
-                (fldinv, str(i) + fd.FLDINV),
+                (fld, str(j) + fd.FLD),
+                (fldord, str(j) + fd.FLDORD),
+                (fldinv, str(j) + fd.FLDINV),
             )
 
     return value_set
 
 
-def data_data_ord_inv(default_records=200):
+def data_data_ord_inv(default_records=200, modulus=None):
     """Return an iterator which returns default_records empty value sets."""
+    if modulus is None:
+        modulus = default_records
 
     def value_set():
         fld = fs.FileSpec.field_name(fd.FLD)
@@ -89,11 +106,12 @@ def data_data_ord_inv(default_records=200):
         fldinv = fs.FileSpec.field_name(fd.FLDINV)
         data = fs.FileSpec.field_name(fd.DATA)
         for i in range(default_records):
+            j = i % modulus
             yield (
-                (fld, str(i) + fd.FLD),
-                (fldord, str(i) + fd.FLDORD),
-                (data, str(i) + fd.DATA),
-                (fldinv, str(i) + fd.FLDINV),
+                (fld, str(j) + fd.FLD),
+                (fldord, str(j) + fd.FLDORD),
+                (data, str(j) + fd.DATA),
+                (fldinv, str(j) + fd.FLDINV),
             )
 
     return value_set
