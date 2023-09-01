@@ -27,7 +27,7 @@ import os
 import dpt_database
 
 
-def add_records(
+def _add_records(
     name,
     definition,
     records=(),
@@ -62,4 +62,14 @@ def add_records(
             database.database_services.Commit()
         elif not txn_per_record and backout:
             database.database_services.Backout()
-    database.delete()
+    return database
+
+
+def keep_records(*args, **kwargs):
+    """Delegate to _add_records then close database."""
+    _add_records(*args, **kwargs).close_database()
+
+
+def add_records(*args, **kwargs):
+    """Delegate to _add_records then delete database."""
+    _add_records(*args, **kwargs).delete()

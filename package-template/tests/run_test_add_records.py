@@ -16,7 +16,7 @@ import record_tuples
 import add_records
 
 
-def run_test_one_file_no_fields(
+def rtar_one_file_no_fields(
     default_records=200,
     brecppg=50,
     btod_factor=1,
@@ -44,7 +44,7 @@ def run_test_one_file_no_fields(
     )
 
 
-def run_test_one_file_one_field(
+def rtar_one_file_one_field(
     default_records=200,
     brecppg=50,
     btod_factor=1,
@@ -72,7 +72,7 @@ def run_test_one_file_one_field(
     )
 
 
-def run_test_one_field_ordered(
+def rtar_one_field_ordered(
     default_records=200,
     brecppg=50,
     btod_factor=1,
@@ -100,7 +100,7 @@ def run_test_one_field_ordered(
     )
 
 
-def run_test_two_field_one_ordered(
+def rtar_two_field_one_ordered(
     default_records=200,
     brecppg=50,
     btod_factor=1,
@@ -128,7 +128,7 @@ def run_test_two_field_one_ordered(
     )
 
 
-def run_test_two_field_one_invisible(
+def rtar_two_field_one_invisible(
     default_records=200,
     brecppg=50,
     btod_factor=1,
@@ -158,7 +158,7 @@ def run_test_two_field_one_invisible(
     )
 
 
-def run_test_three_field_one_invisible(
+def rtar_three_field_one_invisible(
     default_records=200,
     brecppg=50,
     btod_factor=1,
@@ -188,7 +188,7 @@ def run_test_three_field_one_invisible(
     )
 
 
-def run_test_data_data_ord_inv(
+def rtar_data_data_ord_inv(
     default_records=200,
     brecppg=50,
     btod_factor=1,
@@ -221,55 +221,55 @@ def run_test_data_data_ord_inv(
 def run_test_add_records(default_records=200, brecppg=50, btod_factor=1):
     """Run tests for all the database definitions in file_definitions."""
     print("enter run_test_add_records", "adding", default_records, "records")
-    print("enter run_test_one_file_no_fields")
-    run_test_one_file_no_fields(
+    print("enter rtar_one_file_no_fields")
+    rtar_one_file_no_fields(
         default_records=default_records,
         brecppg=brecppg,
         btod_factor=btod_factor,
     )
-    print("leave run_test_one_file_no_fields")
-    print("enter run_test_one_file_one_field")
-    run_test_one_file_one_field(
+    print("leave rtar_one_file_no_fields")
+    print("enter rtar_one_file_one_field")
+    rtar_one_file_one_field(
         default_records=default_records,
         brecppg=brecppg,
         btod_factor=btod_factor,
     )
-    print("leave run_test_one_file_one_field")
-    print("enter run_test_one_field_ordered")
-    run_test_one_field_ordered(
+    print("leave rtar_one_file_one_field")
+    print("enter rtar_one_field_ordered")
+    rtar_one_field_ordered(
         default_records=default_records,
         brecppg=brecppg,
         btod_factor=btod_factor,
     )
-    print("leave run_test_one_field_ordered")
-    print("enter run_test_two_field_one_ordered")
-    run_test_two_field_one_ordered(
+    print("leave rtar_one_field_ordered")
+    print("enter rtar_two_field_one_ordered")
+    rtar_two_field_one_ordered(
         default_records=default_records,
         brecppg=brecppg,
         btod_factor=btod_factor,
     )
-    print("leave run_test_two_field_one_ordered")
-    print("enter run_test_two_field_one_invisible")
-    run_test_two_field_one_invisible(
+    print("leave rtar_two_field_one_ordered")
+    print("enter rtar_two_field_one_invisible")
+    rtar_two_field_one_invisible(
         default_records=default_records,
         brecppg=brecppg,
         btod_factor=btod_factor,
     )
-    print("leave run_test_two_field_one_invisible")
-    print("enter run_test_three_field_one_invisible")
-    run_test_three_field_one_invisible(
+    print("leave rtar_two_field_one_invisible")
+    print("enter rtar_three_field_one_invisible")
+    rtar_three_field_one_invisible(
         default_records=default_records,
         brecppg=brecppg,
         btod_factor=btod_factor,
     )
-    print("leave run_test_three_field_one_invisible")
-    print("enter run_test_data_data_ord_inv")
-    run_test_data_data_ord_inv(
+    print("leave rtar_three_field_one_invisible")
+    print("enter rtar_data_data_ord_inv")
+    rtar_data_data_ord_inv(
         default_records=default_records,
         brecppg=brecppg,
         btod_factor=btod_factor,
     )
-    print("leave run_test_data_data_ord_inv")
+    print("leave rtar_data_data_ord_inv")
 
 
 if __name__ == "__main__":

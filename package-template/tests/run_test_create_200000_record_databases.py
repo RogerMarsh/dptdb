@@ -1,4 +1,4 @@
-# run_test_create_200000_record_databases_deferred.py
+# run_test_create_200000_record_databases.py
 # Copyright 2023 Roger Marsh
 # License: BSD license
 
@@ -12,10 +12,10 @@ populated by deferred updates.
  without giving any failure indication.)
 
 """
-import run_test_create_databases_deferred
+import run_test_create_databases
 
 
 if __name__ == "__main__":
-    run_test_create_databases_deferred.run_test_create_databases_deferred(
+    run_test_create_databases.run_test_create_databases(
         default_records=200000
     )

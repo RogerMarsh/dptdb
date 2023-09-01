@@ -19,6 +19,7 @@ TWO_FIELD_ONE_ORDERED = "twoford"
 TWO_FIELD_ONE_INVISIBLE = "twofinv"
 THREE_FIELD_ONE_INVISIBLE = "ordfinv"
 DATA_DATA_ORD_INV = "ddoiflds"
+VIS_INV_INV_INV = "visinv"
 
 
 def one_file_no_fields(default_records=200, brecppg=50, btod_factor=1):
@@ -182,6 +183,44 @@ def data_data_ord_inv(default_records=200, brecppg=50, btod_factor=1):
                 fs.FileSpec.field_name(FLDORD): {fs.ORD: True},
                 fs.FileSpec.field_name(FLDINV): {fs.ORD: True, fs.INV: True},
                 fs.FileSpec.field_name(DATA): None,
+            },
+        },
+    }
+
+
+def vis_inv_inv_inv(default_records=200, brecppg=50, btod_factor=1):
+    """Return a four field file definition for 200 records by default.
+
+    One field is not ordered.
+    The other three fields are invisible, hence ordered, fields.
+
+    Intended for records with in excess of 4000 index value references,
+    which is seen on databases created by chesstab where the problem
+    with x64 dptdb was seen.
+
+    The number of index values must be large enough to make the DPT
+    audit file show multiple 'chunks' being processed when the
+    run_test_vis_inv_inv_inv module is run.
+
+    Therefore the test directory has to be deleted manually afterwards.
+
+    """
+    return {
+        VIS_INV_INV_INV : {
+            fs.DDNAME: fs.FileSpec.dpt_dd(VIS_INV_INV_INV),
+            fs.FILE: fs.FileSpec.dpt_dsn(VIS_INV_INV_INV),
+            fs.FILEDESC: {
+                fs.BRECPPG: brecppg,
+                fs.FILEORG: fs.RRN,
+            },
+            fs.BTOD_FACTOR: btod_factor,
+            fs.BTOD_CONSTANT: 30,
+            fs.DEFAULT_RECORDS: default_records,
+            fs.FIELDS: {
+                fs.FileSpec.field_name(FLD): None,
+                fs.FileSpec.field_name(FLDORD): {fs.ORD: True, fs.INV: True},
+                fs.FileSpec.field_name(FLDINV): {fs.ORD: True, fs.INV: True},
+                fs.FileSpec.field_name(DATA): {fs.ORD: True, fs.INV: True},
             },
         },
     }
