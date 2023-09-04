@@ -9,3 +9,4 @@ if __name__ == "__main__":
     run_test_traverse_records_viii_65280.rttr_viii_65280(
         default_records=65280, modulus=13, btod_factor=400, index_only=True
     )
+    print("run_test_traverse_index_viii_65280", "done")

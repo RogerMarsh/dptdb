@@ -13,8 +13,15 @@ is neither list nor bitmap representation of an inverted list in this
 case.
 
 """
-import run_test_create_3_delete_1
+import run_test_traverse_create_3_delete_1
+
+
+def run_test_traverse_create_2_delete_1():
+    run_test_traverse_create_3_delete_1.rttc3d1_one_file_one_field(
+        default_records=2
+    )
+    print("run_test_create_2_delete_1", "done")
 
 
 if __name__ == "__main__":
-    run_test_create_3_delete_1.rttc3d1_one_file_one_field(default_records=2)
+    run_test_traverse_create_2_delete_1()

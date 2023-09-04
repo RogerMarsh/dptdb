@@ -2,7 +2,7 @@
 # Copyright 2023 Roger Marsh
 # Licence: See LICENCE (BSD licence)
 
-"""Define sample FileSpec instances for tests."""
+"""Define iterators record value sets for tests."""
 import filespec as fs
 import file_definitions as fd
 

@@ -21,3 +21,4 @@ if __name__ == "__main__":
         btod_factor=400,
         upper_count_limit=6
     )
+    print("run_test_traverse_6_viii_65280", "done")

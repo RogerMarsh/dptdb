@@ -57,57 +57,65 @@ def rttc3d1_one_file_one_field(
         ),
     )
     database.create()
-    for file, context in database.contexts.items():
-        foundset = context.FindRecords(
-            dptapi.APIFindSpecification(dptapi.FD_SINGLEREC, 0)
-        )
-        try:
-            cursor = foundset.OpenCursor()
+    try:
+        for file, context in database.contexts.items():
+            foundset = context.FindRecords(
+                dptapi.APIFindSpecification(dptapi.FD_SINGLEREC, 0)
+            )
             try:
-                cursor.GotoFirst()
-                while True:
-                    if not cursor.Accessible():
-                        break
-                    current = cursor.AccessCurrentRecordForReadWrite()
-                    current.Delete()
-                    cursor.Advance(1)
-                database.database_services.Commit()
-            finally:
-                foundset.CloseCursor(cursor)
-                del cursor
-        finally:
-            context.DestroyRecordSet(foundset)
-            del foundset
-        foundset = context.FindRecords()
-        try:
-            assert foundset.Count() == default_records - 1
-            for advance in (1, -1):
                 cursor = foundset.OpenCursor()
-                ebm_count = 0
-                recnum = None
                 try:
-                    if advance == 1:
-                        cursor.GotoFirst()
-                    else:
-                        cursor.GotoLast()
+                    cursor.GotoFirst()
                     while True:
                         if not cursor.Accessible():
                             break
-                        ebm_count += 1
-                        recnum = cursor.AccessCurrentRecordForRead(
-                            ).RecNum()
-                        cursor.Advance(advance)
-                except RuntimeError as exc:
-                    print("ebm advance", advance, ebm_count)
-                    print("recnum", recnum)
-                    raise
+                        current = cursor.AccessCurrentRecordForReadWrite()
+                        current.Delete()
+                        cursor.Advance(1)
+                    database.database_services.Commit()
                 finally:
                     foundset.CloseCursor(cursor)
                     del cursor
-        finally:
-            context.DestroyRecordSet(foundset)
-            del foundset
+            finally:
+                context.DestroyRecordSet(foundset)
+                del foundset
+            foundset = context.FindRecords()
+            try:
+                assert foundset.Count() == default_records - 1
+                for advance in (1, -1):
+                    cursor = foundset.OpenCursor()
+                    ebm_count = 0
+                    recnum = None
+                    try:
+                        if advance == 1:
+                            cursor.GotoFirst()
+                        else:
+                            cursor.GotoLast()
+                        while True:
+                            if not cursor.Accessible():
+                                break
+                            ebm_count += 1
+                            recnum = cursor.AccessCurrentRecordForRead(
+                                ).RecNum()
+                            cursor.Advance(advance)
+                    except RuntimeError as exc:
+                        print("ebm advance", advance, ebm_count)
+                        print("recnum", recnum)
+                        raise
+                    finally:
+                        foundset.CloseCursor(cursor)
+                        del cursor
+            finally:
+                context.DestroyRecordSet(foundset)
+                del foundset
+    finally:
+        database.close_database()
+
+
+def run_test_traverse_create_3_delete_1():
+    rttc3d1_one_file_one_field(default_records=3)
+    print("run_test_create_3_delete_1", "done")
 
 
 if __name__ == "__main__":
-    rttc3d1_one_file_one_field(default_records=3)
+    run_test_traverse_create_3_delete_1()

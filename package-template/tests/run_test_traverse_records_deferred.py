@@ -36,117 +36,7 @@ import open_dpt_database
 import file_definitions
 import record_tuples
 import filespec
-
-
-def traverse_records(database, default_records, modulus):
-    """Traverse database checking against default_records and modulus.
-
-    The number of records that should be traversed is determined by
-    default_records and modulus.
-
-    """
-    for file, context in database.contexts.items():
-
-        # Find all records by EBM.
-        foundset = context.FindRecords()
-
-        try:
-            assert foundset.Count() == default_records
-
-            # Traverse in EBM forwards and backwards.
-            for advance in (1, -1):
-                cursor = foundset.OpenCursor()
-                try:
-                    count = 0
-                    if advance == 1:
-                        cursor.GotoFirst()
-                    else:
-                        cursor.GotoLast()
-                    while True:
-                        if not cursor.Accessible():
-                            break
-                        count += 1
-                        cursor.Advance(advance)
-                    assert count == default_records
-                finally:
-                    foundset.CloseCursor(cursor)
-                    del cursor
-            assert foundset.Count() == default_records
-
-        finally:
-            context.DestroyRecordSet(foundset)
-            del foundset
-
-        # Traverse fields in file and ignore non-ordered fields.
-        fieldattrcursor = context.OpenFieldAttCursor()
-        try:
-            fieldattrcursor.GotoFirst()
-            while True:
-                if not fieldattrcursor.Accessible():
-                    break
-                attributes = fieldattrcursor.Atts()
-                if not attributes.IsOrdered():
-                    fieldattrcursor.Advance(1)
-                    continue
-
-                # Traverse index for each field forwards and backwards.
-                for direction, valueadvance in (
-                    (dptapi.CURSOR_ASCENDING, 1),
-                    (dptapi.CURSOR_DESCENDING, -1),
-                ):
-                    fieldname = fieldattrcursor.Name()
-                    valuecursor = context.OpenDirectValueCursor(
-                        dptapi.APIFindValuesSpecification(fieldname)
-                    )
-                    try:
-                        valuecursor.SetDirection(direction)
-                        if valueadvance == 1:
-                            valuecursor.GotoFirst()
-                        else:
-                            valuecursor.GotoLast()
-                        while True:
-                            if not valuecursor.Accessible():
-                                break
-
-                            # Traverse foundset for each field==value in
-                            # index forwards and backwards.
-                            foundset = context.FindRecords(
-                                dptapi.APIFindSpecification(
-                                    fieldname,
-                                    dptapi.FD_EQ,
-                                    dptapi.APIFieldValue(
-                                        valuecursor.GetCurrentValue()
-                                    )
-                                )
-                            )
-                            assert foundset.Count() <= default_records
-                            try:
-                                for advance in (1, -1):
-                                    cursor = foundset.OpenCursor()
-                                    try:
-                                        if advance == 1:
-                                            cursor.GotoFirst()
-                                        else:
-                                            cursor.GotoLast()
-                                        while True:
-                                            if not cursor.Accessible():
-                                                break
-                                            cursor.Advance(advance)
-                                    finally:
-                                        foundset.CloseCursor(cursor)
-                                        del cursor
-                            finally:
-                                context.DestroyRecordSet(foundset)
-                                del foundset
-
-                            valuecursor.Advance(valueadvance)
-                    finally:
-                        context.CloseDirectValueCursor(valuecursor)
-                        del valuecursor
-                fieldattrcursor.Advance(1)
-        finally:
-            context.CloseFieldAttCursor(fieldattrcursor)
-            del fieldattrcursor
+import traverse_records
 
 
 def populate_database_test_one_field_ordered(
@@ -334,7 +224,9 @@ def rttrd_one_field_ordered_deferred(
             btod_factor=btod_factor,
         ),
     )
-    traverse_records(database, default_records, modulus)
+    traverse_records.traverse_records(
+        database, default_records=default_records, modulus=modulus
+    )
     database.delete()
 
 
@@ -377,7 +269,9 @@ def rttrd_two_field_one_ordered_deferred(
             btod_factor=btod_factor,
         ),
     )
-    traverse_records(database, default_records, modulus)
+    traverse_records.traverse_records(
+        database, default_records=default_records, modulus=modulus
+    )
     database.delete()
 
 
@@ -422,7 +316,9 @@ def rttrd_two_field_one_invisible_deferred(
             btod_factor=btod_factor,
         ),
     )
-    traverse_records(database, default_records, modulus)
+    traverse_records.traverse_records(
+        database, default_records=default_records, modulus=modulus
+    )
     database.delete()
 
 
@@ -467,7 +363,9 @@ def rttrd_three_field_one_invisible_deferred(
             btod_factor=btod_factor,
         ),
     )
-    traverse_records(database, default_records, modulus)
+    traverse_records.traverse_records(
+        database, default_records=default_records, modulus=modulus
+    )
     database.delete()
 
 
@@ -512,7 +410,9 @@ def rttrd_data_data_ord_inv_deferred(
             btod_factor=btod_factor,
         ),
     )
-    traverse_records(database, default_records, modulus)
+    traverse_records.traverse_records(
+        database, default_records=default_records, modulus=modulus
+    )
     database.delete()
 
 

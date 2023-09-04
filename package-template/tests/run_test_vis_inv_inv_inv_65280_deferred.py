@@ -108,6 +108,7 @@ def run_test_vis_inv_inv_inv_65280_deferred(
         deferred=deferred,
         modulus=modulus,
     )
+    print("run_test_vis_inv_inv_inv_65280_deferred", "done")
 
 
 if __name__ == "__main__":
