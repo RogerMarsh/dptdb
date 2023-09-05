@@ -13,7 +13,7 @@ V3R0 = $(BUILD)/v3r0
 
 # Main targets (phony copy targets are defined near the real targets).
 
-.PHONY : all clean directories source_files copy-all clean-objects
+.PHONY : all clean copy-all clean-objects
 
 all : copy-all
 

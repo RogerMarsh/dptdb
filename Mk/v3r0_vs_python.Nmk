@@ -87,7 +87,7 @@ $(WRAP_O) : $(V3R0SWIG_OBJECT) $(WRAP_CXX)
 
 # The .pyd file built from SWIG.
 
-$(V3R0_PACKAGE_DPTDB)\$(PYTHON_API_DLL) : object_directory object_files $(WRAP_O)
+$(V3R0_PACKAGE_DPTDB)\$(PYTHON_API_DLL) : $(OBJECT_DIRECTORIES) $(OBJECT_FILES) $(WRAP_O)
 	link $(V3R0_LDFLAGS) -out:$@ $(WRAP_O) $(API_OBJS) $(OBJS) $(PYTHON_LIBRARY)
 
 wrapper : $(V3R0_PACKAGE_DPTDB)\$(PYTHON_API_DLL)

@@ -56,31 +56,33 @@ AFX_SRCS = $(SEDAFX_NAMES:%=$(V3R0_STDAFX)/%.cpp)
 
 AFX_INCS = $(SEDAFX_NAMES:%=$(V3R0_STDAFX)/%.h)
 
+SOURCE_FILES = $(SRCS) $(INCS) $(API_SRCS) $(API_INCS) $(AFX_SRCS) $(AFX_INCS)
+
 # The build directory parent (dpt/v3r0) is created in fetch.Makefile.
 
 $(V3R0API_SRC) : $(V3R0_SRC)
-	mkdir $(V3R0API_SRC)
+	-mkdir $(V3R0API_SRC)
 
 $(V3R0_SRC) : $(V3R0)
-	mkdir $(V3R0_SRC)
+	-mkdir $(V3R0_SRC)
 
 $(V3R0API_INC) : $(V3R0_INC)
-	mkdir $(V3R0API_INC)
+	-mkdir $(V3R0API_INC)
 
 $(V3R0_INC) : $(V3R0)
-	mkdir $(V3R0_INC)
+	-mkdir $(V3R0_INC)
 
 $(V3R0_STDAFX) : $(V3R0)
-	mkdir $(V3R0_STDAFX)
+	-mkdir $(V3R0_STDAFX)
 
 $(V3R0_SWIG) : $(V3R0)
-	mkdir $(V3R0_SWIG)
+	-mkdir $(V3R0_SWIG)
 
 $(V3R0) : $(BUILD)
-	mkdir $(V3R0)
+	-mkdir $(V3R0)
 
 $(BUILD) :
-	mkdir $(BUILD)
+	-mkdir $(BUILD)
 
 # Pattern rules for editing DPT C++.
 
@@ -133,6 +135,7 @@ $(V3R0_STDAFX)/%.h : $(SED_STDAFX)/%.h
 # Not done until DPT source code has been compiled (move rule to build?).
 
 $(V3R0_SWIG)/$(SWIG_INTERFACE) : $(COPY_SWIG)
+	-mkdir $(V3R0_SWIG)
 	cp -p $< $@
 
 

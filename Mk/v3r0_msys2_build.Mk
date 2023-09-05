@@ -5,7 +5,7 @@ DEFOPTS = $(DEFINES) $(OPTIONS)
 CXXEXTRA = -D_BBDBAPI
 DPT_LDFLAGS = -shared
 
-### Build includes (-I) options for compiler.
+# Build includes (-I) options for compiler.
 
 V3R0_INCLUDE = -I$(V3R0_INC) -I$(V3R0_STDAFX)
 V3R0API_INCLUDE = -I$(V3R0_INC) -I$(V3R0API_INC) -I$(V3R0_STDAFX)
@@ -30,29 +30,31 @@ API_OBJS = $(SEDAPI_NAMES:%=$(V3R0API_OBJECT)/%.o)
 
 AFX_OBJS = $(SEDAFX_NAMES:%=$(V3R0STDAFX_OBJECT)/%.o)
 
+OBJECT_FILES = $(OBJS) $(AFX_OBJS) $(API_OBJS)
+
+$(OBJECT_FILES) : $(V3R0_STDAFX)/stdafx.h $(INCS) $(API_INCS)
+
 # Object directories.
 
 $(V3R0_OBJECT) : $(V3R0)
-	mkdir $(V3R0_OBJECT)
+	-mkdir $(V3R0_OBJECT)
 
 $(V3R0STDAFX_OBJECT) : $(V3R0_OBJECT)
-	mkdir $(V3R0STDAFX_OBJECT)
+	-mkdir $(V3R0STDAFX_OBJECT)
 
 $(V3R0API_OBJECT) : $(V3R0_OBJECT)
-	mkdir $(V3R0API_OBJECT)
+	-mkdir $(V3R0API_OBJECT)
 
 $(V3R0SWIG_OBJECT) : $(V3R0_OBJECT)
-	mkdir $(V3R0SWIG_OBJECT)
+	-mkdir $(V3R0SWIG_OBJECT)
+
+OBJECT_DIRECTORIES = $(V3R0STDAFX_OBJECT) $(V3R0API_OBJECT)
 
 # Copy package template directory for build and local install.
 
 $(V3R0_PACKAGE) : package-template
-	mkdir $@
+	-mkdir $@
 	cp -rp $</* $@/
-
-# Build targets (.PHONY).
-
-object_files : $(V3R0STDAFX_OBJECT) $(V3R0API_OBJECT) $(V3R0SWIG_OBJECT) $(OBJS) $(AFX_OBJS) $(API_OBJS)
 
 # SWIG wrapper rules.
 # Comments on 'sed' edits for the MinGW (sourceforge.net/projects/mingw),
@@ -109,12 +111,12 @@ WRAP_O = $(V3R0SWIG_OBJECT)/$(SWIG_DPTAPI)_$(SWIG_PYTHON)_wrap.o
 $(WRAP_CXX) : $(V3R0_PACKAGE) $(V3R0_SWIG)/$(SWIG_INTERFACE)
 	swig -c++ -$(SWIG_PYTHON) -o $@ -outdir $(V3R0_PACKAGE_DPTDB) -I$(V3R0API_INC) $(V3R0_SWIG)/$(SWIG_INTERFACE)
 
-$(WRAP_O) : $(WRAP_CXX)
-	$(WINE) $(CXX) -c $(CXXEXTRA) $(CXXFLAGS) -I$(V3R0API_INC) -I$(V3R0_INC) -I$(PYTHON_INCLUDE) $(DEFOPTS) -o $@ $<
+$(WRAP_O) : $(V3R0SWIG_OBJECT) $(WRAP_CXX)
+	$(WINE) $(CXX) -c $(CXXEXTRA) $(CXXFLAGS) -I$(V3R0API_INC) -I$(V3R0_INC) -I$(PYTHON_INCLUDE) $(DEFOPTS) -o $@ $(WRAP_CXX)
 
 # The .pyd file built from SWIG.
 
-$(V3R0_PACKAGE_DPTDB)/$(PYTHON_API_DLL) : directories source_files object_files $(WRAP_O)
+$(V3R0_PACKAGE_DPTDB)/$(PYTHON_API_DLL) : $(OBJECT_DIRECTORIES) $(OBJECT_FILES) $(WRAP_O)
 	$(WINE) $(CXX) $(DPT_LDFLAGS) -o $@ $(WRAP_O) $(API_OBJS) $(OBJS) -l$(PYTHON_LIBRARY) -L$(SYSTEM_LIBRARY)
 
 wrapper : $(V3R0_PACKAGE_DPTDB)/$(PYTHON_API_DLL)

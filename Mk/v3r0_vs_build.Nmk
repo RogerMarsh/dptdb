@@ -181,6 +181,8 @@ API_OBJS = $(V3R0API_OBJECT)\access_api.obj \
         $(V3R0API_OBJECT)\valdirect_api.obj \
         $(V3R0API_OBJECT)\valset_api.obj
 
+OBJECT_FILES = $(OBJS) $(AFX_OBJS) $(API_OBJS)
+
 
 # Source file names.
 
@@ -197,6 +199,8 @@ $(V3R0STDAFX_OBJECT) : $(V3R0_OBJECT)
 $(V3R0API_OBJECT) : $(V3R0_OBJECT)
 	mkdir $(V3R0API_OBJECT)
 
+OBJECT_DIRECTORIES = $(V3R0STDAFX_OBJECT) $(V3R0API_OBJECT)
+
 # Compiler settings.
 
 CXX = $(PATH_TO_CXX)$(COMPILER)
@@ -204,7 +208,7 @@ DEFOPTS = $(DEFINES) $(OPTIONS)
 CXXEXTRA = -D_BBDBAPI -EHsc -nologo -std:$(CPPSTANDARD)
 V3R0_LDFLAGS = -dll
 
-### Build includes (-I) options for compiler.
+# Build includes (-I) options for compiler.
 
 V3R0_INCLUDE = -I$(V3R0_INC) -I$(V3R0_STDAFX)
 V3R0AFX_INCLUDE = -I$(V3R0_INC) -I$(V3R0_STDAFX)
@@ -220,10 +224,4 @@ V3R0API_INCLUDE = -I$(V3R0_INC) -I$(V3R0API_INC) -I$(V3R0_STDAFX)
 
 {$(V3R0API_SRC)}.cpp{$(V3R0API_OBJECT)}.obj:
 	@-$(CXX) -c $(CXXEXTRA) $(CXXFLAGS) $(V3R0API_INCLUDE) $(DEFOPTS) -Fo$(V3R0API_OBJECT)\ $<
-
-# Build targets (.PHONY).
-
-object_directory : $(V3R0STDAFX_OBJECT) $(V3R0API_OBJECT)
-
-object_files : $(OBJS) $(AFX_OBJS) $(API_OBJS)
 
