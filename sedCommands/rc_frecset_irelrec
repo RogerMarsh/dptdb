@@ -1,0 +1,2 @@
+/if .!data->FindPrev/s/if/std::cout << relrec << "  to FindPrevRelRec   " << irelrec << " " << prevbit << "  to FindPrev" << std::endl; if/g
+
