@@ -1,0 +1,4 @@
+/int numentries = ila.NumEntries();/s/int numentries = ila.NumEntries();/std::cout << "call FlushData NumEntries" << std::endl;\
+		int numentries = ila.NumEntries();\
+		std::cout << "exit FlushData NumEntries" << std::endl;/g
+
