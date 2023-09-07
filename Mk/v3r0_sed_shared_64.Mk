@@ -19,6 +19,5 @@ SED_SRC_EDITS += \
                 -f sedCommands/fp_irelrec_prevbit \
                 -f sedCommands/fn_irelrec \
                 -f sedCommands/rc_frecset_workaround \
-                -f sedCommands/trace_du_crash_x64 \
                 -f sedCommands/fn_singlerec
 
