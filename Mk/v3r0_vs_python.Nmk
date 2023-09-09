@@ -49,6 +49,8 @@ V3R0SWIG_SOURCE = $(V3R0_SWIG)\$(PY_MAJOR_MINUS_MINOR_32_OR_64)
 V3R0_SWIG_INTERFACE = $(V3R0_SWIG)\$(SWIG_INTERFACE)
 V3R0_PACKAGE = $(V3R0)\package\$(PY_MAJOR_MINUS_MINOR_32_OR_64)
 V3R0_PACKAGE_DPTDB = $(V3R0_PACKAGE)\src\dptdb
+PYTHON_TAG = cp$(PYTHON_MAJOR)$(PYTHON_MINOR)
+ABI_TAG = cp$(PYTHON_MAJOR)$(PYTHON_MINOR)
 
 
 # Library is python310.dll and header is Python.h for version 3.10 of Python.
@@ -92,6 +94,7 @@ $(V3R0_PACKAGE_DPTDB)\$(PYTHON_API_DLL) : $(OBJECT_DIRECTORIES) $(OBJECT_FILES) 
 
 wrapper : $(V3R0_PACKAGE_DPTDB)\$(PYTHON_API_DLL)
 	py $(PY_MINUS_MAJOR_DOT_MINOR_32_OR_64) -m build --no-isolation $(V3R0_PACKAGE)
+	$(PYTHON_VERSION_DIRECTORY)\scripts\wheel tags --python-tag=$(PYTHON_TAG) --abi-tag=$(ABI_TAG) --platform-tag=$(PLATFORM_TAG) --remove $(V3R0_PACKAGE)\dist\dpt3.0_dptdb-1.0.0.dev0-py3-none-any.whl
 
 local-install : wrapper
 	py $(PY_MINUS_MAJOR_DOT_MINOR_32_OR_64) -m pip install --user --no-index --find-links $(V3R0_PACKAGE)\dist dpt3.0_dptdb

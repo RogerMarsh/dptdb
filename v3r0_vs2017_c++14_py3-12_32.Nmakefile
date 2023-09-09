@@ -19,6 +19,10 @@ PYTHON_MAJOR = 3
 PYTHON_MINOR = 12
 PYTHON_32_OR_64 = -32
 
+# Value of the --platform-tag argument for 'wheel tags ...' command.
+
+PLATFORM_TAG = win32
+
 # Assume wrappers for all Python versions are built with same SWIG version.
 
 !INCLUDE Mk\v3r0_vs_swig.Nmk

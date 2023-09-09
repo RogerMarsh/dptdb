@@ -77,8 +77,12 @@ $(V3R0_PACKAGE) : package-template
 
 PYTHON_NAME = python
 SWIG_PYTHON = $(PYTHON_NAME)
-PYTHON_MAJOR_MINOR ?= 3.10
+PYTHON_MAJOR ?= 3
+PYTHON_MINOR ?= 10
+PYTHON_MAJOR_MINOR = $(PYTHON_MAJOR).$(PYTHON_MINOR)
 PYTHON_VERSION = $(PYTHON_MAJOR_MINOR)
+PYTHON_TAG = cp$(PYTHON_MAJOR)$(PYTHON_MINOR)
+ABI_TAG = cp$(PYTHON_MAJOR)$(PYTHON_MINOR)
 
 # Library is python3.10 and header is python3.10 for version 3.10 of Python.
 # This is different naming than for Microsoft Windows Python.
@@ -121,6 +125,7 @@ $(V3R0_PACKAGE_DPTDB)/$(PYTHON_API_DLL) : $(OBJECT_DIRECTORIES) $(OBJECT_FILES) 
 
 wrapper : $(V3R0_PACKAGE_DPTDB)/$(PYTHON_API_DLL)
 	python -m build --wheel --no-isolation $(V3R0_PACKAGE)
+	wheel tags --python-tag=$(PYTHON_TAG) --abi-tag=$(ABI_TAG) --platform-tag=$(PLATFORM_TAG) --remove $(V3R0_PACKAGE)/dist/dpt3.0_dptdb-1.0.0.dev0-py3-none-any.whl
 
 local-install : wrapper
 	python -m pip install --user --no-index --find-links $(V3R0_PACKAGE)/dist dpt3.0_dptdb

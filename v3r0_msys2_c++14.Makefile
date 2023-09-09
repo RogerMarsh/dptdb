@@ -6,6 +6,10 @@ CPPSTANDARD = c++14
 WINE =
 PATH_TO_CXX =
 
+# Value of the --platform-tag argument for 'wheel tags ...' command.
+
+PLATFORM_TAG = mingw_i686
+
 include Mk/v3r0_sed_shared.Mk
 
 # Copy, edit, and build.
