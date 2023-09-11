@@ -52,9 +52,17 @@ OBJECT_DIRECTORIES = $(V3R0STDAFX_OBJECT) $(V3R0API_OBJECT)
 
 # Copy package template directory for build and local install.
 
+# In Msys2 MINGW32 terminal the commented version, copy then sed
+# in-place, does the edit but then sed fails claiming it is unable
+# to read a file. So sed then copy without overwrite.
+# Never got to see if same happens in Msys2 MINGW64 terminal.
+
 $(V3R0_PACKAGE) : package-template
 	-mkdir $@
-	cp -rp $</* $@/
+	sed -e '/"invalid"/s/invalid/$(DPT30_DPTDB_VERSION)/g' $</pyproject.toml > $@/pyproject.toml
+	cp -nrp $</* $@/
+#	cp -rp $</* $@/
+#	sed -i '' -e '/"invalid"/s/invalid/$(DPT30_DPTDB_VERSION)/g' $@/pyproject.toml
 
 # SWIG wrapper rules.
 # Comments on 'sed' edits for the MinGW (sourceforge.net/projects/mingw),
@@ -125,7 +133,7 @@ $(V3R0_PACKAGE_DPTDB)/$(PYTHON_API_DLL) : $(OBJECT_DIRECTORIES) $(OBJECT_FILES) 
 
 wrapper : $(V3R0_PACKAGE_DPTDB)/$(PYTHON_API_DLL)
 	python -m build --wheel --no-isolation $(V3R0_PACKAGE)
-	wheel tags --python-tag=$(PYTHON_TAG) --abi-tag=$(ABI_TAG) --platform-tag=$(PLATFORM_TAG) --remove $(V3R0_PACKAGE)/dist/dpt3.0_dptdb-1.0.0.dev0-py3-none-any.whl
+	python -m wheel tags --python-tag=$(PYTHON_TAG) --abi-tag=$(ABI_TAG) --platform-tag=$(PLATFORM_TAG) --remove $(V3R0_PACKAGE)/dist/dpt3.0_dptdb-$(DPT30_DPTDB_VERSION)-py3-none-any.whl
 
 local-install : wrapper
 	python -m pip install --user --no-index --find-links $(V3R0_PACKAGE)/dist dpt3.0_dptdb

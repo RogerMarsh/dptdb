@@ -1,0 +1,14 @@
+# This file will be included in make and nmake makefiles.
+
+# The file exists so there is one place where dpt3.0-dptdb version
+# numbers are changed.
+
+# There are five version definitions because the project status may
+# vary with environment: there are four environments plus one
+# definition for times when the four are in step.
+
+DPT30_DPTDB = 1.0.0.dev0
+DPT30_DPTDB_MSYS2_X86 = $(DPT30_DPTDB)
+DPT30_DPTDB_MSYS2_X64 = 1.0.1.dev0
+DPT30_DPTDB_VS_X86 = $(DPT30_DPTDB)
+DPT30_DPTDB_VS_X64 = 1.0.1.dev0

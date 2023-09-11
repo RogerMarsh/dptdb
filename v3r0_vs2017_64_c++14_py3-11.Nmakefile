@@ -26,6 +26,11 @@ PYTHON_32_OR_64 =
 
 PLATFORM_TAG = win_amd64
 
+# Select value from Mk/dpt30-dptdb_version for DPT30_DPTDB_VERSION.
+
+!INCLUDE Mk/dpt30-dptdb_version
+DPT30_DPTDB_VERSION = $(DPT30_DPTDB_VS_X64)
+
 # Assume wrappers for all Python versions are built with same SWIG version.
 
 !INCLUDE Mk\v3r0_vs_swig.Nmk

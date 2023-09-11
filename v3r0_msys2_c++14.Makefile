@@ -10,6 +10,11 @@ PATH_TO_CXX =
 
 PLATFORM_TAG = mingw_i686
 
+# Select value from Mk/dpt30-dptdb_version for DPT30_DPTDB_VERSION.
+
+include Mk/dpt30-dptdb_version
+DPT30_DPTDB_VERSION = $(DPT30_DPTDB_MSYS2_X86)
+
 include Mk/v3r0_sed_shared.Mk
 
 # Copy, edit, and build.
