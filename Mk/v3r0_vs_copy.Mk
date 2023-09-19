@@ -14,6 +14,7 @@ include Mk/v3r0_sed_shared.Mk
 
 include Mk/v3r0_copy_targets.Mk
 include Mk/v3r0_copy.Mk
+include Mk/v3r0_copy_swig.Mk
 include Mk/v3r0_source_targets.Mk
 
 # Cannot delay copying SWIG stuff because the build is done by nmake.

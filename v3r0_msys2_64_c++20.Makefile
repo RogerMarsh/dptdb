@@ -22,4 +22,4 @@ include Mk/v3r0_sed_msys2_64.Mk
 # Copy, edit, and build.
 
 include Mk/v3r0_msys2.Mk
-
+include Mk/v3r0_copy_swig_64.Mk

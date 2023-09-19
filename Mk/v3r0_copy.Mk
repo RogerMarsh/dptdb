@@ -132,10 +132,12 @@ $(V3R0_STDAFX)/%.h : $(SED_STDAFX)/%.h
 	sed $(BACK_TO_FORWARD_SLANT) $(SED_STDAFX_H_EDITS) $< > $@
 
 # Copy SWIG interface file from extract directory.
-# Not done until DPT source code has been compiled (move rule to build?).
 
-$(V3R0_SWIG)/$(SWIG_INTERFACE) : $(COPY_SWIG)
-	-mkdir $(V3R0_SWIG)
-	cp -p $< $@
+# Include a file which defines dependency and recipe for SWIG interface
+# file as close as possible to this file such that the recipe, x86 or
+# x64 as appropriate, copies things from extract area to build work area.
+
+# It is hoped this is temporary until problems in the x64 build are
+# fixed, when the definition can come back here.
 
 

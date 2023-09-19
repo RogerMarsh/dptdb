@@ -1,0 +1,5 @@
+/%ignore dpt::APIRoundedDouble::operator=;/s/;/;\
+\
+\/\/Suppress OpenContext_DUSingle(...) method for 64 bit builds.\
+%ignore dpt::APIDatabaseServices::OpenContext_DUSingle;/g
+

@@ -120,8 +120,13 @@ $(V3R0_OBJECT)\swig : $(V3R0_OBJECT)
 # characters should be fine, and is so.
 # 'py -m PythonSed.sed ...' does not do the job, so multiple installs
 # of pythonsed are needed.
+# "-i ''" causes creation of a backup of original "pyproject.toml" file
+# named "pyproject.toml''".
+# So "pythonsed -e [command] [from] > [to]" and overwrite what "xcopy"
+# did with this file.
 
 $(V3R0_PACKAGE) : package-template
 	xcopy /s /e package-template $(V3R0_PACKAGE)\\
-	$(PYTHON_VERSION_DIRECTORY)\Scripts\pythonsed -i '' -e /"invalid"/s/invalid/$(DPT30_DPTDB_VERSION)/g $(V3R0_PACKAGE)\pyproject.toml
+	$(PYTHON_VERSION_DIRECTORY)\Scripts\pythonsed -e /"invalid"/s/invalid/$(DPT30_DPTDB_VERSION)/g package-template\pyproject.toml > $(V3R0_PACKAGE)\pyproject.toml
+#	$(PYTHON_VERSION_DIRECTORY)\Scripts\pythonsed -i '' -e /"invalid"/s/invalid/$(DPT30_DPTDB_VERSION)/g $(V3R0_PACKAGE)\pyproject.toml
 #	$(PYTHON_VERSION_DIRECTORY)\Scripts\pythonsed -i '' -e '/"invalid"/s/invalid/$(DPT30_DPTDB_VERSION)/g' $(V3R0_PACKAGE)\pyproject.toml
