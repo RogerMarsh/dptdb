@@ -117,6 +117,34 @@ def data_data_ord_inv(default_records=200, modulus=None):
     return value_set
 
 
+def data_data_ord_inv_upper(default_records=200, modulus=None):
+    """Return iterator yielding data_data_ord_inv value sets.
+
+    The field names are forced to upper case.  Used to demonstrate
+    fastload is incompatible with non-uppercase field names like
+    'Fieldname' for example.
+
+    """
+    if modulus is None:
+        modulus = default_records
+
+    def value_set():
+        fld = fs.FileSpec.field_name(fd.FLD).upper()
+        fldord = fs.FileSpec.field_name(fd.FLDORD).upper()
+        fldinv = fs.FileSpec.field_name(fd.FLDINV).upper()
+        data = fs.FileSpec.field_name(fd.DATA).upper()
+        for i in range(default_records):
+            j = i % modulus
+            yield (
+                (fld, str(j) + fd.FLD),
+                (fldord, str(j) + fd.FLDORD),
+                (data, str(j) + fd.DATA),
+                (fldinv, str(j) + fd.FLDINV),
+            )
+
+    return value_set
+
+
 def vis_inv_inv_inv(default_records=200, modulus=None):
     """Return iterator yielding vis_inv_inv_inv value sets.
 

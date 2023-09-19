@@ -20,6 +20,7 @@ TWO_FIELD_ONE_INVISIBLE = "twofinv"
 THREE_FIELD_ONE_INVISIBLE = "ordfinv"
 DATA_DATA_ORD_INV = "ddoiflds"
 VIS_INV_INV_INV = "visinv"
+DATA_DATA_ORD_INV_UPPER = "ddoiufds"
 
 
 def one_file_no_fields(default_records=200, brecppg=50, btod_factor=1):
@@ -183,6 +184,39 @@ def data_data_ord_inv(default_records=200, brecppg=50, btod_factor=1):
                 fs.FileSpec.field_name(FLDORD): {fs.ORD: True},
                 fs.FileSpec.field_name(FLDINV): {fs.ORD: True, fs.INV: True},
                 fs.FileSpec.field_name(DATA): None,
+            },
+        },
+    }
+
+
+def data_data_ord_inv_upper(default_records=200, brecppg=50, btod_factor=1):
+    """Return a four field file definition for 200 records by default.
+
+    One field is ordered and another is invisible (ordered too).
+    The fourth field is another unordered field.
+
+    This definition exists to demonstrate fastload is incompatible with
+    field names which are not uppercase.
+
+    """
+    return {
+        DATA_DATA_ORD_INV_UPPER : {
+            fs.DDNAME: fs.FileSpec.dpt_dd(DATA_DATA_ORD_INV_UPPER),
+            fs.FILE: fs.FileSpec.dpt_dsn(DATA_DATA_ORD_INV_UPPER),
+            fs.FILEDESC: {
+                fs.BRECPPG: brecppg,
+                fs.FILEORG: fs.RRN,
+            },
+            fs.BTOD_FACTOR: btod_factor,
+            fs.BTOD_CONSTANT: 30,
+            fs.DEFAULT_RECORDS: default_records,
+            fs.FIELDS: {
+                fs.FileSpec.field_name(FLD.upper()): None,
+                fs.FileSpec.field_name(FLDORD.upper()): {fs.ORD: True},
+                fs.FileSpec.field_name(FLDINV.upper()): {
+                    fs.ORD: True, fs.INV: True
+                },
+                fs.FileSpec.field_name(DATA.upper()): None,
             },
         },
     }

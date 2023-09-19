@@ -8,7 +8,14 @@ import os
 import dpt_database
 
 
-def open_dpt_database(name, definition, directory=None):
+def open_dpt_database(
+    name,
+    definition,
+    directory=None,
+    deferred=False,
+    load=False,
+    unload=False,
+):
     """Return database for definition in directory/name.
 
     The database is created if it does not exist.
@@ -21,6 +28,12 @@ def open_dpt_database(name, definition, directory=None):
     if directory is None:
         directory = dpt_database.directory_with_bitness()
     directory = os.path.join(directory, name)
-    database = dpt_database.DPTDatabase(directory, filedefs=definition)
+    database = dpt_database.DPTDatabase(
+        directory,
+        deferred=deferred,
+        load=load,
+        unload=unload,
+        filedefs=definition,
+    )
     database.create()
     return database

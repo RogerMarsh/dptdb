@@ -33,10 +33,25 @@ def directory_with_bitness():
 class DPTDatabase:
     """Define database."""
 
-    def __init__(self, directory, deferred=False, filedefs=None):
-        """Create DPT definition for a database in directory from filedefs."""
+    def __init__(
+        self,
+        directory,
+        deferred=False,
+        load=False,
+        unload=False,
+        filedefs=None,
+    ):
+        """Create DPT definition for a database in directory from filedefs.
+
+        load is ignored if bool(deferred) is True.
+        unload is ignored if bool(deferred) is True.
+        unload is ignored if bool(load) is True.
+
+        """
         self.directory = directory
         self.deferred = deferred
+        self.load = load
+        self.unload = unload
         if filedefs is None:
             filedefs = {}
         self.filespec = filespec.FileSpec(**filedefs)
@@ -62,12 +77,26 @@ class DPTDatabase:
         if not os.path.exists(self.dptsys):
             os.makedirs(self.dptsys)
             
-        # Set parms for normal or single-step deferred update mode
+        # Set parms for normal, single-step deferred update, unload or
+        # load mode.
         if self.deferred:
             pf = open(parms, 'w')
             try:
                 pf.write("RCVOPT=X'00' " + os.linesep)
-                pf.write("MAXBUF=200 " + os.linesep)
+                pf.write("MAXBUF=99 " + os.linesep)
+            finally:
+                pf.close()
+        elif self.load:
+            pf = open(parms, 'w')
+            try:
+                pf.write("RCVOPT=X'00' " + os.linesep)
+                pf.write("MAXBUF=99 " + os.linesep)
+            finally:
+                pf.close()
+        elif self.unload:
+            pf = open(parms, 'w')
+            try:
+                pf.write("MAXBUF=99 " + os.linesep)
             finally:
                 pf.close()
         elif os.path.exists(parms):
@@ -101,10 +130,19 @@ class DPTDatabase:
                 dsoc = self.database_services.OpenContext
             for key, value in self.filespec.items():
                 disp = os.path.exists(value[filespec.FILE])
-                if not disp and self.deferred:
-                    raise RuntimeError(
-                        "Cannot open non-existent file for deferred update"
-                    )
+                if not disp:
+                    if self.deferred:
+                        raise RuntimeError(
+                            "Cannot do deferred update on non-existent file"
+                        )
+                    if self.unload:
+                        raise RuntimeError(
+                            "Cannot do unload on non-existent file"
+                        )
+                    if self.load:
+                        raise RuntimeError(
+                            "Cannot do load on non-existent file"
+                        )
                 if disp:
                     self.database_services.Allocate(
                         value[filespec.DDNAME],
