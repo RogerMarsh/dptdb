@@ -32,13 +32,21 @@
 # to building dptdb until it become impossible to run a Python interface
 # to DPT built in the MinGW environment.
 
+# fastload_no_upper must be applied before msgini_restore_upper.
+# The only way of locating the edit in fastload.cpp also edits
+# msgini.cpp and msgini_restore_upper compensates for the unwanted
+# edit.  These two edits tackle an application problem rather than
+# a c++ toolchain problem.
+
 SED_STDAFX_H_EDITS = -f sedCommands/extra_h_stdafx_c++14
 SED_SRC_EDITS = -f sedCommands/back_to_forward_slant \
                 -f sedCommands/make_pair \
                 -f sedCommands/access_controller \
                 -f sedCommands/i64_to_ll \
                 -f sedCommands/comment_session \
-                -f sedCommands/ord_comp_ptr_int
+                -f sedCommands/ord_comp_ptr_int \
+                -f sedCommands/fastload_no_upper \
+                -f sedCommands/msgini_restore_upper
 SED_INC_EDITS = -f sedCommands/back_to_forward_slant
 SEDAPI_SRC_EDITS = -f sedCommands/back_to_forward_slant
 SEDAPI_INC_EDITS = -f sedCommands/back_to_forward_slant

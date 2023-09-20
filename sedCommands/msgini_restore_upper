@@ -1,0 +1,3 @@
+/line in this situation/s/ion/ion\
+			util::ToUpper(line);/g
+
