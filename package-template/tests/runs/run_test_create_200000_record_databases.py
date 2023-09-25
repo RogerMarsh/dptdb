@@ -13,9 +13,11 @@ populated by deferred updates.
 
 """
 import run_test_create_databases
+import record_tuples
 
 
 if __name__ == "__main__":
     run_test_create_databases.run_test_create_databases(
-        default_records=200000
+        default_records=200000,
+        items=record_tuples.all_record_generators,
     )

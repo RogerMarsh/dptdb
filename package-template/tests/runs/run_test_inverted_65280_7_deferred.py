@@ -15,9 +15,12 @@ Change default records from 200004 used in the 200004_7 run written because
 import multiprocessing
 
 import run_test_inverted_deferred
+import record_tuples
 
 if __name__ == "__main__":
     multiprocessing.set_start_method("spawn")
     run_test_inverted_deferred.run_test_inverted_deferred(
-        default_records=65280, modulus=9326
+        default_records=65280,
+        modulus=9326,
+        items=record_tuples.record_generators,
     )

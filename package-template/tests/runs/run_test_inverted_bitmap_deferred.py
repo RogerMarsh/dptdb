@@ -15,9 +15,12 @@ Set modulus to 127 so each index value references over 1000 records.
 import multiprocessing
 
 import run_test_inverted_deferred
+import record_tuples
 
 if __name__ == "__main__":
     multiprocessing.set_start_method("spawn")
     run_test_inverted_deferred.run_test_inverted_deferred(
-        default_records=200000, modulus=127
+        default_records=200000,
+        modulus=127,
+        items=record_tuples.record_generators,
     )

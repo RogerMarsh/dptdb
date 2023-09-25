@@ -68,10 +68,9 @@ def run_test_vis_inv_inv_inv(
             brecppg=brecppg,
             btod_factor=btod_factor,
         ),
-        records=record_tuples.vis_inv_inv_inv(
-            default_records=default_records,
-            modulus=modulus,
-        ),
+        record_tuples.vis_inv_inv_inv,
+        default_records=default_records,
+        modulus=modulus,
         deferred=deferred,
     )
 

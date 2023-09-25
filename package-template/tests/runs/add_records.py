@@ -30,12 +30,17 @@ import dpt_database
 def _add_records(
     name,
     definition,
-    records=(),
+    records=None,
+    default_records=200,
+    modulus=None,
     commit=True,
     backout=False,
     txn_per_record=True,
     deferred=False,
+    multistep=False,
     directory=None,
+    du_fixed_length=-1,  # OpenContext_DUMulti du_parm3 argument.
+    du_format_options=None,  # OpenContext_DUMulti du_parm4 argument.
 ):
     """Add records to database with definition in directory/name.
 
@@ -47,10 +52,20 @@ def _add_records(
         directory = dpt_database.directory_with_bitness()
     directory = os.path.join(directory, name)
     database = dpt_database.DPTDatabase(
-        directory, deferred=deferred, filedefs=definition
+        directory,
+        deferred=deferred,
+        multistep=multistep,
+        filedefs=definition,
+        du_fixed_length=du_fixed_length,
+        du_format_options=du_format_options,
     )
     database.create()
-    for record in records():
+    if records is None:
+        records = lambda a, b: ()
+    for record in records(
+        default_records=default_records,
+        modulus=modulus,
+    )():
         database.add_record(database.contexts[name], record=record)
         if not deferred:
             if txn_per_record and commit:

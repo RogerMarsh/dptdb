@@ -180,3 +180,44 @@ def vis_inv_inv_inv(default_records=200, modulus=None):
             )
 
     return value_set
+
+
+all_record_generators = (
+    (
+        fd.ONE_FILE_NO_FIELDS,
+        fd.one_file_no_fields,
+        one_file_no_fields,
+    ),
+    (
+        fd.ONE_FILE_ONE_FIELD,
+        fd.one_file_one_field,
+        one_file_one_field,
+    ),
+    (
+        fd.ONE_FIELD_ORDERED,
+        fd.one_field_ordered,
+        one_field_ordered,
+    ),
+    (
+        fd.TWO_FIELD_ONE_ORDERED,
+        fd.two_field_one_ordered,
+        two_field_one_ordered,
+    ),
+    (
+        fd.TWO_FIELD_ONE_INVISIBLE,
+        fd.two_field_one_invisible,
+        two_field_one_invisible,
+    ),
+    (
+        fd.THREE_FIELD_ONE_INVISIBLE,
+        fd.three_field_one_invisible,
+        three_field_one_invisible,
+    ),
+    (
+        fd.DATA_DATA_ORD_INV,
+        fd.data_data_ord_inv,
+        data_data_ord_inv,
+    ),
+)
+
+record_generators = all_record_generators[2:]

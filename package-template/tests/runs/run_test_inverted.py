@@ -14,8 +14,11 @@ argument 'deferred' set False.
 import multiprocessing
 
 import run_test_inverted_deferred
-
+import record_tuples
 
 if __name__ == "__main__":
     multiprocessing.set_start_method("spawn")
-    run_test_inverted_deferred.run_test_inverted_deferred(deferred=False)
+    run_test_inverted_deferred.run_test_inverted_deferred(
+        deferred=False,
+        items=record_tuples.record_generators,
+    )

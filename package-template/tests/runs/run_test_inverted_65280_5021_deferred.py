@@ -15,9 +15,12 @@ would do) for it to be a bitmap.
 import multiprocessing
 
 import run_test_inverted_deferred
+import record_tuples
 
 if __name__ == "__main__":
     multiprocessing.set_start_method("spawn")
     run_test_inverted_deferred.run_test_inverted_deferred(
-        default_records=65280, modulus=13
+        default_records=65280,
+        modulus=13,
+        items=record_tuples.record_generators,
     )

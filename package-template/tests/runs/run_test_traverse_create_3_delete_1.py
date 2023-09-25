@@ -39,10 +39,9 @@ def rttc3d1_one_file_one_field(
             brecppg=brecppg,
             btod_factor=btod_factor,
         ),
-        records=record_tuples.one_file_one_field(
-            default_records=default_records,
-            modulus=modulus,
-        ),
+        record_tuples.one_file_one_field,
+        default_records=default_records,
+        modulus=modulus,
         deferred=deferred,
     )
     directory = dpt_database.directory_with_bitness()

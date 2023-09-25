@@ -11,266 +11,40 @@ All field values are unique in these tests, so lists and bitmaps are not
 used to implement the inverted lists of records.
 
 """
-import file_definitions
-import record_tuples
 import add_records
+import record_tuples
 
 
-def rtar_one_file_no_fields(
-    default_records=200,
-    brecppg=50,
-    btod_factor=1,
-    deferred=False,
-    modulus=None,
+def run_test_add_records(
+    default_records=200, brecppg=50, btod_factor=1, modulus=None, items=None
 ):
-    """Add records to database with one file and no fields.
-
-    Create a dtatabase large enough for default records and add that number
-    of records to the database.
-
-    """
-    add_records.add_records(
-        file_definitions.ONE_FILE_NO_FIELDS,
-        file_definitions.one_file_no_fields(
-            default_records=default_records,
-            brecppg=brecppg,
-            btod_factor=btod_factor,
-        ),
-        records=record_tuples.one_file_no_fields(
-            default_records=default_records,
-            modulus=modulus,
-        ),
-        deferred=deferred,
-    )
-
-
-def rtar_one_file_one_field(
-    default_records=200,
-    brecppg=50,
-    btod_factor=1,
-    deferred=False,
-    modulus=None,
-):
-    """Add records to database with one file and one field.
-
-    Create a database large enough for default records and add that number
-    of records to the database.
-
-    """
-    add_records.add_records(
-        file_definitions.ONE_FILE_ONE_FIELD,
-        file_definitions.one_file_one_field(
-            default_records=default_records,
-            brecppg=brecppg,
-            btod_factor=btod_factor,
-        ),
-        records=record_tuples.one_file_one_field(
-            default_records=default_records,
-            modulus=modulus,
-        ),
-        deferred=deferred,
-    )
-
-
-def rtar_one_field_ordered(
-    default_records=200,
-    brecppg=50,
-    btod_factor=1,
-    deferred=False,
-    modulus=None,
-):
-    """Add records to database with one file and one ordered field.
-
-    Create a database large enough for default records and add that number
-    of records to the database.
-
-    """
-    add_records.add_records(
-        file_definitions.ONE_FIELD_ORDERED,
-        file_definitions.one_field_ordered(
-            default_records=default_records,
-            brecppg=brecppg,
-            btod_factor=btod_factor,
-        ),
-        records=record_tuples.one_field_ordered(
-            default_records=default_records,
-            modulus=modulus,
-        ),
-        deferred=deferred,
-    )
-
-
-def rtar_two_field_one_ordered(
-    default_records=200,
-    brecppg=50,
-    btod_factor=1,
-    deferred=False,
-    modulus=None,
-):
-    """Add records to database one file, two fields one ordered.
-
-    Create a database large enough for default records and add that number
-    of records to the database.
-
-    """
-    add_records.add_records(
-        file_definitions.TWO_FIELD_ONE_ORDERED,
-        file_definitions.two_field_one_ordered(
-            default_records=default_records,
-            brecppg=brecppg,
-            btod_factor=btod_factor,
-        ),
-        records=record_tuples.two_field_one_ordered(
-            default_records=default_records,
-            modulus=modulus,
-        ),
-        deferred=deferred,
-    )
-
-
-def rtar_two_field_one_invisible(
-    default_records=200,
-    brecppg=50,
-    btod_factor=1,
-    deferred=False,
-    modulus=None,
-):
-    """Add records to database one file, two fields one invisible.
-
-    Invisible possible only if ordered.
-
-    Create a database large enough for default records and add that number
-    of records to the database.
-
-    """
-    add_records.add_records(
-        file_definitions.TWO_FIELD_ONE_INVISIBLE,
-        file_definitions.two_field_one_invisible(
-            default_records=default_records,
-            brecppg=brecppg,
-            btod_factor=btod_factor,
-        ),
-        records=record_tuples.two_field_one_invisible(
-            default_records=default_records,
-            modulus=modulus,
-        ),
-        deferred=deferred,
-    )
-
-
-def rtar_three_field_one_invisible(
-    default_records=200,
-    brecppg=50,
-    btod_factor=1,
-    deferred=False,
-    modulus=None,
-):
-    """Add records to database one file, three fields one invisible.
-
-    That's two ordered fields, one of them invisible.
-
-    Create a database large enough for default records and add that number
-    of records to the database.
-
-    """
-    add_records.add_records(
-        file_definitions.THREE_FIELD_ONE_INVISIBLE,
-        file_definitions.three_field_one_invisible(
-            default_records=default_records,
-            brecppg=brecppg,
-            btod_factor=btod_factor,
-        ),
-        records=record_tuples.three_field_one_invisible(
-            default_records=default_records,
-            modulus=modulus,
-        ),
-        deferred=deferred,
-    )
-
-
-def rtar_data_data_ord_inv(
-    default_records=200,
-    brecppg=50,
-    btod_factor=1,
-    deferred=False,
-    modulus=None,
-):
-    """Add records to database one file, four fields one invisible.
-
-    That's two unordered fields, two ordered fields, one of them invisible.
-
-    Create a database large enough for default records and add that number
-    of records to the database.
-
-    """
-    add_records.add_records(
-        file_definitions.DATA_DATA_ORD_INV,
-        file_definitions.data_data_ord_inv(
-            default_records=default_records,
-            brecppg=brecppg,
-            btod_factor=btod_factor,
-        ),
-        records=record_tuples.data_data_ord_inv(
-            default_records=default_records,
-            modulus=modulus,
-        ),
-        deferred=deferred,
-    )
-
-
-def run_test_add_records(default_records=200, brecppg=50, btod_factor=1):
     """Run tests for all the database definitions in file_definitions."""
-    print("enter run_test_add_records", "adding", default_records, "records")
-    print("enter rtar_one_file_no_fields")
-    rtar_one_file_no_fields(
-        default_records=default_records,
-        brecppg=brecppg,
-        btod_factor=btod_factor,
+    if items is None:
+        items = ()
+    print(
+        "enter run_test_add_records",
+        "(deferred is set False)",
+        "adding",
+        default_records,
+        "records",
     )
-    print("leave rtar_one_file_no_fields")
-    print("enter rtar_one_file_one_field")
-    rtar_one_file_one_field(
-        default_records=default_records,
-        brecppg=brecppg,
-        btod_factor=btod_factor,
-    )
-    print("leave rtar_one_file_one_field")
-    print("enter rtar_one_field_ordered")
-    rtar_one_field_ordered(
-        default_records=default_records,
-        brecppg=brecppg,
-        btod_factor=btod_factor,
-    )
-    print("leave rtar_one_field_ordered")
-    print("enter rtar_two_field_one_ordered")
-    rtar_two_field_one_ordered(
-        default_records=default_records,
-        brecppg=brecppg,
-        btod_factor=btod_factor,
-    )
-    print("leave rtar_two_field_one_ordered")
-    print("enter rtar_two_field_one_invisible")
-    rtar_two_field_one_invisible(
-        default_records=default_records,
-        brecppg=brecppg,
-        btod_factor=btod_factor,
-    )
-    print("leave rtar_two_field_one_invisible")
-    print("enter rtar_three_field_one_invisible")
-    rtar_three_field_one_invisible(
-        default_records=default_records,
-        brecppg=brecppg,
-        btod_factor=btod_factor,
-    )
-    print("leave rtar_three_field_one_invisible")
-    print("enter rtar_data_data_ord_inv")
-    rtar_data_data_ord_inv(
-        default_records=default_records,
-        brecppg=brecppg,
-        btod_factor=btod_factor,
-    )
-    print("leave rtar_data_data_ord_inv")
+    for name, definition, records in items:
+        print("enter add_records for", name)
+        add_records.add_records(
+            name,
+            definition(
+                default_records=default_records,
+                brecppg=brecppg,
+                btod_factor=btod_factor,
+            ),
+            records=records,
+            default_records=default_records,
+            modulus=modulus,
+            deferred=False,
+        )
+        print("leave add_records for", name)
+    print("done")
 
 
 if __name__ == "__main__":
-    run_test_add_records()
+    run_test_add_records(items=record_tuples.all_record_generators)

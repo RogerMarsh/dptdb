@@ -19,9 +19,12 @@ created for the extra four records: 200000 // 50 == 200004 // 50 == 4000)
 import multiprocessing
 
 import run_test_inverted_deferred
+import record_tuples
 
 if __name__ == "__main__":
     multiprocessing.set_start_method("spawn")
     run_test_inverted_deferred.run_test_inverted_deferred(
-        default_records=200004, modulus=100002
+        default_records=200004,
+        modulus=100002,
+        items=record_tuples.record_generators,
     )

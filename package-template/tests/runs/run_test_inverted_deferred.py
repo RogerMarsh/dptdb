@@ -28,265 +28,9 @@ It is assumed the multiprocessing start method has been set as 'spawn'.
 """
 import multiprocessing
 
-import run_test_add_records
+import add_records
+import record_tuples
 import open_dpt_database
-import file_definitions
-
-
-def create_one_field_ordered(
-    default_records=200, brecppg=50, btod_factor=1
-):
-    """Create a database large enough for default records.
-
-    Provided for convenient use wia multiprocessing.
-
-    """
-    open_dpt_database.open_dpt_database(
-        file_definitions.ONE_FIELD_ORDERED,
-        file_definitions.one_field_ordered(
-            default_records=default_records,
-            brecppg=brecppg,
-            btod_factor=btod_factor,
-        ),
-    ).close_database()
-
-
-def create_two_field_one_ordered(
-    default_records=200, brecppg=50, btod_factor=1
-):
-    """Create a database large enough for default records.
-
-    Provided for convenient use wia multiprocessing.
-
-    """
-    open_dpt_database.open_dpt_database(
-        file_definitions.TWO_FIELD_ONE_ORDERED,
-        file_definitions.two_field_one_ordered(
-            default_records=default_records,
-            brecppg=brecppg,
-            btod_factor=btod_factor,
-        ),
-    ).close_database()
-
-
-def create_two_field_one_invisible(
-    default_records=200, brecppg=50, btod_factor=1
-):
-    """Create a database large enough for default records.
-
-    Provided for convenient use wia multiprocessing.
-
-    """
-    open_dpt_database.open_dpt_database(
-        file_definitions.TWO_FIELD_ONE_INVISIBLE,
-        file_definitions.two_field_one_invisible(
-            default_records=default_records,
-            brecppg=brecppg,
-            btod_factor=btod_factor,
-        ),
-    ).close_database()
-
-
-def create_three_field_one_invisible(
-    default_records=200, brecppg=50, btod_factor=1
-):
-    """Create a database large enough for default records.
-
-    Provided for convenient use wia multiprocessing.
-
-    """
-    open_dpt_database.open_dpt_database(
-        file_definitions.THREE_FIELD_ONE_INVISIBLE,
-        file_definitions.three_field_one_invisible(
-            default_records=default_records,
-            brecppg=brecppg,
-            btod_factor=btod_factor,
-        ),
-    ).close_database()
-
-
-def create_data_data_ord_inv(
-    default_records=200, brecppg=50, btod_factor=1
-):
-    """Create a database large enough for default records.
-
-    Provided for convenient use wia multiprocessing.
-
-    """
-    open_dpt_database.open_dpt_database(
-        file_definitions.DATA_DATA_ORD_INV,
-        file_definitions.data_data_ord_inv(
-            default_records=default_records,
-            brecppg=brecppg,
-            btod_factor=btod_factor,
-        ),
-    ).close_database()
-
-
-def rtid_one_field_ordered_deferred(
-    default_records=200,
-    brecppg=50,
-    btod_factor=1,
-    modulus=None,
-    deferred=True,
-):
-    """Add records to database with one file and one ordered field.
-
-    Create a database large enough for default records and add that number
-    of records to the database.
-
-    """
-    process = multiprocessing.Process(
-        target=create_one_field_ordered,
-        kwargs=dict(
-            default_records=default_records,
-            brecppg=brecppg,
-            btod_factor=btod_factor,
-        ),
-    )
-    process.start()
-    process.join()
-    run_test_add_records.rtar_one_field_ordered(
-        default_records=default_records,
-        brecppg=brecppg,
-        btod_factor=btod_factor,
-        deferred=deferred,
-        modulus=modulus,
-    )
-
-
-def rtid_two_field_one_ordered_deferred(
-    default_records=200,
-    brecppg=50,
-    btod_factor=1,
-    modulus=None,
-    deferred=True,
-):
-    """Add records to database one file, two fields one ordered.
-
-    Create a database large enough for default records and add that number
-    of records to the database.
-
-    """
-    process = multiprocessing.Process(
-        target=create_two_field_one_ordered,
-        kwargs=dict(
-            default_records=default_records,
-            brecppg=brecppg,
-            btod_factor=btod_factor,
-        ),
-    )
-    process.start()
-    process.join()
-    run_test_add_records.rtar_two_field_one_ordered(
-        default_records=default_records,
-        brecppg=brecppg,
-        btod_factor=btod_factor,
-        deferred=deferred,
-        modulus=modulus,
-    )
-
-
-def rtid_two_field_one_invisible_deferred(
-    default_records=200,
-    brecppg=50,
-    btod_factor=1,
-    modulus=None,
-    deferred=True,
-):
-    """Add records to database one file, two fields one invisible.
-
-    Invisible possible only if ordered.
-
-    Create a database large enough for default records and add that number
-    of records to the database.
-
-    """
-    process = multiprocessing.Process(
-        target=create_two_field_one_invisible,
-        kwargs=dict(
-            default_records=default_records,
-            brecppg=brecppg,
-            btod_factor=btod_factor,
-        ),
-    )
-    process.start()
-    process.join()
-    run_test_add_records.rtar_two_field_one_invisible(
-        default_records=default_records,
-        brecppg=brecppg,
-        btod_factor=btod_factor,
-        deferred=deferred,
-        modulus=modulus,
-    )
-
-
-def rtid_three_field_one_invisible_deferred(
-    default_records=200,
-    brecppg=50,
-    btod_factor=1,
-    modulus=None,
-    deferred=True,
-):
-    """Add records to database one file, three fields one invisible.
-
-    That's two ordered fields, one of them invisible.
-
-    Create a database large enough for default records and add that number
-    of records to the database.
-
-    """
-    process = multiprocessing.Process(
-        target=create_three_field_one_invisible,
-        kwargs=dict(
-            default_records=default_records,
-            brecppg=brecppg,
-            btod_factor=btod_factor,
-        ),
-    )
-    process.start()
-    process.join()
-    run_test_add_records.rtar_three_field_one_invisible(
-        default_records=default_records,
-        brecppg=brecppg,
-        btod_factor=btod_factor,
-        deferred=deferred,
-        modulus=modulus,
-    )
-
-
-def rtid_data_data_ord_inv_deferred(
-    default_records=200,
-    brecppg=50,
-    btod_factor=1,
-    modulus=None,
-    deferred=True,
-):
-    """Add records to database one file, four fields one invisible.
-
-    That's two unordered fields, two ordered fields, one of them invisible.
-
-    Create a database large enough for default records and add that number
-    of records to the database.
-
-    """
-    process = multiprocessing.Process(
-        target=create_data_data_ord_inv,
-        kwargs=dict(
-            default_records=default_records,
-            brecppg=brecppg,
-            btod_factor=btod_factor,
-        ),
-    )
-    process.start()
-    process.join()
-    run_test_add_records.rtar_data_data_ord_inv(
-        default_records=default_records,
-        brecppg=brecppg,
-        btod_factor=btod_factor,
-        deferred=deferred,
-        modulus=modulus,
-    )
 
 
 def run_test_inverted_deferred(
@@ -295,8 +39,11 @@ def run_test_inverted_deferred(
     btod_factor=1,
     modulus=None,
     deferred=True,
+    items=None,
 ):
     """Run tests for all the database definitions in file_definitions."""
+    if items is None:
+        items = ()
     print(
         "enter run_test_inverted_deferred",
         "(deferred is " + str(deferred) + ")",
@@ -304,54 +51,38 @@ def run_test_inverted_deferred(
         default_records,
         "records",
     )
-    print("enter rtid_one_field_ordered_deferred")
-    rtid_one_field_ordered_deferred(
-        default_records=default_records,
-        brecppg=brecppg,
-        btod_factor=btod_factor,
-        modulus=modulus,
-        deferred=deferred,
-    )
-    print("leave rtid_one_field_ordered_deferred")
-    print("enter rtid_two_field_one_ordered_deferred")
-    rtid_two_field_one_ordered_deferred(
-        default_records=default_records,
-        brecppg=brecppg,
-        btod_factor=btod_factor,
-        modulus=modulus,
-        deferred=deferred,
-    )
-    print("leave rtid_two_field_one_ordered_deferred")
-    print("enter rtid_two_field_one_invisible_deferred")
-    rtid_two_field_one_invisible_deferred(
-        default_records=default_records,
-        brecppg=brecppg,
-        btod_factor=btod_factor,
-        modulus=modulus,
-        deferred=deferred,
-    )
-    print("leave rtid_two_field_one_invisible_deferred")
-    print("enter rtid_three_field_one_invisible_deferred")
-    rtid_three_field_one_invisible_deferred(
-        default_records=default_records,
-        brecppg=brecppg,
-        btod_factor=btod_factor,
-        modulus=modulus,
-        deferred=deferred,
-    )
-    print("leave rtid_three_field_one_invisible_deferred")
-    print("enter rtid_data_data_ord_inv_deferred")
-    rtid_data_data_ord_inv_deferred(
-        default_records=default_records,
-        brecppg=brecppg,
-        btod_factor=btod_factor,
-        modulus=modulus,
-        deferred=deferred,
-    )
-    print("leave rtid_data_data_ord_inv_deferred")
+    for name, definition, records in items:
+        print("enter create_database for", name)
+        process = multiprocessing.Process(
+            target=open_dpt_database.create_database,
+            args=(name, definition),
+            kwargs=dict(
+                default_records=default_records,
+                brecppg=brecppg,
+                btod_factor=btod_factor,
+            ),
+        )
+        process.start()
+        process.join()
+        print("leave create_database for", name)
+        print("enter add_records for", name)
+        add_records.add_records(
+            name,
+            definition(
+                default_records=default_records,
+                brecppg=brecppg,
+                btod_factor=btod_factor,
+            ),
+            records=records,
+            default_records=default_records,
+            modulus=modulus,
+            deferred=deferred,
+        )
+        print("leave add_records for", name)
     print("done")
 
 
 if __name__ == "__main__":
     multiprocessing.set_start_method("spawn")
-    run_test_inverted_deferred()
+    run_test_inverted_deferred(items=record_tuples.record_generators)
+

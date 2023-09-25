@@ -12,10 +12,12 @@ number 1 as first record.
 import multiprocessing
 
 import run_test_traverse_records_deferred
-
+import record_tuples
 
 if __name__ == "__main__":
     multiprocessing.set_start_method("spawn")
     run_test_traverse_records_deferred.run_test_traverse_records_deferred(
-        default_records=4, modulus=2
+        default_records=4,
+        modulus=2,
+        items=record_tuples.record_generators,
     )

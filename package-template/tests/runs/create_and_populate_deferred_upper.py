@@ -25,53 +25,16 @@ more than 65280.
 """
 import multiprocessing
 
-import open_dpt_database
+import create_and_populate_deferred
 import file_definitions
-import add_records
 import record_tuples
-
-
-def _create(default_records=200):
-    """Create the database in a normal session."""
-    open_dpt_database.open_dpt_database(
-        file_definitions.DATA_DATA_ORD_INV_UPPER,
-        file_definitions.data_data_ord_inv_upper(
-            default_records=default_records
-        ),
-    ).close_database()
-
-
-def _populate(default_records=200, modulus=None):
-    """Add default_records to database one file, four fields one invisible.
-
-    That's two unordered fields, two ordered fields, one of them invisible.
-
-    """
-    add_records.keep_records(
-        file_definitions.DATA_DATA_ORD_INV_UPPER,
-        file_definitions.data_data_ord_inv_upper(
-            default_records=default_records
-        ),
-        records=record_tuples.data_data_ord_inv_upper(
-            default_records=default_records,
-            modulus=modulus,
-        ),
-        deferred=True,
-    )
-
-
-def create_and_populate_deferred_upper(default_records=200, modulus=None):
-    """Create and populate the database."""
-    process = multiprocessing.Process(
-        target=_create,
-        kwargs=dict(default_records=default_records),
-    )
-    process.start()
-    process.join()
-    _populate(default_records=default_records, modulus=modulus)
 
 
 if __name__ == "__main__":
     multiprocessing.set_start_method("spawn")
 
-    create_and_populate_deferred_upper()
+    create_and_populate_deferred(
+        file_definitions.DATA_DATA_ORD_INV_UPPER,
+        file_definitions.data_data_ord_inv_upper,
+        record_tuples.data_data_ord_inv_upper,
+    )

@@ -11,7 +11,11 @@ record; and set modulus as 100 so each index value is used twice.
 import multiprocessing
 
 import run_test_inverted_deferred
+import record_tuples
 
 if __name__ == "__main__":
     multiprocessing.set_start_method("spawn")
-    run_test_inverted_deferred.run_test_inverted_deferred(modulus=100)
+    run_test_inverted_deferred.run_test_inverted_deferred(
+        modulus=100,
+        items=record_tuples.record_generators,
+    )

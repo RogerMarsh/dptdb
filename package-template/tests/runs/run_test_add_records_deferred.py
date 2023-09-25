@@ -33,196 +33,17 @@ is a problem creating more than one existence bitmap segment in the x64
 environment.
 
 """
-import run_test_add_records
+import add_records
 import open_dpt_database
-import file_definitions
-
-
-def rtard_one_file_no_fields_deferred(
-    default_records=200, brecppg=50, btod_factor=1
-):
-    """Add records to database with one file and no fields.
-
-    Create a dtatabase large enough for default records and add that number
-    of records to the database.
-
-    """
-    open_dpt_database.open_dpt_database(
-        file_definitions.ONE_FILE_NO_FIELDS,
-        file_definitions.one_file_no_fields(
-            default_records=default_records,
-            brecppg=brecppg,
-            btod_factor=btod_factor,
-        ),
-    ).close_database()
-    run_test_add_records.rtar_one_file_no_fields(
-        default_records=default_records,
-        brecppg=brecppg,
-        btod_factor=btod_factor,
-        deferred=True,
-    )
-
-
-def rtard_one_file_one_field_deferred(
-    default_records=200, brecppg=50, btod_factor=1
-):
-    """Add records to database with one file and one field.
-
-    Create a database large enough for default records and add that number
-    of records to the database.
-
-    """
-    open_dpt_database.open_dpt_database(
-        file_definitions.ONE_FILE_ONE_FIELD,
-        file_definitions.one_file_one_field(
-            default_records=default_records,
-            brecppg=brecppg,
-            btod_factor=btod_factor,
-        ),
-    ).close_database()
-    run_test_add_records.rtar_one_file_one_field(
-        default_records=default_records,
-        brecppg=brecppg,
-        btod_factor=btod_factor,
-        deferred=True,
-    )
-
-
-def rtard_one_field_ordered_deferred(
-    default_records=200, brecppg=50, btod_factor=1
-):
-    """Add records to database with one file and one ordered field.
-
-    Create a database large enough for default records and add that number
-    of records to the database.
-
-    """
-    open_dpt_database.open_dpt_database(
-        file_definitions.ONE_FIELD_ORDERED,
-        file_definitions.one_field_ordered(
-            default_records=default_records,
-            brecppg=brecppg,
-            btod_factor=btod_factor,
-        ),
-    ).close_database()
-    run_test_add_records.rtar_one_field_ordered(
-        default_records=default_records,
-        brecppg=brecppg,
-        btod_factor=btod_factor,
-        deferred=True,
-    )
-
-
-def rtard_two_field_one_ordered_deferred(
-    default_records=200, brecppg=50, btod_factor=1
-):
-    """Add records to database one file, two fields one ordered.
-
-    Create a database large enough for default records and add that number
-    of records to the database.
-
-    """
-    open_dpt_database.open_dpt_database(
-        file_definitions.TWO_FIELD_ONE_ORDERED,
-        file_definitions.two_field_one_ordered(
-            default_records=default_records,
-            brecppg=brecppg,
-            btod_factor=btod_factor,
-        ),
-    ).close_database()
-    run_test_add_records.rtar_two_field_one_ordered(
-        default_records=default_records,
-        brecppg=brecppg,
-        btod_factor=btod_factor,
-        deferred=True,
-    )
-
-
-def rtard_two_field_one_invisible_deferred(
-    default_records=200, brecppg=50, btod_factor=1
-):
-    """Add records to database one file, two fields one invisible.
-
-    Invisible possible only if ordered.
-
-    Create a database large enough for default records and add that number
-    of records to the database.
-
-    """
-    open_dpt_database.open_dpt_database(
-        file_definitions.TWO_FIELD_ONE_INVISIBLE,
-        file_definitions.two_field_one_invisible(
-            default_records=default_records,
-            brecppg=brecppg,
-            btod_factor=btod_factor,
-        ),
-    ).close_database()
-    run_test_add_records.rtar_two_field_one_invisible(
-        default_records=default_records,
-        brecppg=brecppg,
-        btod_factor=btod_factor,
-        deferred=True,
-    )
-
-
-def rtard_three_field_one_invisible_deferred(
-    default_records=200, brecppg=50, btod_factor=1
-):
-    """Add records to database one file, three fields one invisible.
-
-    That's two ordered fields, one of them invisible.
-
-    Create a database large enough for default records and add that number
-    of records to the database.
-
-    """
-    open_dpt_database.open_dpt_database(
-        file_definitions.THREE_FIELD_ONE_INVISIBLE,
-        file_definitions.three_field_one_invisible(
-            default_records=default_records,
-            brecppg=brecppg,
-            btod_factor=btod_factor,
-        ),
-    ).close_database()
-    run_test_add_records.rtar_three_field_one_invisible(
-        default_records=default_records,
-        brecppg=brecppg,
-        btod_factor=btod_factor,
-        deferred=True,
-    )
-
-
-def rtard_data_data_ord_inv_deferred(
-    default_records=200, brecppg=50, btod_factor=1
-):
-    """Add records to database one file, four fields one invisible.
-
-    That's two unordered fields, two ordered fields, one of them invisible.
-
-    Create a database large enough for default records and add that number
-    of records to the database.
-
-    """
-    open_dpt_database.open_dpt_database(
-        file_definitions.DATA_DATA_ORD_INV,
-        file_definitions.data_data_ord_inv(
-            default_records=default_records,
-            brecppg=brecppg,
-            btod_factor=btod_factor,
-        ),
-    ).close_database()
-    run_test_add_records.rtar_data_data_ord_inv(
-        default_records=default_records,
-        brecppg=brecppg,
-        btod_factor=btod_factor,
-        deferred=True,
-    )
+import record_tuples
 
 
 def run_test_add_records_deferred(
-    default_records=200, brecppg=50, btod_factor=1
+    default_records=200, brecppg=50, btod_factor=1, modulus=None, items=None
 ):
     """Run tests for all the database definitions in file_definitions."""
+    if items is None:
+        items = ()
     print("WARNING:    This run cannot succeed.")
     print("WARNING:    The DPT stuff for first file is done but the 'leave'")
     print("WARNING:    trace message does not get printed; and the run")
@@ -236,57 +57,32 @@ def run_test_add_records_deferred(
         default_records,
         "records",
     )
-    print("enter rtard_one_file_no_fields_deferred")
-    rtard_one_file_no_fields_deferred(
-        default_records=default_records,
-        brecppg=brecppg,
-        btod_factor=btod_factor,
-    )
-    print("leave rtard_one_file_no_fields_deferred")
-    print("enter rtard_one_file_one_field_deferred")
-    rtard_one_file_one_field_deferred(
-        default_records=default_records,
-        brecppg=brecppg,
-        btod_factor=btod_factor,
-    )
-    print("leave rtard_one_file_one_field_deferred")
-    print("enter rtard_one_field_ordered_deferred")
-    rtard_one_field_ordered_deferred(
-        default_records=default_records,
-        brecppg=brecppg,
-        btod_factor=btod_factor,
-    )
-    print("leave rtard_one_field_ordered_deferred")
-    print("enter rtard_two_field_one_ordered_deferred")
-    rtard_two_field_one_ordered_deferred(
-        default_records=default_records,
-        brecppg=brecppg,
-        btod_factor=btod_factor,
-    )
-    print("leave rtard_two_field_one_ordered_deferred")
-    print("enter rtard_two_field_one_invisible_deferred")
-    rtard_two_field_one_invisible_deferred(
-        default_records=default_records,
-        brecppg=brecppg,
-        btod_factor=btod_factor,
-    )
-    print("leave rtard_two_field_one_invisible_deferred")
-    print("enter rtard_three_field_one_invisible_deferred")
-    rtard_three_field_one_invisible_deferred(
-        default_records=default_records,
-        brecppg=brecppg,
-        btod_factor=btod_factor,
-    )
-    print("leave rtard_three_field_one_invisible_deferred")
-    print("enter rtard_data_data_ord_inv_deferred")
-    rtard_data_data_ord_inv_deferred(
-        default_records=default_records,
-        brecppg=brecppg,
-        btod_factor=btod_factor,
-    )
-    print("leave rtard_data_data_ord_inv_deferred")
+    for name, definition, records in items:
+        print("enter create_database for", name)
+        open_dpt_database.create_database(
+            name,
+            definition,
+            default_records=default_records,
+            brecppg=brecppg,
+            btod_factor=btod_factor,
+        )
+        print("leave create_database for", name)
+        print("enter add_records for", name)
+        add_records.add_records(
+            name,
+            definition(
+                default_records=default_records,
+                brecppg=brecppg,
+                btod_factor=btod_factor,
+            ),
+            records=records,
+            default_records=default_records,
+            modulus=modulus,
+            deferred=True,
+        )
+        print("leave add_records for", name)
     print("done")
 
 
 if __name__ == "__main__":
-    run_test_add_records_deferred()
+    run_test_add_records_deferred(items=record_tuples.all_record_generators)
