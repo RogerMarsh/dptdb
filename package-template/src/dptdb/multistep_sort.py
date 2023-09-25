@@ -505,7 +505,7 @@ class MultistepSort:
         """
         del kwargs
         self._sort_tape_crlf_delimited(
-            self, self.tapea, self._length_tapea_data_le_255
+            self.tapea, self._length_tapea_data_le_255
         )
     
     def sort_tapen_crlf_delimited(self, value_length=None):
@@ -536,9 +536,7 @@ class MultistepSort:
 
         """
         del kwargs
-        self._sort_tape_length_delimited(
-            self, self.tapea, ValueLengthTapeA
-        )
+        self._sort_tape_length_delimited(self.tapea, ValueLengthTapeA)
     
     def sort_tapen_length_delimited(self, **kwargs):
         """Sort data, validated by length_data, in tape file into chunks.
@@ -548,6 +546,4 @@ class MultistepSort:
 
         """
         del kwargs
-        self._sort_tape_length_delimited(
-            self, self.tapen, ValueLengthTapeN
-        )
+        self._sort_tape_length_delimited(self.tapen, ValueLengthTapeN)

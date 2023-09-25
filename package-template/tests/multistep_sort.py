@@ -1055,19 +1055,6 @@ class MultistepSort_sort_tapea_crlf_delimited(unittest.TestCase):
             *(None,),
         )
 
-    def test_sort_tapea_crlf_delimited_02(self):
-        self.assertRaisesRegex(
-            TypeError,
-            "".join(
-                (
-                    r"_sort_tape_crlf_delimited\(\) takes 3 ",
-                    "positional arguments but 4 were given",
-                )
-            ),
-            self.mss.sort_tapea_crlf_delimited,
-            **dict(extra=None),
-        )
-
 
 class MultistepSort_sort_tapen_crlf_delimited_01(unittest.TestCase):
 
@@ -1227,19 +1214,6 @@ class MultistepSort_sort_tapea_length_delimited(unittest.TestCase):
             *(None,),
         )
 
-    def test_sort_tapea_length_delimited_02(self):
-        self.assertRaisesRegex(
-            TypeError,
-            "".join(
-                (
-                    r"_sort_tape_length_delimited\(\) takes 3 ",
-                    "positional arguments but 4 were given",
-                )
-            ),
-            self.mss.sort_tapea_length_delimited,
-            **dict(extra=None),
-        )
-
 
 class MultistepSort_sort_tapen_length_delimited(unittest.TestCase):
 
@@ -1257,19 +1231,6 @@ class MultistepSort_sort_tapen_length_delimited(unittest.TestCase):
             ),
             self.mss.sort_tapen_length_delimited,
             *(None,),
-        )
-
-    def test_sort_tapen_length_delimited_02(self):
-        self.assertRaisesRegex(
-            TypeError,
-            "".join(
-                (
-                    r"_sort_tape_length_delimited\(\) takes 3 ",
-                    "positional arguments but 4 were given",
-                )
-            ),
-            self.mss.sort_tapen_length_delimited,
-            **dict(extra=None),
         )
 
 
