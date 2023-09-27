@@ -36,6 +36,7 @@ class ModuleContents(unittest.TestCase):
                 "_RECORD_NUMBERS_PER_SEGMENT",
                 "_TAPE_IEEE_NUMERIC_LENGTH",
                 "os",
+                "struct",
             ]
         )
 
@@ -208,146 +209,292 @@ class MultistepSort__is_chunk_full(unittest.TestCase):
         self.assertEqual(self.mss._is_chunk_full("next"), True)
 
 
-class MultistepSort__tape_crlf_sort_key(unittest.TestCase):
+class MultistepSort__tapea_crlf_sort_key(unittest.TestCase):
 
     def setUp(self):
         self.mss = multistep_sort.MultistepSort("t")
 
-    def test__tape_crlf_sort_key_01(self):
+    def test__tapea_crlf_sort_key_01(self):
         self.assertRaisesRegex(
             TypeError,
             "".join(
                 (
-                    r"_tape_crlf_sort_key\(\) takes 2 positional arguments ",
+                    r"_tapea_crlf_sort_key\(\) takes 2 positional arguments ",
                     "but 3 were given",
                 )
             ),
-            self.mss._tape_crlf_sort_key,
+            self.mss._tapea_crlf_sort_key,
             *(None, None),
         )
 
-    def test__tape_crlf_sort_key_02(self):
+    def test__tapea_crlf_sort_key_02(self):
         self.assertRaisesRegex(
             TypeError,
             "".join(
                 (
-                    r"_tape_crlf_sort_key\(\) missing 1 required positional ",
+                    r"_tapea_crlf_sort_key\(\) missing 1 required positional ",
                     "argument: 'value'",
                 )
             ),
-            self.mss._tape_crlf_sort_key,
+            self.mss._tapea_crlf_sort_key,
         )
 
-    def test__tape_crlf_sort_key_03(self):
-        self.assertEqual(self.mss._tape_crlf_sort_key(b"abcdefg"), b"fg")
+    def test__tapea_crlf_sort_key_03(self):
+        self.assertEqual(self.mss._tapea_crlf_sort_key(b"abcdefg"), b"fg")
 
 
-class MultistepSort__tape_crlf_chunk_sort_key(unittest.TestCase):
+class MultistepSort__tapea_crlf_chunk_sort_key(unittest.TestCase):
 
     def setUp(self):
         self.mss = multistep_sort.MultistepSort("t")
 
-    def test__tape_crlf_chunk_sort_key_01(self):
+    def test__tapea_crlf_chunk_sort_key_01(self):
         self.assertRaisesRegex(
             TypeError,
             "".join(
                 (
-                    r"_tape_crlf_chunk_sort_key\(\) takes 2 positional ",
+                    r"_tapea_crlf_chunk_sort_key\(\) takes 2 positional ",
                     "arguments but 3 were given",
                 )
             ),
-            self.mss._tape_crlf_chunk_sort_key,
+            self.mss._tapea_crlf_chunk_sort_key,
             *(None, None),
         )
 
-    def test__tape_crlf_chunk_sort_key_02(self):
+    def test__tapea_crlf_chunk_sort_key_02(self):
         self.assertRaisesRegex(
             TypeError,
             "".join(
                 (
-                    r"_tape_crlf_chunk_sort_key\(\) missing 1 required ",
+                    r"_tapea_crlf_chunk_sort_key\(\) missing 1 required ",
                     "positional argument: 'value'",
                 )
             ),
-            self.mss._tape_crlf_chunk_sort_key,
+            self.mss._tapea_crlf_chunk_sort_key,
         )
 
-    def test__tape_crlf_chunk_sort_key_03(self):
+    def test__tapea_crlf_chunk_sort_key_03(self):
         self.assertEqual(
-            self.mss._tape_crlf_chunk_sort_key((b"abcdefg", None)), b"fg"
+            self.mss._tapea_crlf_chunk_sort_key((b"abcdefg", None)), b"fg"
         )
 
 
-class MultistepSort__tape_length_sort_key(unittest.TestCase):
+class MultistepSort__tapen_crlf_sort_key(unittest.TestCase):
 
     def setUp(self):
         self.mss = multistep_sort.MultistepSort("t")
 
-    def test__tape_length_sort_key_01(self):
+    def test__tapen_crlf_sort_key_01(self):
         self.assertRaisesRegex(
             TypeError,
             "".join(
                 (
-                    r"_tape_length_sort_key\(\) takes 2 positional ",
-                    "arguments but 3 were given",
+                    r"_tapen_crlf_sort_key\(\) takes 2 positional arguments ",
+                    "but 3 were given",
                 )
             ),
-            self.mss._tape_length_sort_key,
+            self.mss._tapen_crlf_sort_key,
             *(None, None),
         )
 
-    def test__tape_length_sort_key_02(self):
+    def test__tapen_crlf_sort_key_02(self):
         self.assertRaisesRegex(
             TypeError,
             "".join(
                 (
-                    r"_tape_length_sort_key\(\) missing 1 required ",
-                    "positional argument: 'value'",
+                    r"_tapen_crlf_sort_key\(\) missing 1 required positional ",
+                    "argument: 'value'",
                 )
             ),
-            self.mss._tape_length_sort_key,
+            self.mss._tapen_crlf_sort_key,
         )
 
-    def test__tape_length_sort_key_03(self):
+    def test__tapen_crlf_sort_key_03(self):
         self.assertEqual(
-            self.mss._tape_length_sort_key(b"abcdefghi"), b"efhi"
+            self.mss._tapen_crlf_sort_key(b"abcdefg3"), (b"fg", 3.0)
         )
 
 
-class MultistepSort__tape_length_chunk_sort_key(unittest.TestCase):
+class MultistepSort__tapen_crlf_chunk_sort_key(unittest.TestCase):
 
     def setUp(self):
         self.mss = multistep_sort.MultistepSort("t")
 
-    def test__tape_length_chunk_sort_key_01(self):
+    def test__tapen_crlf_chunk_sort_key_01(self):
         self.assertRaisesRegex(
             TypeError,
             "".join(
                 (
-                    r"_tape_length_chunk_sort_key\(\) takes 2 positional ",
+                    r"_tapen_crlf_chunk_sort_key\(\) takes 2 positional ",
                     "arguments but 3 were given",
                 )
             ),
-            self.mss._tape_length_chunk_sort_key,
+            self.mss._tapen_crlf_chunk_sort_key,
             *(None, None),
         )
 
-    def test__tape_length_chunk_sort_key_02(self):
+    def test__tapen_crlf_chunk_sort_key_02(self):
         self.assertRaisesRegex(
             TypeError,
             "".join(
                 (
-                    r"_tape_length_chunk_sort_key\(\) missing 1 required ",
+                    r"_tapen_crlf_chunk_sort_key\(\) missing 1 required ",
                     "positional argument: 'value'",
                 )
             ),
-            self.mss._tape_length_chunk_sort_key,
+            self.mss._tapen_crlf_chunk_sort_key,
         )
 
-    def test__tape_length_chunk_sort_key_03(self):
+    def test__tapen_crlf_chunk_sort_key_03(self):
         self.assertEqual(
-            self.mss._tape_length_chunk_sort_key((b"abcdefghi", None)),
+            self.mss._tapen_crlf_chunk_sort_key(
+                (b"abcdefg3", None)), (b"fg", 3.0)
+        )
+
+
+class MultistepSort__tapea_length_sort_key(unittest.TestCase):
+
+    def setUp(self):
+        self.mss = multistep_sort.MultistepSort("t")
+
+    def test__tapea_length_sort_key_01(self):
+        self.assertRaisesRegex(
+            TypeError,
+            "".join(
+                (
+                    r"_tapea_length_sort_key\(\) takes 2 positional ",
+                    "arguments but 3 were given",
+                )
+            ),
+            self.mss._tapea_length_sort_key,
+            *(None, None),
+        )
+
+    def test__tapea_length_sort_key_02(self):
+        self.assertRaisesRegex(
+            TypeError,
+            "".join(
+                (
+                    r"_tapea_length_sort_key\(\) missing 1 required ",
+                    "positional argument: 'value'",
+                )
+            ),
+            self.mss._tapea_length_sort_key,
+        )
+
+    def test__tapea_length_sort_key_03(self):
+        self.assertEqual(
+            self.mss._tapea_length_sort_key(b"abcdefghi"), b"efhi"
+        )
+
+
+class MultistepSort__tapea_length_chunk_sort_key(unittest.TestCase):
+
+    def setUp(self):
+        self.mss = multistep_sort.MultistepSort("t")
+
+    def test__tapea_length_chunk_sort_key_01(self):
+        self.assertRaisesRegex(
+            TypeError,
+            "".join(
+                (
+                    r"_tapea_length_chunk_sort_key\(\) takes 2 positional ",
+                    "arguments but 3 were given",
+                )
+            ),
+            self.mss._tapea_length_chunk_sort_key,
+            *(None, None),
+        )
+
+    def test__tapea_length_chunk_sort_key_02(self):
+        self.assertRaisesRegex(
+            TypeError,
+            "".join(
+                (
+                    r"_tapea_length_chunk_sort_key\(\) missing 1 required ",
+                    "positional argument: 'value'",
+                )
+            ),
+            self.mss._tapea_length_chunk_sort_key,
+        )
+
+    def test__tapea_length_chunk_sort_key_03(self):
+        self.assertEqual(
+            self.mss._tapea_length_chunk_sort_key((b"abcdefghi", None)),
             b"efhi",
+        )
+
+
+class MultistepSort__tapen_length_sort_key(unittest.TestCase):
+
+    def setUp(self):
+        self.mss = multistep_sort.MultistepSort("t")
+
+    def test__tapen_length_sort_key_01(self):
+        self.assertRaisesRegex(
+            TypeError,
+            "".join(
+                (
+                    r"_tapen_length_sort_key\(\) takes 2 positional ",
+                    "arguments but 3 were given",
+                )
+            ),
+            self.mss._tapen_length_sort_key,
+            *(None, None),
+        )
+
+    def test__tapen_length_sort_key_02(self):
+        self.assertRaisesRegex(
+            TypeError,
+            "".join(
+                (
+                    r"_tapen_length_sort_key\(\) missing 1 required ",
+                    "positional argument: 'value'",
+                )
+            ),
+            self.mss._tapen_length_sort_key,
+        )
+
+    def test__tapen_length_sort_key_03(self):
+        self.assertEqual(
+            self.mss._tapen_length_sort_key(b"abcdefg3"), (b"ef", 3.0)
+        )
+
+
+class MultistepSort__tapen_length_chunk_sort_key(unittest.TestCase):
+
+    def setUp(self):
+        self.mss = multistep_sort.MultistepSort("t")
+
+    def test__tapen_length_chunk_sort_key_01(self):
+        self.assertRaisesRegex(
+            TypeError,
+            "".join(
+                (
+                    r"_tapen_length_chunk_sort_key\(\) takes 2 positional ",
+                    "arguments but 3 were given",
+                )
+            ),
+            self.mss._tapen_length_chunk_sort_key,
+            *(None, None),
+        )
+
+    def test__tapen_length_chunk_sort_key_02(self):
+        self.assertRaisesRegex(
+            TypeError,
+            "".join(
+                (
+                    r"_tapen_length_chunk_sort_key\(\) missing 1 required ",
+                    "positional argument: 'value'",
+                )
+            ),
+            self.mss._tapen_length_chunk_sort_key,
+        )
+
+    def test__tapen_length_chunk_sort_key_03(self):
+        self.assertEqual(
+            self.mss._tapen_length_chunk_sort_key((b"abcdefg3", None)),
+            (b"ef", 3.0),
         )
 
 
@@ -383,7 +530,8 @@ class MultistepSort__tape_ieee_sort_key(unittest.TestCase):
 
     def test__tape_ieee_sort_key_03(self):
         self.assertEqual(
-            self.mss._tape_ieee_sort_key(b"abcdefghi"), (b"ef", 676869.0)
+            self.mss._tape_ieee_sort_key(b"abcdef     ghi"),
+            (b"ef", (5.837238083554008e+199,))
         )
 
 
@@ -419,8 +567,8 @@ class MultistepSort__tape_ieee_chunk_sort_key(unittest.TestCase):
 
     def test__tape_ieee_chunk_sort_key_03(self):
         self.assertEqual(
-            self.mss._tape_ieee_chunk_sort_key((b"abcdefghi", None)),
-            (b"ef", 676869.0),
+            self.mss._tape_ieee_chunk_sort_key((b"abcdef     ghi", None)),
+            (b"ef", (5.837238083554008e+199,))
         )
 
 
@@ -660,7 +808,7 @@ class MultistepSort__write_chunk_crlf_delimited_02(SortFiles):
         records = [b"bbbbbbbbbbb", b"aaaaaaaaaaa"]
         ae(
             self.mss._write_chunk_crlf_delimited(
-                records, self.mss._tape_crlf_sort_key, self.mss.tapea
+                records, self.mss._tapea_crlf_sort_key, self.mss.tapea
             ),
             self.mss.tapea,
         )
@@ -700,7 +848,7 @@ class MultistepSort__write_chunk_crlf_delimited_02(SortFiles):
         ae(
             self.mss._write_chunk_crlf_delimited(
                 records,
-                self.mss._tape_crlf_sort_key,
+                self.mss._tapea_crlf_sort_key,
                 self.mss.tapea,
                 last_chunk=True,
             ),
@@ -776,7 +924,7 @@ class MultistepSort__write_chunk_length_delimited_02(SortFiles):
         records = [b"bbbbbb\x04bbbb", b"aaaaaa\x04aaaa"]
         ae(
             self.mss._write_chunk_length_delimited(
-                records, self.mss._tape_crlf_sort_key, self.mss.tapea
+                records, self.mss._tapea_crlf_sort_key, self.mss.tapea
             ),
             self.mss.tapea,
         )
@@ -832,12 +980,12 @@ class MultistepSort__sort_tape_crlf_delimited_01(unittest.TestCase):
             TypeError,
             "".join(
                 (
-                    r"_sort_tape_crlf_delimited\(\) takes 3 positional ",
-                    "arguments but 4 were given",
+                    r"_sort_tape_crlf_delimited\(\) takes 5 positional ",
+                    "arguments but 6 were given",
                 )
             ),
             self.mss._sort_tape_crlf_delimited,
-            *(None, None, None),
+            *(None, None, None, None, None),
         )
 
     def test__sort_tape_crlf_delimited_02(self):
@@ -845,8 +993,9 @@ class MultistepSort__sort_tape_crlf_delimited_01(unittest.TestCase):
             TypeError,
             "".join(
                 (
-                    r"_sort_tape_crlf_delimited\(\) missing 2 required ",
-                    "positional arguments: 'tape' and 'length_data'",
+                    r"_sort_tape_crlf_delimited\(\) missing 4 required ",
+                    "positional arguments: 'tape', 'sort_key', ",
+                    "'chunk_sort_key', and 'length_data'",
                 )
             ),
             self.mss._sort_tape_crlf_delimited,
@@ -864,7 +1013,10 @@ class MultistepSort__sort_tape_crlf_delimited_02(SortFiles):
         with open(self.mss.tapea, mode="wb") as file:
             file.write(b"\r\n".join(records))
         self.mss._sort_tape_crlf_delimited(
-            self.mss.tapea, self.mss._length_tapea_data_le_255
+            self.mss.tapea,
+            self.mss._tapea_crlf_sort_key,
+            self.mss._tapea_crlf_chunk_sort_key,
+            self.mss._length_tapea_data_le_255
         )
         records.sort()
         with open(self.mss.tapea, mode="rb") as file:
@@ -892,7 +1044,10 @@ class MultistepSort__sort_tape_crlf_delimited_02(SortFiles):
         with open(self.mss.tapea, mode="wb") as file:
             file.write(b"\r\n".join(records))
         self.mss._sort_tape_crlf_delimited(
-            self.mss.tapea, self.mss._length_tapea_data_le_255
+            self.mss.tapea,
+            self.mss._tapea_crlf_sort_key,
+            self.mss._tapea_crlf_chunk_sort_key,
+            self.mss._length_tapea_data_le_255
         )
         records.sort()
         with open(self.mss.tapea, mode="rb") as file:
@@ -909,12 +1064,12 @@ class MultistepSort__sort_tape_length_delimited_01(unittest.TestCase):
             TypeError,
             "".join(
                 (
-                    r"_sort_tape_length_delimited\(\) takes 3 positional ",
-                    "arguments but 4 were given",
+                    r"_sort_tape_length_delimited\(\) takes 5 positional ",
+                    "arguments but 6 were given",
                 )
             ),
             self.mss._sort_tape_length_delimited,
-            *(None, None, None),
+            *(None, None, None, None, None),
         )
 
     def test__sort_tape_length_delimited_02(self):
@@ -922,8 +1077,9 @@ class MultistepSort__sort_tape_length_delimited_01(unittest.TestCase):
             TypeError,
             "".join(
                 (
-                    r"_sort_tape_length_delimited\(\) missing 2 required ",
-                    "positional arguments: 'tape' and 'length_error'",
+                    r"_sort_tape_length_delimited\(\) missing 4 required ",
+                    "positional arguments: 'tape', 'sort_key', ",
+                    "'chunk_sort_key', and 'length_error'",
                 )
             ),
             self.mss._sort_tape_length_delimited,
@@ -941,7 +1097,10 @@ class MultistepSort__sort_tape_length_delimited_02(SortFiles):
         with open(self.mss.tapea, mode="wb") as file:
             file.write(b"".join(records))
         self.mss._sort_tape_length_delimited(
-            self.mss.tapea, multistep_sort.ValueLengthTapeA
+            self.mss.tapea,
+            self.mss._tapea_length_sort_key,
+            self.mss._tapea_length_chunk_sort_key,
+            multistep_sort.ValueLengthTapeA
         )
         records.sort()
         with open(self.mss.tapea, mode="rb") as file:
@@ -969,7 +1128,10 @@ class MultistepSort__sort_tape_length_delimited_02(SortFiles):
         with open(self.mss.tapea, mode="wb") as file:
             file.write(b"".join(records))
         self.mss._sort_tape_length_delimited(
-            self.mss.tapea, multistep_sort.ValueLengthTapeA
+            self.mss.tapea,
+            self.mss._tapea_length_sort_key,
+            self.mss._tapea_length_chunk_sort_key,
+            multistep_sort.ValueLengthTapeA
         )
         records.sort()
         with open(self.mss.tapea, mode="rb") as file:
@@ -1117,8 +1279,8 @@ class MultistepSort_sort_tapen_crlf_delimited_02(SortFiles):
     def test_sort_tapen_crlf_delimited_06(self):
         ae = self.assertEqual
         records = [
-            b"ggggggg",
-            b"hhhhhhh",
+            b"ggggggg2",
+            b"hhhhhhh3",
         ]
         with open(self.mss.tapen, mode="wb") as file:
             file.write(b"\r\n".join(records))
@@ -1130,21 +1292,21 @@ class MultistepSort_sort_tapen_crlf_delimited_02(SortFiles):
     def test_sort_tapen_crlf_delimited_07(self):
         ae = self.assertEqual
         records = [
-            b"aaaaaaaa",
-            b"bbbbbbbb",
-            b"cccccccc",
-            b"ffffffff",
-            b"dddddddd",
-            b"eeeeeeee",
-            b"iiiiiiii",
-            b"hhhhhhhh",
-            b"gggggggg",
-            b"llllllll",
-            b"mmmmmmmm",
-            b"kkkkkkkk",
-            b"pppppppp",
-            b"nnnnnnnn",
-            b"oooooooo",
+            b"aaaaaaa1",
+            b"bbbbbbb3",
+            b"ccccccc2",
+            b"fffffff4",
+            b"ddddddd5",
+            b"eeeeeee4.5",
+            b"iiiiiii6",
+            b"hhhhhhh9",
+            b"ggggggg8",
+            b"lllllll7",
+            b"mmmmmmm6.7",
+            b"kkkkkkk6.3",
+            b"ppppppp10",
+            b"nnnnnnn12",
+            b"ooooooo11",
         ]
         with open(self.mss.tapen, mode="wb") as file:
             file.write(b"\r\n".join(records))
@@ -1164,33 +1326,63 @@ class MultistepSort_sort_tapen_crlf_delimited_03(SortFiles):
         ]
         with open(self.mss.tapen, mode="wb") as file:
             file.write(b"\r\n".join(records))
-        self.mss.sort_tapen_crlf_delimited(value_length=0)
-        records.sort()
-        with open(self.mss.tapen, mode="rb") as file:
-            ae(file.read(), b"\r\n".join(records))
+        self.assertRaisesRegex(
+            ValueError,
+            "could not convert string to float: ''",
+            self.mss.sort_tapen_crlf_delimited,
+            **dict(value_length=0),
+        )
 
     def test_sort_tapen_crlf_delimited_09(self):
         ae = self.assertEqual
         records = [
-            b"aaaaaaaa",
-            b"bbbbbbbb",
-            b"cccccccc",
-            b"ffffffff",
-            b"dddddddd",
-            b"eeeeeeee",
-            b"iiiiiiii",
-            b"hhhhhhhh",
-            b"gggggggg",
-            b"llllllll",
-            b"mmmmmmmm",
-            b"kkkkkkkk",
-            b"pppppppp",
-            b"nnnnnnnn",
-            b"oooooooo",
+            b"ggggggg2",
+            b"hhhhhhh",
+        ]
+        with open(self.mss.tapen, mode="wb") as file:
+            file.write(b"\r\n".join(records))
+        self.assertRaisesRegex(
+            multistep_sort.ValueLengthAllowedFixedTapeN,
+            "Field value length ne 1",
+            self.mss.sort_tapen_crlf_delimited,
+            **dict(value_length=1),
+        )
+
+    def test_sort_tapen_crlf_delimited_10(self):
+        ae = self.assertEqual
+        records = [
+            b"ggggggg2",
+            b"hhhhhhh3",
         ]
         with open(self.mss.tapen, mode="wb") as file:
             file.write(b"\r\n".join(records))
         self.mss.sort_tapen_crlf_delimited(value_length=1)
+        records.sort()
+        with open(self.mss.tapen, mode="rb") as file:
+            ae(file.read(), b"\r\n".join(records))
+
+    def test_sort_tapen_crlf_delimited_11(self):
+        ae = self.assertEqual
+        records = [
+            b"aaaaaaa  1",
+            b"bbbbbbb3  ",
+            b"ccccccc 2 ",
+            b"fffffff  4",
+            b"ddddddd  5",
+            b"eeeeeee4.5",
+            b"iiiiiii  6",
+            b"hhhhhhh9  ",
+            b"ggggggg  8",
+            b"lllllll  7",
+            b"mmmmmmm6.7",
+            b"kkkkkkk6.3",
+            b"ppppppp 10",
+            b"nnnnnnn12 ",
+            b"ooooooo 11",
+        ]
+        with open(self.mss.tapen, mode="wb") as file:
+            file.write(b"\r\n".join(records))
+        self.mss.sort_tapen_crlf_delimited(value_length=3)
         records.sort()
         with open(self.mss.tapen, mode="rb") as file:
             ae(file.read(), b"\r\n".join(records))
@@ -1240,10 +1432,14 @@ if __name__ == "__main__":
     runner().run(loader(ModuleContents))
     runner().run(loader(MultistepSort___init__))
     runner().run(loader(MultistepSort__is_chunk_full))
-    runner().run(loader(MultistepSort__tape_crlf_sort_key))
-    runner().run(loader(MultistepSort__tape_crlf_chunk_sort_key))
-    runner().run(loader(MultistepSort__tape_length_sort_key))
-    runner().run(loader(MultistepSort__tape_length_chunk_sort_key))
+    runner().run(loader(MultistepSort__tapea_crlf_sort_key))
+    runner().run(loader(MultistepSort__tapea_crlf_chunk_sort_key))
+    runner().run(loader(MultistepSort__tapen_crlf_sort_key))
+    runner().run(loader(MultistepSort__tapen_crlf_chunk_sort_key))
+    runner().run(loader(MultistepSort__tapea_length_sort_key))
+    runner().run(loader(MultistepSort__tapea_length_chunk_sort_key))
+    runner().run(loader(MultistepSort__tapen_length_sort_key))
+    runner().run(loader(MultistepSort__tapen_length_chunk_sort_key))
     runner().run(loader(MultistepSort__tape_ieee_sort_key))
     runner().run(loader(MultistepSort__tape_ieee_chunk_sort_key))
     runner().run(loader(MultistepSort__length_tapea_data_le_255))

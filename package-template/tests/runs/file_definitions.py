@@ -21,6 +21,7 @@ THREE_FIELD_ONE_INVISIBLE = "ordfinv"
 DATA_DATA_ORD_INV = "ddoiflds"
 VIS_INV_INV_INV = "visinv"
 DATA_DATA_ORD_INV_UPPER = "ddoiufds"
+SORTING = "sorting"
 
 
 def one_file_no_fields(default_records=200, brecppg=50, btod_factor=1):
@@ -255,6 +256,36 @@ def vis_inv_inv_inv(default_records=200, brecppg=50, btod_factor=1):
                 fs.FileSpec.field_name(FLDORD): {fs.ORD: True, fs.INV: True},
                 fs.FileSpec.field_name(FLDINV): {fs.ORD: True, fs.INV: True},
                 fs.FileSpec.field_name(DATA): {fs.ORD: True, fs.INV: True},
+            },
+        },
+    }
+
+
+def sorting(default_records=200, brecppg=50, btod_factor=1):
+    """Return a four field file definition for 200 records by default.
+
+    One field is not ordered.
+    The other three fields are ordered fields.
+
+    At least one ordered field is invisible, and at least one is numeric.
+
+    """
+    return {
+        SORTING : {
+            fs.DDNAME: fs.FileSpec.dpt_dd(SORTING),
+            fs.FILE: fs.FileSpec.dpt_dsn(SORTING),
+            fs.FILEDESC: {
+                fs.BRECPPG: brecppg,
+                fs.FILEORG: fs.RRN,
+            },
+            fs.BTOD_FACTOR: btod_factor,
+            fs.BTOD_CONSTANT: 30,
+            fs.DEFAULT_RECORDS: default_records,
+            fs.FIELDS: {
+                fs.FileSpec.field_name(FLD): None,
+                fs.FileSpec.field_name(FLDORD): {fs.ORD: True},
+                fs.FileSpec.field_name(FLDINV): {fs.ORD: True, fs.INV: True},
+                fs.FileSpec.field_name(DATA): {fs.ORD: True, fs.ONM: True},
             },
         },
     }

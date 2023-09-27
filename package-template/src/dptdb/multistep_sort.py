@@ -25,6 +25,7 @@ single-step process is available and should be preferred.
 
 """
 import os
+import struct
 
 _CHUNKS_DIRECTORY = "chunks"
 _MAX_VALUE_LENGTH = 255
@@ -118,26 +119,42 @@ class MultistepSort:
         self.__record_number_count = 0  # Not -1 on reset for next chunk.
         return True
     
-    def _tape_crlf_sort_key(self, value):
+    def _tapea_crlf_sort_key(self, value):
         """Return key for sorting purposes."""
-        return value[5:]  # Field id and field value.
+        return value[5:]  # Field id and value.
     
-    def _tape_crlf_chunk_sort_key(self, value):
+    def _tapea_crlf_chunk_sort_key(self, value):
         """Return key for sorting purposes."""
-        return self._tape_crlf_sort_key(value[0])  # Or just value[0][4:]
+        return self._tapea_crlf_sort_key(value[0])  # Or just value[0][4:]
     
-    def _tape_length_sort_key(self, value):
+    def _tapen_crlf_sort_key(self, value):
+        """Return key for sorting purposes."""
+        return (value[5:7], float(value[7:]))  # (Field id, value).
+    
+    def _tapen_crlf_chunk_sort_key(self, value):
+        """Return key for sorting purposes."""
+        return self._tapen_crlf_sort_key(value[0])
+    
+    def _tapea_length_sort_key(self, value):
         """Return key for sorting purposes."""
         return value[4:6] + value[7:]  # Field id and value without length.
     
-    def _tape_length_chunk_sort_key(self, value):
+    def _tapea_length_chunk_sort_key(self, value):
         """Return key for sorting purposes."""
-        return self._tape_length_sort_key(value[0])
+        return self._tapea_length_sort_key(value[0])
+    
+    def _tapen_length_sort_key(self, value):
+        """Return key for sorting purposes."""
+        return (value[4:6], float(value[7:]))  # (Field id, value).
+    
+    def _tapen_length_chunk_sort_key(self, value):
+        """Return key for sorting purposes."""
+        return self._tapen_length_sort_key(value[0])
     
     def _tape_ieee_sort_key(self, value):
         """Return key for sorting purposes."""
         return (
-            value[4:6], float(value[6:].hex())  # Field id and value as float.
+            value[4:6], struct.unpack("=d", value[6:])  # (Field id, value).
         )
     
     def _tape_ieee_chunk_sort_key(self, value):
@@ -209,7 +226,9 @@ class MultistepSort:
         except FileExistsError:
             pass
     
-    def _sort_tape_crlf_delimited(self, tape, length_data):
+    def _sort_tape_crlf_delimited(
+        self, tape, sort_key, chunk_sort_key, length_data
+    ):
         """Sort data, validated by length_data, in tape file into chunks.
 
         tape will be self.tapea or self.tapen for formats A1 or N1 as
@@ -232,7 +251,7 @@ class MultistepSort:
                     chunks.append(
                         self._write_chunk_crlf_delimited(
                             records,
-                            self._tape_crlf_sort_key,
+                            sort_key,
                             os.path.basename(tape) + str(len(chunks)),
                         )
                     )
@@ -241,7 +260,7 @@ class MultistepSort:
             chunks.append(
                 self._write_chunk_crlf_delimited(
                     records,
-                    self._tape_crlf_sort_key,
+                    sort_key,
                     os.path.basename(tape) + str(len(chunks)),
                     last_chunk=True,
                 )
@@ -270,7 +289,7 @@ class MultistepSort:
                     continue
                 length_data(oc[0])
             while len(open_chunks):
-                open_chunks.sort(key=self._tape_crlf_chunk_sort_key)
+                open_chunks.sort(key=chunk_sort_key)
                 oc = open_chunks[0]
                 file.write(oc[0])
                 oc[0] = oc[-1].readline().rstrip(b"\r\n")
@@ -287,7 +306,9 @@ class MultistepSort:
             for chunk in chunks:
                 os.remove(chunk)
     
-    def _sort_tape_length_delimited(self, tape, length_error):
+    def _sort_tape_length_delimited(
+        self, tape, sort_key, chunk_sort_key, length_error
+    ):
         """Sort data, validated by length_data, in tape file into chunks.
 
         tape will be self.tapea or self.tapen for formats A1 or N1 as
@@ -323,7 +344,7 @@ class MultistepSort:
                     chunks.append(
                         self._write_chunk_length_delimited(
                             records,
-                            self._tape_length_sort_key,
+                            sort_key,
                             os.path.basename(tape) + str(len(chunks)),
                         )
                     )
@@ -332,7 +353,7 @@ class MultistepSort:
             chunks.append(
                 self._write_chunk_length_delimited(
                     records,
-                    self._tape_length_sort_key,
+                    sort_key,
                     os.path.basename(tape) + str(len(chunks)),
                 )
             )
@@ -374,7 +395,7 @@ class MultistepSort:
                     )
                 oc[0] = head + data
             while len(open_chunks):
-                open_chunks.sort(key=self._tape_length_chunk_sort_key)
+                open_chunks.sort(key=chunk_sort_key)
                 oc = open_chunks[0]
                 file.write(oc[0])
                 head = oc[-1].read(_HEADER_LENGTH)
@@ -505,7 +526,10 @@ class MultistepSort:
         """
         del kwargs
         self._sort_tape_crlf_delimited(
-            self.tapea, self._length_tapea_data_le_255
+            self.tapea,
+            self._tapea_crlf_sort_key,
+            self._tapea_crlf_chunk_sort_key,
+            self._length_tapea_data_le_255,
         )
     
     def sort_tapen_crlf_delimited(self, value_length=None):
@@ -524,6 +548,8 @@ class MultistepSort:
             self.__fixed_value_length = value_length
         self._sort_tape_crlf_delimited(
             self.tapen,
+            self._tapen_crlf_sort_key,
+            self._tapen_crlf_chunk_sort_key,
             self._length_tapen_data_le_255
             if value_length is None else self._length_tapen_data_is_fixed
         )
@@ -536,7 +562,12 @@ class MultistepSort:
 
         """
         del kwargs
-        self._sort_tape_length_delimited(self.tapea, ValueLengthTapeA)
+        self._sort_tape_length_delimited(
+            self.tapea,
+            self._tapea_length_sort_key,
+            self._tapea_length_chunk_sort_key,
+            ValueLengthTapeA,
+        )
     
     def sort_tapen_length_delimited(self, **kwargs):
         """Sort data, validated by length_data, in tape file into chunks.
@@ -546,4 +577,9 @@ class MultistepSort:
 
         """
         del kwargs
-        self._sort_tape_length_delimited(self.tapen, ValueLengthTapeN)
+        self._sort_tape_length_delimited(
+            self.tapen,
+            self._tapen_length_sort_key,
+            self._tapen_length_chunk_sort_key,
+            ValueLengthTapeN,
+        )
