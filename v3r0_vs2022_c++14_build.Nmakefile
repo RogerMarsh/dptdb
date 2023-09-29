@@ -18,7 +18,8 @@ CPPSTANDARD = c++14
 
 # Build.
 
-all : object_directory object_files
+all : wrappers
 
 !INCLUDE Mk\v3r0_vs_build.Nmk
 
+wrappers : $(OBJECT_DIRECTORIES) $(OBJECT_FILES)
