@@ -7,7 +7,7 @@
 # vary with environment: there are four environments plus one
 # definition for times when the four are in step.
 
-DPT30_DPTDB = 1.0.0.dev0
+DPT30_DPTDB = 1.0.0
 DPT30_DPTDB_MSYS2_X86 = $(DPT30_DPTDB)
 DPT30_DPTDB_MSYS2_X64 = 1.0.1.dev0
 DPT30_DPTDB_VS_X86 = $(DPT30_DPTDB)
