@@ -12,11 +12,13 @@ This package provides Python applications with the database API used by DPT.
 
 DPT is a multi-user database system for Microsoft Windows.
 
-The Python application can be as simple as a single-threaded process embedding the DPT API.
+This package contains two modules: a Python interface to the DPT API built using `SWIG`_ and multistep_sort which is an implementation of the sorts needed by DPT's multi-step deferred update process for efficient updates.
 
 These are links to DPT `source`_ and `documentation`_ zip files, and both files are available at `Github.com/RogerMarsh/dptdb`_ too.  
 
 There is no separate documentation for Python.
+
+There are no source distributions (*.tar.gz files), only wheels.  For source see `Github.com/RogerMarsh/dptdb`_ which builds the wheels.
 
 
 Installation Instructions
@@ -27,38 +29,51 @@ Install the package by typing
 
    'py -m pip install --user dpt3.0_dptdb'
 
-in Windows PowerShell.
+in Windows PowerShell (see 'py' documentation for selecting Python version),
+
+or
+
+   'python -m pip install --user dpt3.0_dptdb'
+
+in a Msys2 MINGW32 or Msys2 MINGW64 shell.
 
 
-Sample code
-===========
+32-bit Builds
+=============
 
-The dpt3.0_dptdb/test directory contains a simple application which populates a database, using some contrived data, and does some simple data retrievals.
+32-bit builds on `MinGW`_ (mingw.org and replacements which no longer exist) produced runnable packages until Python 3.7, and dpt3.0-dptdb was ignored after that until the Developer Command Prompt for Visual Studio products were noticed.
 
-This can be run on Microsoft Windows by typing
+The dpt3.0_dptdb/tests/runs/pydpt-test.py module, which populates a database with some contrived data in an attempt to demonstrate running out of memory when run under `Wine`_, is retained from mingw.org days.
 
-   'py pydpt-test.py'
-
-in Windows PowerShell with dpt3.0_dptdb/test as the current directory.
+32-bit builds on `Msys2`_ and Developer Command Prompt for VS2017 are runnable on Python 3.8 and later (and probably wherever the old mingw.org-based builds would run).
 
 
-The sample application offers seven options which create databases with different numbers of records.  Each record has 6 fields and all fields are indexed.
+64-bit Builds
+=============
 
-   One option, called normal, adds 246,625 records to a database in a 16 Mb file in about 3.33 minutes with transaction backout enabled.
+64-bit builds on `Msys2`_ and Developer Command Prompt for VS2017 are runnable after avoiding a few problems located with some test runs.
 
-   The shortest option adds 246,625 records to a database in a 16 Mb file in about 0.6 minutes with transaction backout disabled.
+The dpt3.0_dptdb/tests/runs directory contains a number of test runs devised to determine where single-step deferred update fails on 64-bit Python builds.  These are the run_test_inverted_* modules.  Note single-step deferred update does work in a few cases on 64-bit Python builds assuming the single-step interface is not suppressed.
 
-   The longest option adds 7,892,000 records to a database in a 526 Mb file in about 18.75 minutes with transaction backout disabled.
+The dpt3.0_dptdb/tests/runs directory contains a number of test runs devised to verify the operation of multi-step deferred update on 64-bit Python builds using the multistep_sort module installed alongside dptapi in dptdb.  These are the run_test_multistep_* modules.
 
-The figures are for a 2Gb 667MHz memory, 1.8GHz CPU, solid state drive, Microsoft Windows XP installation.
+The dpt3.0_dptdb/tests/runs directory contains a number of test runs devised to determine where traversal of database in index order fails on 64-bit Python builds.  These are the run_test_traverse_* modules.
+
+
+32-bit and 64-bit Builds
+========================
+
+The dpt3.0_dptdb/tests/runs directory contains a number of test runs devised to verify the operation of file reorganization runs with and without the patch to prevent renaming fields to all upper-case.  These are the run_test_reorganize_* modules.
 
 
 Restrictions
 ============
 
-This package does not run in a `Msys2`_ environment under Microsoft Windows, but the dptdb builder can be downloaded and used to build and install dptdb in that environment.
+The DPT API OpenContext_DUSingle interface is suppressed in 64-bit builds because this style of deferred update (DU) does not work in these environments.
 
-It is not known if dptdb is now usable in a `Msys2`_ environment under `Wine`_, or if the restrictions which affected the old versions built in a `MinGW`_ environment would be relevant.
+The obsolescent OpenContextDUMulti interface has to be used to do deferred updates in 64-bit environments.
+
+The multistep_sort module is added alongside the dptapi module built by SWIG to support OpenContextDUMulti as a consequence of the suppression of OpenContext_DUSingle.
 
 
 Notes

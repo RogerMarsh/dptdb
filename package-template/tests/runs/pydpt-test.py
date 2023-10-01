@@ -5,35 +5,55 @@
 
 """Sample code to do deferred and non-deferred updates.
 
-An attempt is made to force DPT to store enough records, by volume, that it has
-to do deferred updates in multiple chunks.
+An attempt is made to force DPT to store enough records, by volume, that it
+has to do deferred updates in multiple chunks.
 
-Some chess game scores, converted to a non-standard but easily processed form,
-are used repeatedly to store a large volume of records.
+When run under Wine in the past, before 2015 probably, DPT calls to find
+memory usage did not work and chunking did not occur causing crashes on
+running out of memory.  Recent single-step deferred updates, in 2023 but
+not on Wine and not done via this module, report
+'DPT.3109 Will use up to 1610Mb memory (75% of installed RAM)'
+on a box with 8Gb memory installed; so maybe what would happen under Wine
+is different now.
+
+Some chess game scores, converted to a non-standard but easily processed
+form, are used repeatedly to store a large volume of records.
 
 The chess game scores are in a form convenient for generating DPT test data.
 
 A set of moves assumes an empty board.
 
-Three character instructions state put a piece on a square. 'e4P' means put a
-white pawn on e4.
+Three character instructions state put a piece on a square. 'e4P' means put
+a white pawn on e4.
 
 Four character instructions state move the piece on the first square to the
 second square. 'e2e4' means move the piece on e2 to e4.
 
 Five character instructions state move the piece on the first square to the
-second square and turn in into the named piece. 'e7e8q' means move the piece on
-e7 to e8 and turn it into a black queen. (Yes, that is illegal in chess, but
-not here.)
+second square and turn in into the named piece. 'e7e8q' means move the piece
+on e7 to e8 and turn it into a black queen. (Yes, that is illegal in chess,
+but not here.)
 
 Castling and en-passant captures are done by a sequence of individual piece
 moves.  There is no requirement that an instruction to move a white piece is
 followed by an instruction to move a black piece.
 
-The idea is to construct a database where each record gives the location of a
-piece after application of an instruction.  The number of records created by an
-instruction is the number of pieces on the board after its application.  A real
-game will generate just over 1800 records.
+The idea is to construct a database where each record gives the location of
+a piece after application of an instruction.  The number of records created
+by an instruction is the number of pieces on the board after its application.
+A real game will generate just over 1800 records.
+
+One option, called normal, adds 246,625 records to a database in a 16 Mb
+file in about 3.33 minutes with transaction backout enabled.
+
+The shortest option adds 246,625 records to a database in a 16 Mb file in
+about 0.6 minutes with transaction backout disabled.
+
+The longest option adds 7,892,000 records to a database in a 526 Mb file
+in about 18.75 minutes with transaction backout disabled.
+
+The figures are for a 2Gb 667MHz memory, 1.8GHz CPU, solid state drive,
+Microsoft Windows XP installation.
 
 """
 
