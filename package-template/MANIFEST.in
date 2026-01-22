@@ -12,4 +12,3 @@
 # archives is published.
 
 include src/dptdb/_dptapi.pyd
-include tests/pydpt-test.py
