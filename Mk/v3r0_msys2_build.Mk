@@ -133,7 +133,7 @@ $(V3R0_PACKAGE_DPTDB)/$(PYTHON_API_DLL) : $(OBJECT_DIRECTORIES) $(OBJECT_FILES) 
 
 wrapper : $(V3R0_PACKAGE_DPTDB)/$(PYTHON_API_DLL)
 	python -m build --wheel --no-isolation $(V3R0_PACKAGE)
-	python -m wheel tags --python-tag=$(PYTHON_TAG) --abi-tag=$(ABI_TAG) --platform-tag=$(PLATFORM_TAG) --remove $(V3R0_PACKAGE)/dist/dpt3.0_dptdb-$(DPT30_DPTDB_VERSION)-py3-none-any.whl
+	python -m wheel tags --python-tag=$(PYTHON_TAG) --abi-tag=$(ABI_TAG) --platform-tag=$(PLATFORM_TAG) --remove $(V3R0_PACKAGE)/dist/dpt3_0_dptdb-$(DPT30_DPTDB_VERSION)-py3-none-any.whl
 
 local-install : wrapper
 	python -m pip install --user --no-index --find-links $(V3R0_PACKAGE)/dist dpt3.0_dptdb
