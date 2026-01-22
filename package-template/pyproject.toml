@@ -8,7 +8,10 @@
 # now recommended usage of "_" and "-" in these names.
 
 [build-system]
-requires = ["setuptools>=61.0"]
+requires = [
+    "setuptools>=77.0.3",
+    "wheel",
+]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -19,7 +22,6 @@ authors = [
 ]
 description = "DPT database API wrappers built using SWIG"
 classifiers = [
-    "License :: OSI Approved :: BSD License",
     "Programming Language :: Python",
     "Operating System :: Microsoft :: Windows",
     "Topic :: Database",
@@ -27,7 +29,8 @@ classifiers = [
     "Intended Audience :: Developers",
     "Development Status :: 7 - Inactive",
 ]
-license = {file = "LICENCE"}
+license = "BSD-3-Clause"
+license-files = ["LICENCE"]
 readme = "README.rst"
 
 [project.urls]
