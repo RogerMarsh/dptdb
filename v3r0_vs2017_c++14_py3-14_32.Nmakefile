@@ -1,11 +1,11 @@
-# Python 3.9 64 bit c++14 build MS VS 2017 x64 Native Tools Command Prompt.
+# Python 3.14 32 bit c++14 build MS VS 2017 x86 Native Tools Command Prompt.
 
 # The makefile naming convention arose from using Developer Command Prompt
 # to do the initial work getting 32 bit DPT running again.
 
-# A consequence is the naming convention for these makefiles appends '_32'
-# to the Python element of the name for x86 (32 bit) builds, but '_64' to
-# the Visual Studio element of the name for x64 (64 bit) builds.
+# A consequence is appending '_32' to the Python element of the name, if
+# there is one, for x86 (32 bit) builds; but '_64' to the Visual Studio
+# element of the name for x64 (64 bit) builds.
 
 # Build directory suffix.
 # Usually indicates the c++ standard. eg: 'c++14'.
@@ -13,23 +13,20 @@
 # directory.
 
 TOOL_CHAIN = vs
-TOOL_CHAIN_VERSION = 2017_64
+TOOL_CHAIN_VERSION = 2017
 CPPSTANDARD = c++14
 PYTHON_MAJOR = 3
-PYTHON_MINOR = 9
-PYTHON_32_OR_64 = 
+PYTHON_MINOR = 14
+PYTHON_32_OR_64 = -32
 
 # Value of the --platform-tag argument for 'wheel tags ...' command.
-# distutils.util.get_platform() and sysconfig.get_platform() report
-# "win-amd64" but the tag has to be "win_amd64" because "-" is a
-# delimiter here.
 
-PLATFORM_TAG = win_amd64
+PLATFORM_TAG = win32
 
 # Select value from Mk/dpt30-dptdb_version for DPT30_DPTDB_VERSION.
 
 !INCLUDE Mk/dpt30-dptdb_version
-DPT30_DPTDB_VERSION = $(DPT30_DPTDB_VS_X64)
+DPT30_DPTDB_VERSION = $(DPT30_DPTDB_VS_X86)
 
 # Assume wrappers for all Python versions are built with same SWIG version.
 

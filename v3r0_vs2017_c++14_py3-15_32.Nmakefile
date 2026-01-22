@@ -1,4 +1,4 @@
-# Python 3.9 32 bit c++14 build MS VS 2017 x86 Native Tools Command Prompt.
+# Python 3.15 32 bit c++14 build MS VS 2017 x86 Native Tools Command Prompt.
 
 # The makefile naming convention arose from using Developer Command Prompt
 # to do the initial work getting 32 bit DPT running again.
@@ -16,7 +16,7 @@ TOOL_CHAIN = vs
 TOOL_CHAIN_VERSION = 2017
 CPPSTANDARD = c++14
 PYTHON_MAJOR = 3
-PYTHON_MINOR = 9
+PYTHON_MINOR = 15
 PYTHON_32_OR_64 = -32
 
 # Value of the --platform-tag argument for 'wheel tags ...' command.
