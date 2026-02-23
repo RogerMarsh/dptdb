@@ -137,3 +137,42 @@ wrapper : $(V3R0_PACKAGE_DPTDB)/$(PYTHON_API_DLL)
 
 local-install : wrapper
 	python -m pip install --user --no-index --find-links $(V3R0_PACKAGE)/dist dpt3.0_dptdb
+
+# Build tests with c++ in a Msys2 32-bit or 64-bit environment.
+
+# Tests folders.
+
+BUILD_TESTS = $(BUILD)/c++-tests
+V3R0_TESTS = $(BUILD_TESTS)/$(DPT_VERSION)
+
+# Test file names.
+
+TEST_NAMES = $(basename $(notdir $(wildcard c++-tests/source/*.cpp)))
+
+TEST_OBJS = $(TEST_NAMES:%=$(V3R0_TESTS)/%.o)
+
+TEST_EXES = $(TEST_NAMES:%=$(V3R0_TESTS)/%.exe)
+
+# The build directory 'BUILD' is created in v3r0_copy.Mk.
+
+$(BUILD_TESTS) : $(BUILD)
+	-mkdir $(BUILD_TESTS)
+
+$(V3R0_TESTS) : $(BUILD_TESTS)
+	-mkdir $(V3R0_TESTS)
+
+# Includes for c++ builds of tests.
+
+V3R0_TESTS_INCLUDE = -I$(V3R0_INC) -I$(V3R0API_INC)
+
+# Pattern rules C++ tests.
+
+$(V3R0_TESTS)/%.o : c++-tests/source/%.cpp
+	$(WINE) $(CXX) -c $(CXXEXTRA) $(CXXFLAGS) $(V3R0_TESTS_INCLUDE) $(DEFOPTS) -o $@ $<
+
+$(V3R0_TESTS)/%.exe : $(V3R0_TESTS)/%.o
+	$(WINE) $(CXX) $(CXXEXTRA) $(CXXFLAGS) $(V3R0_TESTS_INCLUDE) $(DEFOPTS) -o $@ $< $(API_OBJS) $(OBJS)
+
+tests : $(OBJECT_DIRECTORIES) $(V3R0_TESTS) $(TEST_EXES)
+
+$(TEST_EXES) : $(OBJECT_FILES)

@@ -18,8 +18,10 @@ CPPSTANDARD = c++20
 
 # Build.
 
-all : wrappers
+all : objects
 
 !INCLUDE Mk\v3r0_vs_build.Nmk
 
-wrappers : $(OBJECT_DIRECTORIES) $(OBJECT_FILES)
+objects : $(OBJECT_DIRECTORIES) $(OBJECT_FILES)
+
+!INCLUDE Mk\v3r0_vs_tests.Nmk

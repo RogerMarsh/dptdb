@@ -13,9 +13,10 @@ COMPILER = cl
 # V3R0 extract and build folders.
 
 DPT = dpt
+DPT_VERSION = v3r0
 EXTRACT = $(DPT)\extract
 BUILD = $(DPT)\$(TOOL_CHAIN)$(TOOL_CHAIN_VERSION)_$(CPPSTANDARD)
-V3R0 = $(BUILD)\v3r0
+V3R0 = $(BUILD)\$(DPT_VERSION)
 V3R0_SRC = $(V3R0)\source
 V3R0_INC = $(V3R0)\include
 DPT_LICENCE = licence.txt

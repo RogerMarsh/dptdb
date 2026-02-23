@@ -1,0 +1,57 @@
+# Build V3R0 tests with c++ in a Microsoft VS Developer Command Prompt.
+
+# Include this file in a makefile that includes ./v3r0_vs_build.Nmk so
+# the following variables are defined:
+# TOOL_CHAIN
+# TOOL_CHAIN_VERSION
+# CPPSTANDARD
+# PATH_TO_CXX 
+# COMPILER
+# DPT
+# DPT_VERSION
+# BUILD
+# V3R0
+# V3R0_INC
+# V3R0API_INC
+# OBJS
+# AFX_OBJS
+# API_OBJS
+# OBJECT_FILES
+
+# V3R0 tests folders.
+
+BUILD_TESTS = $(BUILD)\c++-tests
+V3R0_TESTS = $(BUILD_TESTS)\$(DPT_VERSION)
+
+# Executable file names.
+
+TEST_EXES = $(V3R0_TESTS)\api_database_services.exe
+
+# The build directory 'V3R0' is created in v3r0_vs_<std>_copy.Makefile.
+
+$(BUILD_TESTS) : $(BUILD)
+	mkdir $(BUILD_TESTS)
+
+$(V3R0_TESTS) : $(BUILD_TESTS)
+	mkdir $(V3R0_TESTS)
+
+# Compiler settings.
+
+# Use settings set in ./v3r0_vs_build.Nmk except for includes.
+
+# Build tests options for compiler.
+
+# The API include directory should be only one needed.
+V3R0_TESTS_INCLUDE = -I$(V3R0_INC) -I$(V3R0API_INC)
+
+# Pattern rules V3R0 C++ tests.
+
+{c++-tests\source}.cpp{$(V3R0_TESTS)}.obj:
+	@-$(CXX) -c $(CXXEXTRA) $(CXXFLAGS) $(V3R0_TESTS_INCLUDE) $(DEFOPTS) -Fo$(V3R0_TESTS)\ $<
+
+# Build tests executables.
+
+$(V3R0_TESTS)\api_database_services.exe : $(V3R0_TESTS)\api_database_services.obj
+	link -out:$@ $(API_OBJS) $(OBJS) $(V3R0_TESTS)\api_database_services.obj
+
+tests : objects $(V3R0_TESTS) $(TEST_EXES)
