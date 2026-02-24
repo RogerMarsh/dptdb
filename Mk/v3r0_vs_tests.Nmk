@@ -25,7 +25,10 @@ V3R0_TESTS = $(BUILD_TESTS)\$(DPT_VERSION)
 
 # Executable file names.
 
-TEST_EXES = $(V3R0_TESTS)\api_database_services.exe
+TEST_EXES = $(V3R0_TESTS)\api_database_services.exe \
+            $(V3R0_TESTS)\create_fields.exe \
+            $(V3R0_TESTS)\create_file.exe \
+            $(V3R0_TESTS)\create_records.exe
 
 # The build directory 'V3R0' is created in v3r0_vs_<std>_copy.Makefile.
 
@@ -41,17 +44,18 @@ $(V3R0_TESTS) : $(BUILD_TESTS)
 
 # Build tests options for compiler.
 
-# The API include directory should be only one needed.
+# Drop the stdafx include.
 V3R0_TESTS_INCLUDE = -I$(V3R0_INC) -I$(V3R0API_INC)
 
 # Pattern rules V3R0 C++ tests.
 
-{c++-tests\source}.cpp{$(V3R0_TESTS)}.obj:
-	@-$(CXX) -c $(CXXEXTRA) $(CXXFLAGS) $(V3R0_TESTS_INCLUDE) $(DEFOPTS) -Fo$(V3R0_TESTS)\ $<
+# The '-Fe...\ <implied executable file name>' option must be before
+# the list of actual object file names possibly built previously.
+{c++-tests\source}.cpp{$(V3R0_TESTS)}.exe:
+	@-$(CXX) $(CXXEXTRA) $(CXXFLAGS) $(V3R0_TESTS_INCLUDE) $(DEFOPTS) -Fe$(V3R0_TESTS)\ $< $(API_OBJS) $(OBJS)
 
 # Build tests executables.
 
-$(V3R0_TESTS)\api_database_services.exe : $(V3R0_TESTS)\api_database_services.obj
-	link -out:$@ $(API_OBJS) $(OBJS) $(V3R0_TESTS)\api_database_services.obj
-
+# objects is defined in each
+# ../v3r0_vs<toolchain>_<c++ standard>_build.Nmakefile.
 tests : objects $(V3R0_TESTS) $(TEST_EXES)
