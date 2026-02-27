@@ -175,12 +175,7 @@ $(V3R0_TESTS)/%.exe : $(V3R0_TESTS)/%.o
 
 # Use tests target if a test module has changed.
 
-tests : $(V3R0_TESTS) $(TEST_EXES)
+tests : $(OBJECT_DIRECTORIES) $(V3R0_TESTS) $(TEST_EXES)
 
-clean-tests :
-	-rm $(TEST_EXES)
-
-# Use rebuild-tests target if a dpt module has changed.
-
-rebuild-tests : clean-tests tests
+$(TEST_EXES) : $(OBJECT_FILES)
 
