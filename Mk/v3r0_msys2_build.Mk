@@ -173,6 +173,14 @@ $(V3R0_TESTS)/%.o : c++-tests/source/%.cpp
 $(V3R0_TESTS)/%.exe : $(V3R0_TESTS)/%.o
 	$(WINE) $(CXX) $(CXXEXTRA) $(CXXFLAGS) $(V3R0_TESTS_INCLUDE) $(DEFOPTS) -o $@ $< $(API_OBJS) $(OBJS)
 
-tests : $(OBJECT_DIRECTORIES) $(V3R0_TESTS) $(TEST_EXES)
+# Use tests target if a test module has changed.
 
-$(TEST_EXES) : $(OBJECT_FILES)
+tests : $(V3R0_TESTS) $(TEST_EXES)
+
+clean-tests :
+	-rm $(TEST_EXES)
+
+# Use rebuild-tests target if a dpt module has changed.
+
+rebuild-tests : clean-tests tests
+
