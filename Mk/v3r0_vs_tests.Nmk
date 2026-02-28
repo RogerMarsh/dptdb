@@ -31,7 +31,9 @@ TEST_EXES = $(V3R0_TESTS)\api_database_services.exe \
             $(V3R0_TESTS)\create_records.exe \
             $(V3R0_TESTS)\record_loop.exe \
             $(V3R0_TESTS)\index_loop.exe \
-            $(V3R0_TESTS)\sort_loop.exe
+            $(V3R0_TESTS)\sort_loop.exe \
+            $(V3R0_TESTS)\find_point.exe \
+            $(V3R0_TESTS)\unsigned_short.exe
 
 # The build directory 'V3R0' is created in v3r0_vs_<std>_copy.Makefile.
 
