@@ -26,6 +26,11 @@ SEDAPI_SRC = $(SED_SRC)/dbapi
 SEDAPI_INC = $(SED_INC)/dbapi
 SED_STDAFX = $(V3R0E)/stdafx
 
+# Tests folders.
+
+BUILD_TESTS = $(BUILD)/$(CPP_TESTS)
+V3R0_TESTS = $(BUILD_TESTS)/$(DPT_VERSION)
+
 # The *.i file defining the SWIG interface.
 SWIG_INTERFACE = dptapi_python.i
 V3R0_SWIG = $(V3R0)/swig
@@ -81,8 +86,21 @@ $(V3R0_SWIG) : $(V3R0)
 $(V3R0) : $(BUILD)
 	-mkdir $(V3R0)
 
+$(V3R0_TESTS) : $(BUILD_TESTS)
+	-mkdir $(V3R0_TESTS)
+
+$(BUILD_TESTS) : $(BUILD)
+	-mkdir $(BUILD_TESTS)
+
 $(BUILD) :
 	-mkdir $(BUILD)
+
+# Copy service initialization parameters for single step deferred update.
+
+PARMS_DU_SINGLE = parms_dusingle.ini
+
+$(V3R0_TESTS)/$(PARMS_DU_SINGLE) : $(CPP_TESTS)/$(PARMS_DU_SINGLE)
+	cp -p $< $@
 
 # Pattern rules for editing DPT C++.
 

@@ -22,4 +22,4 @@ include Mk/v3r0_source_targets.Mk
 # The make for msys2 does not need the 'copy-all' indirection.
 # V3R0_SWIG and SWIG_INTERFACE are defined in Mk/v3r0_copy.Mk.
 
-copy-all :  $(SOURCE_FILES) $(V3R0_SWIG)/$(SWIG_INTERFACE)
+copy-all :  $(SOURCE_FILES) $(V3R0_SWIG)/$(SWIG_INTERFACE) $(V3R0_TESTS) $(V3R0_TESTS)/$(PARMS_DU_SINGLE)

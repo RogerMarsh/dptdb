@@ -6,6 +6,7 @@
 
 void loop_forward(dpt::APIFoundSet& foundset)
 {
+    std::cout << "enter loop_forward\n";
     dpt::APIRecordSetCursor cursor = foundset.OpenCursor();  // Cursor is set on first record.
     if (!cursor.Accessible()) {
         std::cout << "No records for loop_forward\n";
@@ -16,14 +17,16 @@ void loop_forward(dpt::APIFoundSet& foundset)
         std::cout << "At record " << cursor.LastAdvancedRecNum() << "\n";
         cursor.Advance();  // Default is 1 meaning each record is visited.
     }
-    std::cout << "loop_forward finished\n";
+    std::cout << "leave loop_forward\n";
     foundset.CloseCursor(cursor);
 }
 
 void loop_backward(dpt::APIFoundSet& foundset)
 {
+    std::cout << "enter loop_backward\n";
     dpt::APIRecordSetCursor cursor = foundset.OpenCursor();
     cursor.GotoLast();
+    std::cout << "Accessible " << cursor.Accessible() << " after GotoLast\n";
     if (!cursor.Accessible()) {
         std::cout << "No records for loop_backward\n";
         foundset.CloseCursor(cursor);
@@ -32,8 +35,9 @@ void loop_backward(dpt::APIFoundSet& foundset)
     while (cursor.Accessible()) {
         std::cout << "At record " << cursor.LastAdvancedRecNum() << "\n";
         cursor.Advance(-1);
+        std::cout << "Accessible " << cursor.Accessible() << " after Advance\n";
     }
-    std::cout << "loop_backward finished\n";
+    std::cout << "leave loop_backward\n";
     foundset.CloseCursor(cursor);
 }
 

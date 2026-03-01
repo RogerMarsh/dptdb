@@ -140,11 +140,6 @@ local-install : wrapper
 
 # Build tests with c++ in a Msys2 32-bit or 64-bit environment.
 
-# Tests folders.
-
-BUILD_TESTS = $(BUILD)/c++-tests
-V3R0_TESTS = $(BUILD_TESTS)/$(DPT_VERSION)
-
 # Test file names.
 
 TEST_NAMES = $(basename $(notdir $(wildcard c++-tests/source/*.cpp)))
@@ -152,14 +147,6 @@ TEST_NAMES = $(basename $(notdir $(wildcard c++-tests/source/*.cpp)))
 TEST_OBJS = $(TEST_NAMES:%=$(V3R0_TESTS)/%.o)
 
 TEST_EXES = $(TEST_NAMES:%=$(V3R0_TESTS)/%.exe)
-
-# The build directory 'BUILD' is created in v3r0_copy.Mk.
-
-$(BUILD_TESTS) : $(BUILD)
-	-mkdir $(BUILD_TESTS)
-
-$(V3R0_TESTS) : $(BUILD_TESTS)
-	-mkdir $(V3R0_TESTS)
 
 # Includes for c++ builds of tests.
 
@@ -175,7 +162,7 @@ $(V3R0_TESTS)/%.exe : $(V3R0_TESTS)/%.o
 
 # Use tests target if a test module has changed.
 
-tests : $(OBJECT_DIRECTORIES) $(V3R0_TESTS) $(TEST_EXES)
+tests : $(OBJECT_DIRECTORIES) $(V3R0_TESTS) $(TEST_EXES) $(V3R0_TESTS)/$(PARMS_DU_SINGLE)
 
 $(TEST_EXES) : $(OBJECT_FILES)
 
