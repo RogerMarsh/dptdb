@@ -1,4 +1,4 @@
-// Add 10 records to file by single-step deferred update indexed by different keys.
+// Add 10 records to file by single-step deferred update indexed by same key.
 
 #include <iostream>
 
@@ -15,7 +15,7 @@ void add_record(dpt::APIDatabaseFileContext& context, const std::string data, co
 
 int main()
 {
-    std::cout << "enter load_records_01\n";
+    std::cout << "enter load_records_02\n";
 
     // Parms argument for DUSingle mode.  The first two arguments are the default values.
     dpt::APIDatabaseServices dbserv("sysprint.txt", "George", "parms_dusingle.ini");
@@ -24,16 +24,16 @@ int main()
     dpt::APIContextSpecification spec = dpt::APIContextSpecification("TSTFIELD");
     dpt::APIDatabaseFileContext context = dbserv.OpenContext_DUSingle(spec);
     add_record(context, "100", "e");
-    add_record(context, "200", "f");
-    add_record(context, "300", "g");
-    add_record(context, "400", "h");
-    add_record(context, "500", "i");
-    add_record(context, "600", "j");
-    add_record(context, "700", "a");
-    add_record(context, "800", "b");
-    add_record(context, "900", "c");
-    add_record(context, "000", "d");
+    add_record(context, "200", "e");
+    add_record(context, "300", "e");
+    add_record(context, "400", "e");
+    add_record(context, "500", "e");
+    add_record(context, "600", "e");
+    add_record(context, "700", "e");
+    add_record(context, "800", "e");
+    add_record(context, "900", "e");
+    add_record(context, "000", "e");
     dbserv.CloseContext(context);
     dbserv.Free("TSTFIELD");
-    std::cout << "leave load_records_01\n";
+    std::cout << "leave load_records_02\n";
 }

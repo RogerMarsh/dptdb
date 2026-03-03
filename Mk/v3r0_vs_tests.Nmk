@@ -35,7 +35,17 @@ TEST_EXES = $(V3R0_TESTS)\api_database_services.exe \
             $(V3R0_TESTS)\find_point.exe \
             $(V3R0_TESTS)\unsigned_short.exe \
             $(V3R0_TESTS)\create_invisible_fields.exe \
-            $(V3R0_TESTS)\load_records_01.exe
+            $(V3R0_TESTS)\load_records_01.exe \
+            $(V3R0_TESTS)\load_records_02.exe \
+            $(V3R0_TESTS)\load_records_03.exe \
+            $(V3R0_TESTS)\load_records_04.exe \
+            $(V3R0_TESTS)\load_records_05.exe \
+            $(V3R0_TESTS)\load_records_06.exe \
+            $(V3R0_TESTS)\load_records_07.exe \
+            $(V3R0_TESTS)\load_records_08.exe \
+            $(V3R0_TESTS)\load_records_09.exe \
+            $(V3R0_TESTS)\load_records_10.exe \
+            $(V3R0_TESTS)\create_large_file.exe
 
 # Compiler settings.
 
