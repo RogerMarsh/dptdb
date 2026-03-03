@@ -13,8 +13,8 @@ int main()
     dpt::APIDatabaseServices dbserv;
     dbserv.Allocate("TSTLARGE", "testlarge.dpt", dpt::FILEDISP_COND);
     dbserv.Create("TSTLARGE",  // DD name is 8 characters maximum.
-        500,      // bsize (pages)
-        200,      // brecppg (so file can hold 100000 records maximum without being extended)
+        750,      // bsize (pages)
+        200,      // brecppg (so file can hold 150000 records maximum without being extended)
         -1,       // breserve (-1 means take default as argument)
         -1,       // breuse
         400,      // dsize
