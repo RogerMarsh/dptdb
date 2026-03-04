@@ -1,4 +1,4 @@
-// Create a file.
+// Create a file of default size.
 
 #include "dptdb.h"
 

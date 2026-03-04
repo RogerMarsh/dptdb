@@ -43,7 +43,18 @@ TEST_EXES = $(V3R0_TESTS)\api_database_services.exe \
             $(V3R0_TESTS)\load_records_06.exe \
             $(V3R0_TESTS)\load_records_07.exe \
             $(V3R0_TESTS)\load_records_08.exe \
-            $(V3R0_TESTS)\create_large_file.exe
+            $(V3R0_TESTS)\load_records_10.exe \
+            $(V3R0_TESTS)\load_records_11.exe \
+            $(V3R0_TESTS)\load_records_12.exe \
+            $(V3R0_TESTS)\load_records_13.exe \
+            $(V3R0_TESTS)\load_records_14.exe \
+            $(V3R0_TESTS)\load_records_15.exe \
+            $(V3R0_TESTS)\load_records_16.exe \
+            $(V3R0_TESTS)\load_records_17.exe \
+            $(V3R0_TESTS)\load_records_18.exe \
+            $(V3R0_TESTS)\load_records_19.exe \
+            $(V3R0_TESTS)\create_file_150000.exe \
+            $(V3R0_TESTS)\create_file_75000.exe
 
 # Compiler settings.
 

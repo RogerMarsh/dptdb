@@ -1,4 +1,4 @@
-// Create a file with two fields, one of them indexed and invisible.
+// Create a file of default size with two fields, one of them indexed and invisible.
 
 #include "dptdb.h"
 
