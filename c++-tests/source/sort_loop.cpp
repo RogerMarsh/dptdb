@@ -1,4 +1,5 @@
 // Loop over sorted records in file.
+// The file is created by create_fields or create_invisible_fields.
 
 #include <iostream>
 

@@ -1,4 +1,5 @@
-// Add 1 record to large file by single-step deferred update indexed by same key.
+// Add 1 record to file by single-step deferred update indexed by same key.
+// The file is created by create_file_150000.
 
 #include <iostream>
 #include <string>

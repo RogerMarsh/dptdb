@@ -1,4 +1,5 @@
 // Loop over index entries for field in file.
+// The file is created by create_fields or create_invisible_fields.
 
 #include <iostream>
 #include <string>

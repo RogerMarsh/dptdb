@@ -1,4 +1,5 @@
 // Add 10 records to file by single-step deferred update indexed by same key.
+// The file is created by create_fields or create_invisible_fields.
 
 #include <iostream>
 

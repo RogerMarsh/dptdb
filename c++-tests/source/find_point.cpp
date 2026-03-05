@@ -1,4 +1,5 @@
 // Find records in file by FD_POINT$ and FD_NOT_POINT$.
+// The file is created by create_fields or create_invisible_fields.
 
 #include <iostream>
 

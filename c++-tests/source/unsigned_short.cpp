@@ -1,4 +1,5 @@
 // Unsigned short comparison for equality with zero.
+// Verify operation of this comparison which fails in soome cases in record_loop.
 
 #include <iostream>
 

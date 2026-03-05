@@ -1,4 +1,4 @@
-// Add records to file.
+// Add records to file created by create_fields or create_invisible_fields.
 
 #include "dptdb.h"
 

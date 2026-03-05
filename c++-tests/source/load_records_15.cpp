@@ -1,4 +1,5 @@
-// Add 65281 records to 75000 record file by single-step deferred update with each key indexing 1000 records.
+// Add 65281 records to file by single-step deferred update with each key indexing 1000 records.
+// The file is created by create_file_75000.
 
 #include <iostream>
 #include <string>
