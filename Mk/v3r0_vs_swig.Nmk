@@ -3,4 +3,4 @@
 # SWIG version settings.
 
 PATH_TO_SWIG_WITHOUT_VERSION = C:\swigwin-
-SWIG_VERSION = 4.0.1
+SWIG_VERSION = 4.4.1
