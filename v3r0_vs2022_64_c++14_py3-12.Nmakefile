@@ -17,7 +17,7 @@ TOOL_CHAIN_VERSION = 2022_64
 CPPSTANDARD = c++14
 COMPILER = clang-cl
 PYTHON_MAJOR = 3
-PYTHON_MINOR = 14
+PYTHON_MINOR = 12
 PYTHON_32_OR_64 = 
 
 # Value of the --platform-tag argument for 'wheel tags ...' command.
