@@ -5,6 +5,7 @@ TOOL_CHAIN_VERSION =
 CPPSTANDARD = c++98
 WINE =
 PATH_TO_CXX =
+Compiler = g++
 
 # Value of the --platform-tag argument for 'wheel tags ...' command.
 

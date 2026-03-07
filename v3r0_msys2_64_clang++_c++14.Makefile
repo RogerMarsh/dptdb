@@ -1,11 +1,11 @@
-# Build V3R0 with c++17 in Msys2 on Microsoft Windows.
+# Build V3R0 with c++14 in Msys2 on Microsoft Windows.
 
 TOOL_CHAIN = msys2
 TOOL_CHAIN_VERSION = _64
-CPPSTANDARD = c++17
+CPPSTANDARD = c++14
 WINE =
 PATH_TO_CXX =
-COMPILER = g++
+COMPILER = clang++
 
 # Value of the --platform-tag argument for 'wheel tags ...' command.
 
