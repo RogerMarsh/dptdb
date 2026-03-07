@@ -3,7 +3,6 @@
 # Compiler settings.
 
 PATH_TO_CXX =
-COMPILER = cl
 WINE =
 
 # sed '-f' arguments.

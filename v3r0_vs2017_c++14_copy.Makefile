@@ -10,6 +10,7 @@
 TOOL_CHAIN = vs
 TOOL_CHAIN_VERSION = 2017
 CPPSTANDARD = c++14
+COMPILER = cl
 
 # Copy and edit.
 

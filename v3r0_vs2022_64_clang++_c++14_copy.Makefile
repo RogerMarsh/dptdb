@@ -11,6 +11,7 @@
 TOOL_CHAIN = vs
 TOOL_CHAIN_VERSION = 2022_64
 CPPSTANDARD = c++14
+COMPILER = clang-cl
 
 # Copy and edit.
 

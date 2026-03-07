@@ -8,7 +8,7 @@
 
 include Mk/v3r0_dpt.Mk
 
-BUILD = $(DPT)/$(TOOL_CHAIN)$(TOOL_CHAIN_VERSION)_$(CPPSTANDARD)
+BUILD = $(DPT)/$(TOOL_CHAIN)$(TOOL_CHAIN_VERSION)_$(COMPILER)_$(CPPSTANDARD)
 V3R0 = $(BUILD)/$(DPT_VERSION)
 
 # Main targets (phony copy targets are defined near the real targets).
