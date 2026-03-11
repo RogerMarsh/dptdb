@@ -46,8 +46,10 @@ SED_SRC_EDITS = -f sedCommands/back_to_forward_slant \
                 -f sedCommands/comment_session \
                 -f sedCommands/ord_comp_ptr_int \
                 -f sedCommands/fastload_no_upper \
-                -f sedCommands/msgini_restore_upper
-SED_INC_EDITS = -f sedCommands/back_to_forward_slant
+                -f sedCommands/msgini_restore_upper \
+                -f sedCommands/resource_cpp_lockinfo
+SED_INC_EDITS = -f sedCommands/back_to_forward_slant \
+                -f sedCommands/resource_h_lockinfo
 SEDAPI_SRC_EDITS = -f sedCommands/back_to_forward_slant
 SEDAPI_INC_EDITS = -f sedCommands/back_to_forward_slant
 SED_STDAFX_CPP_EDITS = -f sedCommands/back_to_forward_slant

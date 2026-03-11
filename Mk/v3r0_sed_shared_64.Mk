@@ -9,10 +9,6 @@
 # rc_frecset_workaround should not be applied to 32 bit even if safe.
 # It is wrong and is removed.
 
-# resource_cpp_lockinfo and resource_h_lockinfo are probably safe on 32-bit
-# but should be applied only if a clang 32-bit build becomes necessary or
-# desirable and requires them.
-
 # trace_du_crash_x64 provides 'cout' statements surrounding the crash
 # statement as close as practical: page_v.h has implementation.
 
@@ -23,9 +19,4 @@ SED_SRC_EDITS += \
                 -f sedCommands/fn_irelrec_nextbit \
                 -f sedCommands/fp_irelrec_prevbit \
                 -f sedCommands/fn_irelrec \
-                -f sedCommands/fn_singlerec \
-                -f sedCommands/resource_cpp_lockinfo
-
-SED_INC_EDITS += \
-                -f sedCommands/resource_h_lockinfo
-
+                -f sedCommands/fn_singlerec
