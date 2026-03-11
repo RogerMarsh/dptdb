@@ -2,7 +2,7 @@
 
 CXX = $(PATH_TO_CXX)$(COMPILER)
 DEFOPTS = $(DEFINES) $(OPTIONS)
-CXXEXTRA = -D_BBDBAPI
+CXXEXTRA = -D_BBDBAPI -std=$(CPPSTANDARD)
 DPT_LDFLAGS = -shared
 
 # Build includes (-I) options for compiler.
