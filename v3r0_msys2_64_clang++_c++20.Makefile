@@ -1,11 +1,11 @@
-# Build V3R0 with c++23 in Msys2 on Microsoft Windows.
+# Build V3R0 with clang++ c++20 in Msys2 on Microsoft Windows.
 
 TOOL_CHAIN = msys2
 TOOL_CHAIN_VERSION = _64
-CPPSTANDARD = c++23
+CPPSTANDARD = c++20
 WINE =
 PATH_TO_CXX =
-COMPILER = g++
+COMPILER = clang++
 
 # Value of the --platform-tag argument for 'wheel tags ...' command.
 
@@ -23,5 +23,5 @@ include Mk/v3r0_sed_msys2_64.Mk
 # Copy, edit, and build.
 
 include Mk/v3r0_msys2.Mk
-include Mk/v3r0_copy_binary_function_null.Mk
+include Mk/v3r0_copy_binary_function.Mk
 include Mk/v3r0_copy_swig_64.Mk

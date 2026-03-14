@@ -162,7 +162,7 @@ $(V3R0_TESTS)/%.exe : $(V3R0_TESTS)/%.o
 
 # Use tests target if a test module has changed.
 
-tests : $(OBJECT_DIRECTORIES) $(V3R0_TESTS) $(TEST_EXES) $(V3R0_TESTS)/$(PARMS_DU_SINGLE)
+tests : $(OBJECT_DIRECTORIES) copy-all $(V3R0_TESTS) $(TEST_EXES) $(V3R0_TESTS)/$(PARMS_DU_SINGLE)
 
 $(TEST_EXES) : $(OBJECT_FILES)
 

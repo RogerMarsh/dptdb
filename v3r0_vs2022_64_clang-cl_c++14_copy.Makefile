@@ -16,4 +16,6 @@ COMPILER = clang-cl
 # Copy and edit.
 
 include Mk/v3r0_vs_copy_64.Mk
+include Mk/v3r0_copy_binary_function_null.Mk
+include Mk/v3r0_copy_all.Mk
 

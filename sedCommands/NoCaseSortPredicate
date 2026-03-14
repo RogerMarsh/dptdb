@@ -1,0 +1,27 @@
+9a\
+// This is what NoCaseSortPredicate becomes following hints in
+9a\
+// tutorialpedia.org/blog/replacement-for-std-binary-function
+9a\
+// but when creating the *.pyd the g++ linker (c++14) generates a
+9a\
+// "multiple definition of 'dpt::NoCaseSortPredicate'; ...bmset.cpp..: first defined here"
+9a\
+// error for each *.cpp module after bmset.cpp which includes du1step.h
+9a\
+// (which includes stlextra.h).
+9a\
+// Since NoCaseSortPredicate is not used by the code in DPT_V3R0_DBMS.ZIP
+9a\
+// the problem is avoided by commenting the redefinition.
+9a\
+// DPT_V2R14_DBMS.ZIP is the first release containing du1step and stlextra.
+9a\
+
+17a\
+//auto NoCaseSortPredicate = [](const std::string& lhs, const std::string& rhs) {
+17a\
+//		return (stricmp(lhs.c_str(), rhs.c_str()) < 0);
+17a\
+//};
+11,17d

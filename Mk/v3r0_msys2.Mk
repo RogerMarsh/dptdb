@@ -6,4 +6,5 @@ include Mk/v3r0_msys2_targets.Mk
 include Mk/v3r0_copy.Mk
 include Mk/v3r0_msys2_build.Mk
 include Mk/v3r0_source_targets.Mk
+include Mk/v3r0_copy_all.Mk
 

@@ -1,0 +1,13 @@
+628a\
+// This is what LeafInfoLessThanPredicate becomes following hints in
+628a\
+// tutorialpedia.org/blog/replacement-for-std-binary-function
+628a\
+
+632a\
+auto LeafNodeLessThanPredicate = [](const FindWorkNode_Leaf* lhs, const FindWorkNode_Leaf* rhs) {
+633,636d
+658d
+673a\
+			std::sort(leaves->begin(), leaves->end(), LeafNodeLessThanPredicate);
+674,675d

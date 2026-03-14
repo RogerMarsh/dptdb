@@ -19,9 +19,9 @@ V3R0_PACKAGE_DPTDB = $(V3R0_PACKAGE)/src/dptdb
 
 # Main targets (phony build targets are defined near the build targets).
 
-.PHONY : all clean wrapper local-install tests
+.PHONY : all clean wrapper local-install tests copy-all
 
-all : wrapper
+all : copy-all wrapper
 
 clean :
 	-rm -r $(V3R0)
