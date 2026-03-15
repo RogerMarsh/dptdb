@@ -1,0 +1,17 @@
+435a\
+// This is what FieldValueLessThanPredicate becomes following hints in
+435a\
+// learn.microsoft.com/en-us/cpp/standard-library/binary-function-struct?view=msvc-170
+435a\
+// stackoverflow.com/questions/57236763/how-to-change-binary-function-to-c17-code
+435a\
+// because I did not see how to apply hints in
+435a\
+// tutorialpedia.org/blog/replacement-for-std-binary-function
+435a\
+// here.
+435a\
+// Summary is just remove the inheritance from std::binary_function at c++17 and later.
+435a\
+
+440d

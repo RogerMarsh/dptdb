@@ -21,5 +21,5 @@ include Mk/v3r0_sed_shared.Mk
 # Copy, edit, and build.
 
 include Mk/v3r0_msys2.Mk
-include Mk/v3r0_copy_binary_function_null.Mk
+include Mk/v3r0_copy_binary_function.Mk
 include Mk/v3r0_copy_swig.Mk

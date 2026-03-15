@@ -54,7 +54,8 @@ TEST_EXES = $(V3R0_TESTS)\api_database_services.exe \
             $(V3R0_TESTS)\load_records_18.exe \
             $(V3R0_TESTS)\load_records_19.exe \
             $(V3R0_TESTS)\create_file_150000.exe \
-            $(V3R0_TESTS)\create_file_75000.exe
+            $(V3R0_TESTS)\create_file_75000.exe \
+            $(V3R0_TESTS)\binary_function.exe
 
 # Compiler settings.
 
