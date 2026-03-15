@@ -24,4 +24,5 @@ include Mk/v3r0_sed_msys2_64.Mk
 
 include Mk/v3r0_msys2.Mk
 include Mk/v3r0_copy_binary_function.Mk
+include Mk/v3r0_copy_DU1StepInfo.Mk
 include Mk/v3r0_copy_swig_64.Mk

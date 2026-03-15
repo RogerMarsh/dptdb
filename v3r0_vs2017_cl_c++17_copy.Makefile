@@ -15,6 +15,7 @@ COMPILER = cl
 # Copy and edit.
 
 include Mk/v3r0_vs_copy.Mk
-include Mk/v3r0_copy_binary_function_null.Mk
+include Mk/v3r0_copy_binary_function.Mk
+include Mk/v3r0_copy_DU1StepInfo_null.Mk
 include Mk/v3r0_copy_all.Mk
 
