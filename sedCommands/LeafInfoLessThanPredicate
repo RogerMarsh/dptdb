@@ -1,13 +1,19 @@
 628a\
-// This is what LeafInfoLessThanPredicate becomes following hints in
+// This is what NoCaseSortPredicate becomes following hints in
+628a\
+// learn.microsoft.com/en-us/cpp/standard-library/binary-function-struct?view=msvc-170
+628a\
+// stackoverflow.com/questions/57236763/how-to-change-binary-function-to-c17-code
+628a\
+// following what works in the FieldValueLessThanPredicate case.
+628a\
+// The fix based on
 628a\
 // tutorialpedia.org/blog/replacement-for-std-binary-function
 628a\
+// is replaced.
+628a\
+// Summary is just remove the inheritance from std::binary_function at c++17 and later.
+628a\
 
-632a\
-auto LeafNodeLessThanPredicate = [](const FindWorkNode_Leaf* lhs, const FindWorkNode_Leaf* rhs) {
-633,636d
-658d
-673a\
-			std::sort(leaves->begin(), leaves->end(), LeafNodeLessThanPredicate);
-674,675d
+634d
