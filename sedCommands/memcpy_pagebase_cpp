@@ -1,0 +1,10 @@
+/void DatabaseFilePage::MakeDirty_S()/s/void DatabaseFilePage::MakeDirty_S()/\
+void GenericPage::Overwrite(RawPageData* r)\
+{\
+    MakeDirty();\
+    memcpy(RawPage_S(), r, DBPAGE_SIZE);\
+}\
+\
+void DatabaseFilePage::MakeDirty_S()\
+/g
+

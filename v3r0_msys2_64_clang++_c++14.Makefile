@@ -1,4 +1,4 @@
-# Build V3R0 with c++14 in Msys2 on Microsoft Windows.
+# Build V3R0 with clang++ c++14 in Msys2 on Microsoft Windows.
 
 TOOL_CHAIN = msys2
 TOOL_CHAIN_VERSION = _64
@@ -19,6 +19,7 @@ DPT30_DPTDB_VERSION = $(DPT30_DPTDB_MSYS2_X64)
 include Mk/v3r0_sed_shared.Mk
 include Mk/v3r0_sed_shared_64.Mk
 include Mk/v3r0_sed_msys2_64.Mk
+include Mk/v3r0_sed_msys2_clang_64.Mk
 
 # Copy, edit, and build.
 
