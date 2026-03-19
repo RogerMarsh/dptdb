@@ -13,10 +13,13 @@ TOOL_CHAIN_VERSION = 2022_64
 CPPSTANDARD = c++20
 COMPILER = cl
 
+# sed '-f' arguments.
+
+include Mk/v3r0_vs_sed_64.Mk
+
 # Copy and edit.
 
 include Mk/v3r0_vs_copy_64.Mk
 include Mk/v3r0_copy_binary_function.Mk
-include Mk/v3r0_copy_DU1StepInfo_null.Mk
 include Mk/v3r0_copy_all.Mk
 

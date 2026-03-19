@@ -12,10 +12,13 @@ TOOL_CHAIN_VERSION = 2019
 CPPSTANDARD = c++14
 COMPILER = cl
 
+# sed '-f' arguments.
+
+include Mk/v3r0_vs_sed.Mk
+
 # Copy and edit.
 
 include Mk/v3r0_vs_copy.Mk
 include Mk/v3r0_copy_binary_function_null.Mk
-include Mk/v3r0_copy_DU1StepInfo_null.Mk
 include Mk/v3r0_copy_all.Mk
 

@@ -5,10 +5,6 @@
 PATH_TO_CXX =
 WINE =
 
-# sed '-f' arguments.
-
-include Mk/v3r0_sed_shared.Mk
-
 # Copy and edit.
 
 include Mk/v3r0_copy_targets.Mk

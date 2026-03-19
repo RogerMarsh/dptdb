@@ -12,10 +12,14 @@ TOOL_CHAIN_VERSION = 2022
 CPPSTANDARD = c++20
 COMPILER = clang-cl
 
+# sed '-f' arguments.
+
+include Mk/v3r0_vs_sed.Mk
+include Mk/v3r0_sed_du1stepinfo.Mk
+
 # Copy and edit.
 
 include Mk/v3r0_vs_copy.Mk
 include Mk/v3r0_copy_binary_function.Mk
-include Mk/v3r0_copy_DU1StepInfo.Mk
 include Mk/v3r0_copy_all.Mk
 
