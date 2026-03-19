@@ -2,6 +2,16 @@
 // Verify operation of this comparison which fails in soome cases in record_loop.
 
 #include <iostream>
+#include <sstream>
+
+// So this can run at c++98 and c++03 standards too.
+std::string int_to_string(const int number)
+{
+    std::stringstream ss;
+    ss << number;
+    std::string str = ss.str();
+    return str;
+}
 
 // Simple version of FindNextRelRec method with the comparison.
 class Segment {
@@ -12,10 +22,10 @@ public:
 bool Segment::compare_with_zero(unsigned short& number) const
 {
     if (number == 0) {
-	std::cout << number << " compares equal to 0\n";
+	std::cout << int_to_string(number) << " compares equal to 0" << std::endl;
 	return false;
 	}
-    std::cout << number << " compares not equal to 0\n";
+    std::cout << int_to_string(number) << " compares not equal to 0" << std::endl;
     return true;
 }
 

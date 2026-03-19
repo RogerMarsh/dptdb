@@ -10,7 +10,7 @@ void point(dpt::APIDatabaseFileContext& context, const int position)
 {
     dpt::APIFindSpecification findspec = dpt::APIFindSpecification(dpt::FD_POINT$, position);
     dpt::APIFoundSet foundset = context.FindRecords(findspec);
-    std::cout << foundset.Count() << " records found point for position " << position << "\n";
+    std::cout << foundset.Count() << " records found point for position " << position << std::endl;
     context.DestroyRecordSet(foundset);
 }
 
@@ -19,7 +19,7 @@ void not_point(dpt::APIDatabaseFileContext& context, const int position)
 {
     dpt::APIFindSpecification findspec = dpt::APIFindSpecification(dpt::FD_NOT_POINT$, position);
     dpt::APIFoundSet foundset = context.FindRecords(findspec);
-    std::cout << foundset.Count() << " records found not_point for position " << position << "\n";
+    std::cout << foundset.Count() << " records found not_point for position " << position << std::endl;
     context.DestroyRecordSet(foundset);
 }
 

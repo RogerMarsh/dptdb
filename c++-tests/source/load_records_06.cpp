@@ -3,8 +3,18 @@
 
 #include <iostream>
 #include <string>
+#include <sstream>
 
 #include "dptdb.h"
+
+// So this can run at c++98 and c++03 standards too.
+std::string int_to_string(const int number)
+{
+    std::stringstream ss;
+    ss << number;
+    std::string str = ss.str();
+    return str;
+}
 
 void add_record(dpt::APIDatabaseFileContext& context, const std::string data, const std::string lookup)
 {
@@ -12,12 +22,12 @@ void add_record(dpt::APIDatabaseFileContext& context, const std::string data, co
     record.Append("Data", data);
     record.Append("Lookup", lookup);
     int record_number = context.StoreRecord(record);
-    // std::cout << "record " << record_number << " stored\n";
+    // std::cout << "record " << record_number << " stored" << std::endl;
 }
 
 int main()
 {
-    std::cout << "enter load_records_06\n";
+    std::cout << "enter load_records_06" << std::endl;
 
     // Parms argument for DUSingle mode.  The first two arguments are the default values.
     dpt::APIDatabaseServices dbserv("sysprint.txt", "George", "parms_dusingle.ini");
@@ -26,11 +36,11 @@ int main()
     dpt::APIContextSpecification spec = dpt::APIContextSpecification("TSTLARGE");
     dpt::APIDatabaseFileContext context = dbserv.OpenContext_DUSingle(spec);
     for (int i = 0; i < 1; ++i) {
-        add_record(context, std::to_string(i), "e");
+        add_record(context, int_to_string(i), "e");
     };
-    std::cout << "1 record stored\n";
+    std::cout << "1 record stored" << std::endl;
     dbserv.CloseContext(context);
-    std::cout << "context closed\n";
+    std::cout << "context closed" << std::endl;
     dbserv.Free("TSTLARGE");
-    std::cout << "leave load_records_06\n";
+    std::cout << "leave load_records_06" << std::endl;
 }

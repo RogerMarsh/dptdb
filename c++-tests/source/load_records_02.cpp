@@ -11,12 +11,12 @@ void add_record(dpt::APIDatabaseFileContext& context, const std::string data, co
     record.Append("Data", data);
     record.Append("Lookup", lookup);
     int record_number = context.StoreRecord(record);
-    std::cout << "record " << record_number << " stored\n";
+    std::cout << "record " << record_number << " stored" << std::endl;
 }
 
 int main()
 {
-    std::cout << "enter load_records_02\n";
+    std::cout << "enter load_records_02" << std::endl;
 
     // Parms argument for DUSingle mode.  The first two arguments are the default values.
     dpt::APIDatabaseServices dbserv("sysprint.txt", "George", "parms_dusingle.ini");
@@ -36,5 +36,5 @@ int main()
     add_record(context, "000", "e");
     dbserv.CloseContext(context);
     dbserv.Free("TSTFIELD");
-    std::cout << "leave load_records_02\n";
+    std::cout << "leave load_records_02" << std::endl;
 }

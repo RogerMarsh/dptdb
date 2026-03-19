@@ -1,5 +1,6 @@
 // Loop over sorted records in file.
 // The file is created by create_fields or create_invisible_fields.
+// Best to populate file with create_records.
 
 #include <iostream>
 
@@ -26,15 +27,15 @@ void sort_ascending_loop_forward(dpt::APIFoundSet& foundset)
     dpt::APISortRecordSet sortedset = sort_ascending(foundset);
     dpt::APIRecordSetCursor cursor = sortedset.OpenCursor();  // Cursor is set on first record.
     if (!cursor.Accessible()) {
-        std::cout << "No records for sort_ascending_loop_forward\n";
+        std::cout << "No records for sort_ascending_loop_forward" << std::endl;
         sortedset.CloseCursor(cursor);
         return;
     }
     while (cursor.Accessible()) {
-        std::cout << "At record " << cursor.LastAdvancedRecNum() << "\n";
+        std::cout << "At record " << cursor.LastAdvancedRecNum() << std::endl;
         cursor.Advance();  // Default is 1 meaning each record is visited.
     }
-    std::cout << "sort_ascending_loop_forward finished\n";
+    std::cout << "sort_ascending_loop_forward finished" << std::endl;
     sortedset.CloseCursor(cursor);
 }
 
@@ -43,15 +44,15 @@ void sort_descending_loop_forward(dpt::APIFoundSet& foundset)
     dpt::APISortRecordSet sortedset = sort_descending(foundset);
     dpt::APIRecordSetCursor cursor = sortedset.OpenCursor();  // Cursor is set on first record.
     if (!cursor.Accessible()) {
-        std::cout << "No records for sort_descending_loop_forward\n";
+        std::cout << "No records for sort_descending_loop_forward" << std::endl;
         sortedset.CloseCursor(cursor);
         return;
     }
     while (cursor.Accessible()) {
-        std::cout << "At record " << cursor.LastAdvancedRecNum() << "\n";
+        std::cout << "At record " << cursor.LastAdvancedRecNum() << std::endl;
         cursor.Advance();  // Default is 1 meaning each record is visited.
     }
-    std::cout << "sort_descending_loop_forward finished\n";
+    std::cout << "sort_descending_loop_forward finished" << std::endl;
     sortedset.CloseCursor(cursor);
 }
 
@@ -61,15 +62,15 @@ void sort_ascending_loop_backward(dpt::APIFoundSet& foundset)
     dpt::APIRecordSetCursor cursor = sortedset.OpenCursor();  // Cursor is set on first record.
     cursor.GotoLast();
     if (!cursor.Accessible()) {
-        std::cout << "No records for sort_ascending_loop_backward\n";
+        std::cout << "No records for sort_ascending_loop_backward" << std::endl;
         sortedset.CloseCursor(cursor);
         return;
     }
     while (cursor.Accessible()) {
-        std::cout << "At record " << cursor.LastAdvancedRecNum() << "\n";
+        std::cout << "At record " << cursor.LastAdvancedRecNum() << std::endl;
         cursor.Advance(-1);
     }
-    std::cout << "sort_ascending_loop_backward finished\n";
+    std::cout << "sort_ascending_loop_backward finished" << std::endl;
     sortedset.CloseCursor(cursor);
 }
 
@@ -79,15 +80,15 @@ void sort_descending_loop_backward(dpt::APIFoundSet& foundset)
     dpt::APIRecordSetCursor cursor = sortedset.OpenCursor();  // Cursor is set on first record.
     cursor.GotoLast();
     if (!cursor.Accessible()) {
-        std::cout << "No records for sort_descending_loop_backward\n";
+        std::cout << "No records for sort_descending_loop_backward" << std::endl;
         sortedset.CloseCursor(cursor);
         return;
     }
     while (cursor.Accessible()) {
-        std::cout << "At record " << cursor.LastAdvancedRecNum() << "\n";
+        std::cout << "At record " << cursor.LastAdvancedRecNum() << std::endl;
         cursor.Advance(-1);
     }
-    std::cout << "sort_descending_loop_backward finished\n";
+    std::cout << "sort_descending_loop_backward finished" << std::endl;
     sortedset.CloseCursor(cursor);
 }
 

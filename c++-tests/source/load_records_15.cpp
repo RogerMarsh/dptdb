@@ -3,15 +3,24 @@
 
 #include <iostream>
 #include <string>
+#include <sstream>
 
 #include "dptdb.h"
+
+// So this can run at c++98 and c++03 standards too.
+std::string int_to_string(const int number)
+{
+    std::stringstream ss;
+    ss << number;
+    std::string str = ss.str();
+    return str;
+}
 
 void add_record_no_index(dpt::APIDatabaseFileContext& context, const std::string data)
 {
     dpt::APIStoreRecordTemplate record;
     record.Append("Data", data);
     int record_number = context.StoreRecord(record);
-    // std::cout << "record " << record_number << " stored\n";
 }
 
 void add_record(dpt::APIDatabaseFileContext& context, const std::string data, const std::string lookup)
@@ -20,7 +29,7 @@ void add_record(dpt::APIDatabaseFileContext& context, const std::string data, co
     record.Append("Data", data);
     record.Append("Lookup", lookup);
     int record_number = context.StoreRecord(record);
-    // std::cout << "record " << record_number << " stored\n";
+    // std::cout << "record " << record_number << " stored" << std::endl;
 }
 
 void add_1000_records(dpt::APIDatabaseFileContext& context, const std::string lookup)
@@ -32,7 +41,7 @@ void add_1000_records(dpt::APIDatabaseFileContext& context, const std::string lo
 
 int main()
 {
-    std::cout << "enter load_records_15\n";
+    std::cout << "enter load_records_15" << std::endl;
 
     // Parms argument for DUSingle mode.  The first two arguments are the default values.
     dpt::APIDatabaseServices dbserv("sysprint.txt", "George", "parms_dusingle.ini");
@@ -42,19 +51,19 @@ int main()
     dpt::APIDatabaseFileContext context = dbserv.OpenContext_DUSingle(spec);
     // Add 65000 records.
     for (int i = 0; i < 65; ++i) {
-        add_1000_records(context, std::to_string(i));
+        add_1000_records(context, int_to_string(i));
     };
     // Add 280 records not indexed.
     for (int i = 0; i < 280; ++i) {
-        add_record_no_index(context, std::to_string(i));
+        add_record_no_index(context, int_to_string(i));
     };
     // Add 1 record repeating an index value.
     for (int i = 0; i < 1; ++i) {
-        add_record(context, std::to_string(i), std::to_string(i));
+        add_record(context, int_to_string(i), int_to_string(i));
     };
-    std::cout << "65281 records stored 1000 records per key\n";
+    std::cout << "65281 records stored 1000 records per key" << std::endl;
     dbserv.CloseContext(context);
-    std::cout << "context closed\n";
+    std::cout << "context closed" << std::endl;
     dbserv.Free("TSTSMALL");
-    std::cout << "leave load_records_15\n";
+    std::cout << "leave load_records_15" << std::endl;
 }
