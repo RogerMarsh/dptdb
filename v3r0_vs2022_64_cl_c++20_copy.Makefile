@@ -16,10 +16,10 @@ COMPILER = cl
 # sed '-f' arguments.
 
 include Mk/v3r0_vs_sed_64.Mk
+include Mk/v3r0_sed_binary_function.Mk
 
 # Copy and edit.
 
 include Mk/v3r0_vs_copy_64.Mk
-include Mk/v3r0_copy_binary_function.Mk
 include Mk/v3r0_copy_all.Mk
 

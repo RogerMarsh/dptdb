@@ -16,10 +16,10 @@ COMPILER = clang-cl
 
 include Mk/v3r0_vs_sed.Mk
 include Mk/v3r0_sed_du1stepinfo.Mk
+include Mk/v3r0_sed_binary_function.Mk
 
 # Copy and edit.
 
 include Mk/v3r0_vs_copy.Mk
-include Mk/v3r0_copy_binary_function.Mk
 include Mk/v3r0_copy_all.Mk
 

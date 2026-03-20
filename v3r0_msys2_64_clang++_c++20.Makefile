@@ -16,14 +16,16 @@ PLATFORM_TAG = mingw_x86_64
 include Mk/dpt30-dptdb_version
 DPT30_DPTDB_VERSION = $(DPT30_DPTDB_MSYS2_X64)
 
+# sed '-f' arguments.
+
 include Mk/v3r0_sed_shared.Mk
 include Mk/v3r0_sed_shared_64.Mk
 include Mk/v3r0_sed_msys2_64.Mk
 include Mk/v3r0_sed_msys2_clang_64.Mk
 include Mk/v3r0_sed_du1stepinfo.Mk
+include Mk/v3r0_sed_binary_function.Mk
 
 # Copy, edit, and build.
 
 include Mk/v3r0_msys2.Mk
-include Mk/v3r0_copy_binary_function.Mk
 include Mk/v3r0_copy_swig_64.Mk

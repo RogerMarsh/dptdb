@@ -11,4 +11,4 @@
 # Therefore the make for msys2 needs the copy-all target despite
 # being unnecessary for SWIG purposes.
 
-copy-all : $(SOURCE_FILES) $(V3R0)/binary_function $(V3R0_SWIG)/$(SWIG_INTERFACE) $(V3R0_TESTS) $(V3R0_TESTS)/$(PARMS_DU_SINGLE)
+copy-all : $(SOURCE_FILES) $(V3R0_SWIG)/$(SWIG_INTERFACE) $(V3R0_TESTS) $(V3R0_TESTS)/$(PARMS_DU_SINGLE)
