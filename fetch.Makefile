@@ -1,3 +1,10 @@
+# fetch.Makefile
+# Run in a Msys2 shell on Microsoft Windows.
+
+# make -f fetch.Makefile
+# extracts the DPT source and documentation from *.ZIP files,
+# downloading the zip files if necessary.
+
 # Download DPT source from copies of zip files from dptoolkit website
 # before it was shut.
 

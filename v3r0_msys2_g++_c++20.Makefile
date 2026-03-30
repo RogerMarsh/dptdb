@@ -1,4 +1,14 @@
-# Build V3R0 with c++20 in Msys2 on Microsoft Windows.
+# v3r0_msys2_g++_c++20.Makefile
+# Run in a Msys2 MINGW32 shell on Microsoft Windows.
+# (The MINGW32 environment is deprecated at 2023-12-13.)
+
+# make -f v3r0_msys2_g++_c++20.Makefile
+# builds the Python interface to DPT.
+
+# make -f v3r0_msys2_g++_c++20.Makefile tests
+# builds the C++ tests of DPT.
+
+# Assumes fetch.Makefile has been run.
 
 TOOL_CHAIN = msys2
 TOOL_CHAIN_VERSION = 

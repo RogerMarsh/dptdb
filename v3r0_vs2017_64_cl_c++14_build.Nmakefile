@@ -1,4 +1,13 @@
-# Build V3R0 in Microsoft VS 2017 x64 Native Tools Command Prompt at c++14.
+# v3r0_vs2017_64_cl_c++14_build.Nmakefile
+# Run in a VS 2017 x64 Native Tools Command Prompt on Microsoft Windows.
+
+# nmake -f v3r0_vs2017_64_cl_c++14_build.Nmakefile
+# compiles the source code in the appropriate cl build directory.
+
+# nmake -f v3r0_vs2017_64_cl_c++14_build.Nmakefile tests
+# builds the C++ tests in the appropriate cl build directory.
+
+# Assumes v3r0_vs2017_64_cl_c++14_copy.Makefile has been run.
 
 # The makefile naming convention arose from using Developer Command Prompt
 # to do the initial work getting 32 bit DPT running again.

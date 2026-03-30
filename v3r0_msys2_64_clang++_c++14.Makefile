@@ -1,4 +1,13 @@
-# Build V3R0 with clang++ c++14 in Msys2 on Microsoft Windows.
+# v3r0_msys2_64_clang++_c++14.Makefile
+# Run in a Msys2 CLANG64 shell on Microsoft Windows.
+
+# make -f v3r0_msys2_64_clang++_c++14.Makefile
+# builds the Python interface to DPT.
+
+# make -f v3r0_msys2_64_clang++_c++14.Makefile tests
+# builds the C++ tests of DPT.
+
+# Assumes fetch.Makefile has been run.
 
 TOOL_CHAIN = msys2
 TOOL_CHAIN_VERSION = _64

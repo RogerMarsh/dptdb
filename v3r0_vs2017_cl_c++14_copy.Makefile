@@ -1,4 +1,10 @@
-# Copy V3R0 for build with c++14 in Microsoft VS 2017 x86 environment.
+# v3r0_vs2017_cl_c++14_copy.Makefile
+# Run in a Msys2 MSYS shell on Microsoft Windows.
+
+# make -f v3r0_vs2017_cl_c++14_copy.Makefile
+# copies the source code to the appropriate cl build directory.
+
+# Assumes fetch.Makefile has been run.
 
 # The makefile naming convention arose from using Developer Command Prompt
 # to do the initial work getting 32 bit DPT running again.

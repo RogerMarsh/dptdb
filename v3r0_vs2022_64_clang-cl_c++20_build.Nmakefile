@@ -1,4 +1,13 @@
-# Build V3R0 in Microsoft VS 2022 x64 Native Tools Command Prompt at c++20.
+# v3r0_vs2022_64_clang-cl_c++20_build.Nmakefile
+# Run in a VS 2022 x64 Native Tools Command Prompt on Microsoft Windows.
+
+# nmake -f v3r0_vs2022_64_clang-cl_c++20_build.Nmakefile
+# compiles the source code in the appropriate clang-cl build directory.
+
+# nmake -f v3r0_vs2022_64_clang-cl_c++20_build.Nmakefile tests
+# builds the C++ tests in the appropriate clang-cl build directory.
+
+# Assumes v3r0_vs2022_64_clang-cl_c++20_copy.Makefile has been run.
 
 # The makefile naming convention arose from using Developer Command Prompt
 # to do the initial work getting 32 bit DPT running again.

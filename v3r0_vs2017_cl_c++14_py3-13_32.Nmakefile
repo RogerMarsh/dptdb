@@ -1,4 +1,10 @@
-# Python 3.13 32 bit c++14 build MS VS 2017 x86 Native Tools Command Prompt.
+# v3r0_vs2017_cl_c++14_py3-13_32.Nmakefile
+# Run in a VS 2017 x86 Native Tools Command Prompt on Microsoft Windows.
+
+# nmake -f v3r0_vs2017_cl_c++14_py3-13_32.Nmakefile
+# builds the Python 3.13 interface to DPT.
+
+# Assumes v3r0_vs2017_cl_c++14_copy.Makefile has been run.
 
 # The makefile naming convention arose from using Developer Command Prompt
 # to do the initial work getting 32 bit DPT running again.
