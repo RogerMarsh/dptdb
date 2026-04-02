@@ -1,0 +1,37 @@
+# v3r0_vs2026_cl_c++latest_build.Nmakefile
+# Run in a VS 2026 x86 Native Tools Command Prompt on Microsoft Windows.
+
+# nmake -f v3r0_vs2026_cl_c++latest_build.Nmakefile
+# compiles the source code in the appropriate cl build directory.
+
+# nmake -f v3r0_vs2026_cl_c++latest_build.Nmakefile tests
+# builds the C++ tests in the appropriate cl build directory.
+
+# Assumes v3r0_vs2026_cl_c++latest_copy.Makefile has been run.
+
+# The makefile naming convention arose from using Developer Command Prompt
+# to do the initial work getting 32 bit DPT running again.
+
+# A consequence is appending '_32' to the Python element of the name, if
+# there is one, for x86 (32 bit) builds; but '_64' to the Visual Studio
+# element of the name for x64 (64 bit) builds.
+
+# Build directory suffix.
+# Usually indicates the c++ standard. eg: 'c++14'.
+# Must be same as given in the 'copy' makefile which created the build
+# directory.
+
+TOOL_CHAIN = vs
+TOOL_CHAIN_VERSION = 2026
+CPPSTANDARD = c++latest
+COMPILER = cl
+
+# Build.
+
+all : objects
+
+!INCLUDE Mk\v3r0_vs_build.Nmk
+
+objects : $(OBJECT_DIRECTORIES) $(OBJECT_FILES)
+
+!INCLUDE Mk\v3r0_vs_tests.Nmk
