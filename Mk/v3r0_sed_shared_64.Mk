@@ -55,7 +55,9 @@ SED_SRC_EDITS += -f sedCommands/bitmap3_cpp_01\
                  -f sedCommands/bitmap3_cpp_41\
                  -f sedCommands/bitmap3_cpp_42\
                  -f sedCommands/bitmap3_cpp_43\
-                 -f sedCommands/bitmap3_cpp_44
+                 -f sedCommands/bitmap3_cpp_44\
+                 -f sedCommands/bitmap3_cpp_45\
+                 -f sedCommands/bitmap3_cpp_46
 
 SED_INC_EDITS += -f sedCommands/bitmap3_h_01\
                  -f sedCommands/bitmap3_h_02\
