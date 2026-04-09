@@ -18,9 +18,11 @@ The default output is Python packages in wheel (*.whl) format.
 
 The makefiles are able to install the Python packages on the box on which they are run.
 
-The Visual Studio build succeeds only at the c++14 standard.
+Makefiles are provided for several, but not all, combinations of Msys2, Visual Studio, clang++, clang-cl, cl, g++, 32-bit, and 64-bit.  The primary combination is Visual Studio cl, but the others prove useful by comparing outcomes.
 
-The Msys2 build succeeds at all the c++ standards supported: c++98, c++03, c++11, c++14, c++17, c++20, and c++23.
+The Visual Studio build succeeds at the c++14, c++17, and c++20, standards where available on the 2017, 2019, 2022, and 2026, versions.
+
+The Msys2 build succeeds at the c++98, c++03, c++11, c++14, c++17, c++20, and c++23, standards except the 64-bit builds for c++98 and c++03 which need a feature added at c++11.
 
 
 

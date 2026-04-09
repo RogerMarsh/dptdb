@@ -1,0 +1,2 @@
+/for (int x = numbits - 1; x >= 0; --x)/s//for (uint32_t x = numbits; x > 0; --x)/g
+

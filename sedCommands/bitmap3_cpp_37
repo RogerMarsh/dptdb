@@ -1,0 +1,2 @@
+/(to == UINT_MAX)/s/UINT_MAX/allbits/g
+

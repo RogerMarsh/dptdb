@@ -1,0 +1,2 @@
+/result.append(1, (Test(x) ? '1' : '0'));/s/x/x - 1/g
+
