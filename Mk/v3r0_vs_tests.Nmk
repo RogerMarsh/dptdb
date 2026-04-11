@@ -26,6 +26,7 @@ V3R0_TESTS = $(BUILD)\$(CPP_TESTS)\$(DPT_VERSION)
 # Executable file names.
 
 TEST_EXES = $(V3R0_TESTS)\api_database_services.exe \
+            $(V3R0_TESTS)\api_sequential_services.exe \
             $(V3R0_TESTS)\bitmap3-init.exe \
             $(V3R0_TESTS)\bitmap3-size_t-shift.exe \
             $(V3R0_TESTS)\bitmap3-uint32_t-shift.exe \
@@ -57,6 +58,15 @@ TEST_EXES = $(V3R0_TESTS)\api_database_services.exe \
             $(V3R0_TESTS)\load_records_17.exe \
             $(V3R0_TESTS)\load_records_18.exe \
             $(V3R0_TESTS)\load_records_19.exe \
+            $(V3R0_TESTS)\load_records_20.exe \
+            $(V3R0_TESTS)\load_records_21.exe \
+            $(V3R0_TESTS)\load_records_22.exe \
+            $(V3R0_TESTS)\load_records_23.exe \
+            $(V3R0_TESTS)\load_records_24.exe \
+            $(V3R0_TESTS)\load_records_25.exe \
+            $(V3R0_TESTS)\load_records_26.exe \
+            $(V3R0_TESTS)\load_records_27.exe \
+            $(V3R0_TESTS)\load_records_28.exe \
             $(V3R0_TESTS)\create_file_150000.exe \
             $(V3R0_TESTS)\create_file_75000.exe \
             $(V3R0_TESTS)\binary_function.exe

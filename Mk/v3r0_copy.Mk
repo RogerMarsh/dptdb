@@ -95,11 +95,20 @@ $(BUILD_TESTS) : $(BUILD)
 $(BUILD) :
 	-mkdir $(BUILD)
 
-# Copy service initialization parameters for single step deferred update.
+# Copy service initialization parameters for single step deferred update,
+# multi step deferred update, and normal operation.
 
+PARMS_DU_MULTI = parms_dumulti.ini
 PARMS_DU_SINGLE = parms_dusingle.ini
+PARMS_NORMAL = parms_normal.ini
+
+$(V3R0_TESTS)/$(PARMS_DU_MULTI) : $(CPP_TESTS)/$(PARMS_DU_MULTI)
+	cp -p $< $@
 
 $(V3R0_TESTS)/$(PARMS_DU_SINGLE) : $(CPP_TESTS)/$(PARMS_DU_SINGLE)
+	cp -p $< $@
+
+$(V3R0_TESTS)/$(PARMS_NORMAL) : $(CPP_TESTS)/$(PARMS_NORMAL)
 	cp -p $< $@
 
 # Pattern rules for editing DPT C++.
