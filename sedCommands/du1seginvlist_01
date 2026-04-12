@@ -1,0 +1,4 @@
+/unsigned short rn2;/s/;/;\
+			unsigned short spare_rn3;\
+			unsigned short spare_rn4;/g
+

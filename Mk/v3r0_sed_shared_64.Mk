@@ -82,4 +82,7 @@ SED_INC_EDITS += -f sedCommands/bitmap3_h_01\
                  -f sedCommands/bitmap3_h_21\
                  -f sedCommands/bitmap3_h_22\
                  -f sedCommands/bitmap3_h_23\
-                 -f sedCommands/bitmap3_h_24
+                 -f sedCommands/bitmap3_h_24\
+                 -f sedCommands/du1seginvlist_01\
+                 -f sedCommands/du1seginvlist_02\
+                 -f sedCommands/du1seginvlist_03
