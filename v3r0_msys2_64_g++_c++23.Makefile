@@ -36,4 +36,4 @@ include Mk/v3r0_sed_binary_function.Mk
 # Copy, edit, and build.
 
 include Mk/v3r0_msys2.Mk
-include Mk/v3r0_copy_swig_64.Mk
+include Mk/v3r0_copy_swig.Mk
