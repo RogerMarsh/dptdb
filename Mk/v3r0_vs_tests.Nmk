@@ -27,6 +27,7 @@ V3R0_TESTS = $(BUILD)\$(CPP_TESTS)\$(DPT_VERSION)
 
 TEST_EXES = $(V3R0_TESTS)\api_database_services.exe \
             $(V3R0_TESTS)\api_sequential_services.exe \
+            $(V3R0_TESTS)\basic-sizes.exe \
             $(V3R0_TESTS)\bitmap3-init.exe \
             $(V3R0_TESTS)\bitmap3-size_t-shift.exe \
             $(V3R0_TESTS)\bitmap3-uint32_t-shift.exe \
