@@ -1,4 +1,4 @@
-# Build V3R0 with c++ in a Microsoft VS Developer Command Prompt.
+# Build Python interface to DPT in a VS Developer Command Prompt.
 
 # SWIG version settings.
 

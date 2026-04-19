@@ -37,7 +37,7 @@ DPT30_DPTDB_VERSION = $(DPT30_DPTDB_VS_X86)
 
 # Assume wrappers for all Python versions are built with same SWIG version.
 
-!INCLUDE Mk\v3r0_vs_swig.Nmk
+!INCLUDE Mk\swig_version.Nmk
 
 # Build Python wrapper with SWIG.
 
