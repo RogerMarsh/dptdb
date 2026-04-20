@@ -1,0 +1,344 @@
+# v3r06_vs_python.Nmakefile
+# Run in a VS x64 Native Tools Command Prompt on Microsoft Windows.
+
+# nmake -f v3r06_vs_python.Nmakefile
+# builds the default Python interface to DPT.
+
+# Assumes v3r06_vs_copy.Makefile has been run.
+
+TOOL_CHAIN = vs
+TOOL_CHAIN_VERSION = 
+CPPSTANDARD = 
+COMPILER = clang-cl
+PYTHON_MAJOR = 3
+PYTHON_MINOR = 14
+PYTHON_32_OR_64 = 
+
+# Value of the --platform-tag argument for 'wheel tags ...' command.
+# distutils.util.get_platform() and sysconfig.get_platform() report
+# "win-amd64" but the tag has to be "win_amd64" because "-" is a
+# delimiter here.
+
+PLATFORM_TAG = win_amd64
+
+# Select value for DPT306_DPTDB_VERSION.
+
+# Copied from Mk/dpt30-dptdb_version and adjusted.
+# This resolves to setting DPT306_DPTDB_VERSION one point higher than
+# DPT30_DPTDB_VS_X64 with a dev suffix if appropriate.
+
+DPT306_DPTDB_VERSION = 2.0.dev0
+
+# Assume wrappers for all Python versions are built with same SWIG version.
+
+!INCLUDE Mk\swig_version.Nmk
+
+# Build Python wrapper with SWIG.
+
+all : wrapper
+
+# Copied from Mk\v3r0_vs_build.Nmk and adjusted.
+# Build V3R06 with c++ in a Microsoft VS Developer Command Prompt.
+
+# Compiler settings.
+
+PATH_TO_CXX = 
+
+# Include this file in a makefile that defines these variables:
+# TOOL_CHAIN
+# TOOL_CHAIN_VERSION
+# CPPSTANDARD
+
+# V3R0 extract and build folders.
+
+DPT = dpt
+DPT_VERSION = v3r06
+EXTRACT = $(DPT)\extract
+BUILD = $(DPT)\$(TOOL_CHAIN)
+V3R06 = $(BUILD)\$(DPT_VERSION)
+V3R06_SRC = $(V3R06)\source
+V3R06_INC = $(V3R06)\include
+DPT_LICENCE = licence.txt
+V3R06API_SRC = $(V3R06_SRC)\dbapi
+V3R06API_INC = $(V3R06_INC)\dbapi
+V3R06_STDAFX = $(V3R06)\stdafx
+V3R06_OBJECT = $(V3R06)\object
+V3R06API_OBJECT = $(V3R06_OBJECT)\dbapi
+V3R06STDAFX_OBJECT = $(V3R06_OBJECT)\stdafx
+
+# Object file names.
+
+OBJS = $(V3R06_OBJECT)\access.obj \
+        $(V3R06_OBJECT)\atom.obj \
+        $(V3R06_OBJECT)\atomback.obj \
+        $(V3R06_OBJECT)\audit.obj \
+        $(V3R06_OBJECT)\bbfloat.obj \
+        $(V3R06_OBJECT)\bbstack.obj \
+        $(V3R06_OBJECT)\bbstdio.obj \
+        $(V3R06_OBJECT)\bbthread.obj \
+        $(V3R06_OBJECT)\bitmap3.obj \
+        $(V3R06_OBJECT)\bmset.obj \
+        $(V3R06_OBJECT)\btree.obj \
+        $(V3R06_OBJECT)\buffer.obj \
+        $(V3R06_OBJECT)\buffhandle.obj \
+        $(V3R06_OBJECT)\buffmgmt.obj \
+        $(V3R06_OBJECT)\cfr.obj \
+        $(V3R06_OBJECT)\charconv.obj \
+        $(V3R06_OBJECT)\checkpt.obj \
+        $(V3R06_OBJECT)\core.obj \
+        $(V3R06_OBJECT)\ctxtdef.obj \
+        $(V3R06_OBJECT)\ctxtopen.obj \
+        $(V3R06_OBJECT)\ctxtspec.obj \
+        $(V3R06_OBJECT)\custom.obj \
+        $(V3R06_OBJECT)\dataconv.obj \
+        $(V3R06_OBJECT)\dbctxt.obj \
+        $(V3R06_OBJECT)\dbcursor.obj \
+        $(V3R06_OBJECT)\dbf_data.obj \
+        $(V3R06_OBJECT)\dbf_ebm.obj \
+        $(V3R06_OBJECT)\dbf_field.obj \
+        $(V3R06_OBJECT)\dbf_find.obj \
+        $(V3R06_OBJECT)\dbf_idiag.obj \
+        $(V3R06_OBJECT)\dbf_index.obj \
+        $(V3R06_OBJECT)\dbf_ival.obj \
+        $(V3R06_OBJECT)\dbf_join.obj \
+        $(V3R06_OBJECT)\dbf_rlt.obj \
+        $(V3R06_OBJECT)\dbf_tableb.obj \
+        $(V3R06_OBJECT)\dbf_tabled.obj \
+        $(V3R06_OBJECT)\dbfile.obj \
+        $(V3R06_OBJECT)\dbserv.obj \
+        $(V3R06_OBJECT)\dbstatus.obj \
+        $(V3R06_OBJECT)\du1step.obj \
+        $(V3R06_OBJECT)\except.obj \
+        $(V3R06_OBJECT)\except_rlc.obj \
+        $(V3R06_OBJECT)\fastload.obj \
+        $(V3R06_OBJECT)\fastunload.obj \
+        $(V3R06_OBJECT)\fieldatts.obj \
+        $(V3R06_OBJECT)\fieldinfo.obj \
+        $(V3R06_OBJECT)\fieldname.obj \
+        $(V3R06_OBJECT)\fieldval.obj \
+        $(V3R06_OBJECT)\file.obj \
+        $(V3R06_OBJECT)\filehandle.obj \
+        $(V3R06_OBJECT)\findspec.obj \
+        $(V3R06_OBJECT)\findwork.obj \
+        $(V3R06_OBJECT)\foundset.obj \
+        $(V3R06_OBJECT)\frecset.obj \
+        $(V3R06_OBJECT)\garbage.obj \
+        $(V3R06_OBJECT)\group.obj \
+        $(V3R06_OBJECT)\grpserv.obj \
+        $(V3R06_OBJECT)\handles.obj \
+        $(V3R06_OBJECT)\hash.obj \
+        $(V3R06_OBJECT)\inverted.obj \
+        $(V3R06_OBJECT)\iowrappers.obj \
+        $(V3R06_OBJECT)\lineio.obj \
+        $(V3R06_OBJECT)\liocons.obj \
+        $(V3R06_OBJECT)\lioshare.obj \
+        $(V3R06_OBJECT)\liostdio.obj \
+        $(V3R06_OBJECT)\loaddiag.obj \
+        $(V3R06_OBJECT)\lockable.obj \
+        $(V3R06_OBJECT)\lockspecial.obj \
+        $(V3R06_OBJECT)\merge.obj \
+        $(V3R06_OBJECT)\msgini.obj \
+        $(V3R06_OBJECT)\msgref.obj \
+        $(V3R06_OBJECT)\msgroute.obj \
+        $(V3R06_OBJECT)\page_a.obj \
+        $(V3R06_OBJECT)\page_b.obj \
+        $(V3R06_OBJECT)\page_e.obj \
+        $(V3R06_OBJECT)\page_f.obj \
+        $(V3R06_OBJECT)\page_i.obj \
+        $(V3R06_OBJECT)\page_l.obj \
+        $(V3R06_OBJECT)\page_m.obj \
+        $(V3R06_OBJECT)\page_p.obj \
+        $(V3R06_OBJECT)\page_t.obj \
+        $(V3R06_OBJECT)\page_v.obj \
+        $(V3R06_OBJECT)\page_x.obj \
+        $(V3R06_OBJECT)\pagebase.obj \
+        $(V3R06_OBJECT)\pagebitmap.obj \
+        $(V3R06_OBJECT)\paged_io.obj \
+        $(V3R06_OBJECT)\pageixval.obj \
+        $(V3R06_OBJECT)\pageslotrec.obj \
+        $(V3R06_OBJECT)\parmini.obj \
+        $(V3R06_OBJECT)\parmized.obj \
+        $(V3R06_OBJECT)\parmref.obj \
+        $(V3R06_OBJECT)\parmref1.obj \
+        $(V3R06_OBJECT)\parmvr.obj \
+        $(V3R06_OBJECT)\parsing.obj \
+        $(V3R06_OBJECT)\pattern.obj \
+        $(V3R06_OBJECT)\progress.obj \
+        $(V3R06_OBJECT)\rawpage.obj \
+        $(V3R06_OBJECT)\reccopy.obj \
+        $(V3R06_OBJECT)\recdata.obj \
+        $(V3R06_OBJECT)\reclist.obj \
+        $(V3R06_OBJECT)\record.obj \
+        $(V3R06_OBJECT)\recovery.obj \
+        $(V3R06_OBJECT)\recset.obj \
+        $(V3R06_OBJECT)\resource.obj \
+        $(V3R06_OBJECT)\rsvwords.obj \
+        $(V3R06_OBJECT)\scope.obj \
+        $(V3R06_OBJECT)\seqfile.obj \
+        $(V3R06_OBJECT)\seqserv.obj \
+        $(V3R06_OBJECT)\sortrec.obj \
+        $(V3R06_OBJECT)\sortset.obj \
+        $(V3R06_OBJECT)\sortspec.obj \
+        $(V3R06_OBJECT)\statized.obj \
+        $(V3R06_OBJECT)\statref.obj \
+        $(V3R06_OBJECT)\statref1.obj \
+        $(V3R06_OBJECT)\statview.obj \
+        $(V3R06_OBJECT)\stlextra.obj \
+        $(V3R06_OBJECT)\sysfile.obj \
+        $(V3R06_OBJECT)\update.obj \
+        $(V3R06_OBJECT)\valdirect.obj \
+        $(V3R06_OBJECT)\valset.obj \
+        $(V3R06_OBJECT)\winutil.obj
+
+
+AFX_OBJS = $(V3R06STDAFX_OBJECT)\stdafx.obj
+
+
+API_OBJS = $(V3R06API_OBJECT)\access_api.obj \
+        $(V3R06API_OBJECT)\bmset_api.obj \
+        $(V3R06API_OBJECT)\core_api.obj \
+        $(V3R06API_OBJECT)\ctxtspec_api.obj \
+        $(V3R06API_OBJECT)\cursor_api.obj \
+        $(V3R06API_OBJECT)\dbctxt_api.obj \
+        $(V3R06API_OBJECT)\dbserv_api.obj \
+        $(V3R06API_OBJECT)\fieldatts_api.obj \
+        $(V3R06API_OBJECT)\fieldinfo_api.obj \
+        $(V3R06API_OBJECT)\fieldval_api.obj \
+        $(V3R06API_OBJECT)\findspec_api.obj \
+        $(V3R06API_OBJECT)\floatnum_api.obj \
+        $(V3R06API_OBJECT)\foundset_api.obj \
+        $(V3R06API_OBJECT)\grpserv_api.obj \
+        $(V3R06API_OBJECT)\msgroute_api.obj \
+        $(V3R06API_OBJECT)\parmvr_api.obj \
+        $(V3R06API_OBJECT)\reccopy_api.obj \
+        $(V3R06API_OBJECT)\reclist_api.obj \
+        $(V3R06API_OBJECT)\record_api.obj \
+        $(V3R06API_OBJECT)\recread_api.obj \
+        $(V3R06API_OBJECT)\recset_api.obj \
+        $(V3R06API_OBJECT)\seqfile_api.obj \
+        $(V3R06API_OBJECT)\seqserv_api.obj \
+        $(V3R06API_OBJECT)\sortset_api.obj \
+        $(V3R06API_OBJECT)\sortspec_api.obj \
+        $(V3R06API_OBJECT)\statview_api.obj \
+        $(V3R06API_OBJECT)\valdirect_api.obj \
+        $(V3R06API_OBJECT)\valset_api.obj
+
+OBJECT_FILES = $(OBJS) $(AFX_OBJS) $(API_OBJS)
+
+
+# Source file names.
+
+# Source file names are implied by 'OBJS', 'AFX_OBS' and API_OBJS.
+
+# The build directory 'V3R06' is created in v3r06_vs_copy.Makefile.
+
+$(V3R06_OBJECT) : $(V3R06)
+	mkdir $(V3R06_OBJECT)
+
+$(V3R06STDAFX_OBJECT) : $(V3R06_OBJECT)
+	mkdir $(V3R06STDAFX_OBJECT)
+
+$(V3R06API_OBJECT) : $(V3R06_OBJECT)
+	mkdir $(V3R06API_OBJECT)
+
+OBJECT_DIRECTORIES = $(V3R06STDAFX_OBJECT) $(V3R06API_OBJECT)
+
+# Compiler settings.
+
+CXX = $(PATH_TO_CXX)$(COMPILER)
+DEFOPTS = $(DEFINES) $(OPTIONS)
+CXXEXTRA = -D_BBDBAPI -EHsc -nologo
+V3R06_LDFLAGS = -dll
+
+# Build includes (-I) options for compiler.
+
+V3R06_INCLUDE = -I$(V3R06_INC) -I$(V3R06_STDAFX)
+V3R06AFX_INCLUDE = -I$(V3R06_INC) -I$(V3R06_STDAFX)
+V3R06API_INCLUDE = -I$(V3R06_INC) -I$(V3R06API_INC) -I$(V3R06_STDAFX)
+
+# Pattern rules V3R06 C++.
+
+{$(V3R06_SRC)}.cpp{$(V3R06_OBJECT)}.obj:
+	@-$(CXX) -c $(CXXEXTRA) $(CXXFLAGS) $(V3R06_INCLUDE) $(DEFOPTS) -Fo$(V3R06_OBJECT)\ $<
+
+{$(V3R06_STDAFX)}.cpp{$(V3R06STDAFX_OBJECT)}.obj:
+	@-$(CXX) -c $(CXXEXTRA) $(CXXFLAGS) $(V3R06AFX_INCLUDE) $(DEFOPTS) -Fo$(V3R06STDAFX_OBJECT)\ $<
+
+{$(V3R06API_SRC)}.cpp{$(V3R06API_OBJECT)}.obj:
+	@-$(CXX) -c $(CXXEXTRA) $(CXXFLAGS) $(V3R06API_INCLUDE) $(DEFOPTS) -Fo$(V3R06API_OBJECT)\ $<
+
+
+
+objects : $(OBJECT_DIRECTORIES) $(OBJECT_FILES)
+
+
+# Copied from Mk\v3r0_vs_python.Nmk and adjusted.
+# Build V3R06 Python interface with c++ in a x64 VS Developer Command Prompt.
+
+# Python wrapper settings.
+
+PYTHON_NAME = Python
+SWIG_PYTHON = python
+PYTHON_MAJOR_MINOR = $(PYTHON_MAJOR)$(PYTHON_MINOR)
+PYTHON_VERSION = $(PYTHON_MAJOR_MINOR)$(PYTHON_32_OR_64)
+PY_MINUS_MAJOR_DOT_MINOR_32_OR_64 = -$(PYTHON_MAJOR).$(PYTHON_MINOR)$(PYTHON_32_OR_64)
+PY_MAJOR_MINUS_MINOR_32_OR_64 = $(PYTHON_MAJOR)-$(PYTHON_MINOR)$(PYTHON_32_OR_64)
+PATH_TO_SWIG = $(PATH_TO_SWIG_WITHOUT_VERSION)$(SWIG_VERSION)
+SWIG_DPTAPI = dptapi
+PYTHON_API_DLL = _$(SWIG_DPTAPI).pyd
+V3R06SWIG_OBJECT = $(V3R06_OBJECT)\swig\$(PY_MAJOR_MINUS_MINOR_32_OR_64)
+SWIG_INTERFACE = dptapi_python.i
+V3R06_SWIG = $(V3R06)\swig
+V3R06SWIG_SOURCE = $(V3R06_SWIG)\$(PY_MAJOR_MINUS_MINOR_32_OR_64)
+V3R06_SWIG_INTERFACE = $(V3R06_SWIG)\$(SWIG_INTERFACE)
+V3R06_PACKAGE = $(V3R06)\package\$(PY_MAJOR_MINUS_MINOR_32_OR_64)
+V3R06_PACKAGE_DPTDB = $(V3R06_PACKAGE)\src\dptdb
+PYTHON_TAG = cp$(PYTHON_MAJOR)$(PYTHON_MINOR)
+ABI_TAG = cp$(PYTHON_MAJOR)$(PYTHON_MINOR)
+
+
+# Library is python310.dll and header is Python.h for version 3.10 of Python.
+# This is different naming than for unix Pythons.
+
+PYTHON_HEADER = $(PYTHON_NAME).h
+PYTHON_VERSION_DIRECTORY = $(LOCALAPPDATA)\Programs\$(PYTHON_NAME)\$(PYTHON_NAME)$(PYTHON_VERSION)
+PYTHON_INCLUDE_DIRECTORY = $(PYTHON_VERSION_DIRECTORY)\include
+PYTHON_INCLUDE = $(PYTHON_INCLUDE_DIRECTORY)\$(PYTHON_HEADER)
+PYTHON_LIBS_DIRECTORY = $(PYTHON_VERSION_DIRECTORY)\libs
+PYTHON_LIBRARY = $(PYTHON_LIBS_DIRECTORY)\$(SWIG_PYTHON)$(PYTHON_MAJOR_MINOR).lib
+
+WRAP_CXX = $(V3R06SWIG_SOURCE)\$(SWIG_DPTAPI)_$(SWIG_PYTHON)_wrap.cxx
+WRAP_O = $(V3R06SWIG_OBJECT)\$(SWIG_DPTAPI)_$(SWIG_PYTHON)_wrap.obj
+
+$(WRAP_CXX) : $(V3R06_PACKAGE) $(V3R06SWIG_SOURCE) $(V3R06_SWIG)\$(SWIG_INTERFACE)
+	$(PATH_TO_SWIG)\swig -c++ -$(SWIG_PYTHON) -o $(WRAP_CXX) -outdir $(V3R06_PACKAGE_DPTDB) -I$(V3R06API_INC) $(V3R06_SWIG)\$(SWIG_INTERFACE)
+
+$(WRAP_O) : $(V3R06SWIG_OBJECT) $(WRAP_CXX)
+	-$(CXX) -c $(CXXEXTRA) $(CXXFLAGS) $(V3R06API_INCLUDE) -I$(PYTHON_INCLUDE_DIRECTORY) -Fo$@ $(WRAP_CXX)
+
+# The .pyd file built from SWIG.
+
+$(V3R06_PACKAGE_DPTDB)\$(PYTHON_API_DLL) : $(OBJECT_DIRECTORIES) $(OBJECT_FILES) $(WRAP_O)
+	link $(V3R06_LDFLAGS) -out:$@ $(WRAP_O) $(API_OBJS) $(OBJS) $(PYTHON_LIBRARY)
+
+wrapper : $(V3R06_PACKAGE_DPTDB)\$(PYTHON_API_DLL)
+	py $(PY_MINUS_MAJOR_DOT_MINOR_32_OR_64) -m build --no-isolation $(V3R06_PACKAGE)
+	py $(PY_MINUS_MAJOR_DOT_MINOR_32_OR_64) -m wheel tags --python-tag=$(PYTHON_TAG) --abi-tag=$(ABI_TAG) --platform-tag=$(PLATFORM_TAG) --remove $(V3R06_PACKAGE)\dist\dpt3_0_dptdb-$(DPT306_DPTDB_VERSION)-py3-none-any.whl
+
+local-install : wrapper
+	py $(PY_MINUS_MAJOR_DOT_MINOR_32_OR_64) -m pip install --user --no-index --find-links $(V3R06_PACKAGE)\dist dpt3.0_dptdb
+
+$(V3R06SWIG_SOURCE) : $(V3R06_SWIG)
+	mkdir $(V3R06SWIG_SOURCE)
+
+$(V3R06SWIG_OBJECT) : $(V3R06_OBJECT)\swig
+	mkdir $(V3R06SWIG_OBJECT)
+
+$(V3R06_OBJECT)\swig : $(V3R06_OBJECT)
+	mkdir $(V3R06_OBJECT)\swig
+
+# Copy package template directory for build and distribution.
+
+$(V3R06_PACKAGE) : package-template
+	xcopy /s /e package-template $(V3R06_PACKAGE)\\
+	$(PYTHON_VERSION_DIRECTORY)\Scripts\pythonsed -e /"invalid"/s/invalid/$(DPT306_DPTDB_VERSION)/g package-template\pyproject.toml > $(V3R06_PACKAGE)\pyproject.toml

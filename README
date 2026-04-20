@@ -36,13 +36,18 @@ The DPT documentation is extracted from DPT_V3R0_DOCS.ZIP and placed at dpt/extr
 Using the Makefiles
 ===================
 
-Four sets of makefiles exist: prefixed with 'v3r0_msys2', 'v3r0_msys2_64', 'v3r0_vs<year>' and 'v3r0_vs<year>_64'.
+Five sets of makefiles exist.  Four prefixed with 'v3r0_msys2', 'v3r0_msys2_64', 'v3r0_vs<year>' and 'v3r0_vs<year>_64'.  These assume 'fetch.Makefile' has been run.  The fifth set is 'extract-v3r06.Makefile', 'v3r06_vs_copy.Makefile', and 'v3r06_vs_python.Nmakefile'.
 
 The 'v3r0_vs2017_c++14', 'v3r0_vs2017_64_c++14', and all the 'msys2' builds succeed.
 
 The other *vs* makefiles were created while figuring what worked: all encounter the same compilation error and my c++ knowledge is not enough to craft a solution.
 
-The rest of this section describes builds for a 32-bit Python at the 'c++14' standard.  Builds for a 64-bit Python are done with '_64' version of the makefile.  The 'msys2' builds are done with the Python installed by pacman.  Makefiles for 'vs' builds exist for various Python versions (in principle those which have not reached end of life).
+
+
+The v3r0_* Makefiles
+====================
+
+This section describes builds for a 32-bit Python at the 'c++14' standard.  Builds for a 64-bit Python are done with '_64' version of the makefile.  The 'msys2' builds are done with the Python installed by pacman.  Makefiles for 'vs' builds exist for various Python versions (in principle those which have not reached end of life).
 
 Do 'make -f fetch.Makefile' in a Msys2 shell to extract the archives.  (The makefile is able to fetch the archives but does not need to because they are included in the dptdb download.)
 
@@ -62,6 +67,27 @@ The Msys2 environment is needed, even for Visual Studio builds, to use the 'sed'
 
 
 
+The v3r06_* Makefiles
+=====================
+
+This section describes the build for a 64-bit Python at the default 'c++' standard for the Visual Studio version.
+
+Do 'make -f extract-v3r06.Makefile' in a Msys2 shell to extract the archive,
+
+and then do 'make -f v3r06_vs_copy.Makefile' in a Msys2 shell to apply patches to fix source code which does not compile on the Visual Studio 2026 Community Edition,
+
+and then do 'nmake -f v3r06_vs_python.Nmakefile' in a 'x64 Native Tools Command Prompt' shell for the Visual Studio version.
+
+The Msys2 environment is needed to use the 'sed' utility to patch the DPT DBMS source code.
+
+A 32-bit build is done by
+
+'nmake -f v3r06_vs_python.Nmakefile PYTHON_32_OR_64=-32 PLATFORM_TAG=win32'
+
+in a 'x86 Native Tools Command Prompt' shell for the Visual Studio version.
+
+
+
 dpt3.0-dptdb Installation Instructions
 ======================================
 
@@ -69,7 +95,7 @@ Run 'py -m pip install --user dpt3.0-dptdb' to install a version built with Deve
 
 Alternatively follow the 'Using the Makefiles' instructions but the final step is run 'nmake -f v3r0_vs2017_c++14_pyX-Y_32.Nmakefile local-install' (not 'nmake -f v3r0_vs2017_c++14_pyX-Y_32.Nmakefile') where X-Y is something like '3-10'.
 
-To install dpt3.0-dptdb in Msys2 follow the 'Using the Makefiles' instructions but the final step is run 'make -f v3r0_msys2_c++14.Makefile local-install' (not 'make -f v3r0_msys2_c++14.Makefile').
+To install dpt3.0-dptdb in Msys2 follow the 'Using the Makefiles' instructions but the final step is run 'make -f v3r0_msys2_c++14.Makefile local-install' (not 'make -f v3r0_msys2_c++14.Makefile'), and similar for 'v3r06'.
 
 
 
