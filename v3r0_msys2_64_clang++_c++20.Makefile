@@ -18,7 +18,7 @@ COMPILER = clang++
 
 # Value of the --platform-tag argument for 'wheel tags ...' command.
 
-PLATFORM_TAG = mingw_x86_64
+PLATFORM_TAG = mingw_x86_64_ucrt_llvm
 
 # Select value from Mk/dpt30-dptdb_version for DPT30_DPTDB_VERSION.
 

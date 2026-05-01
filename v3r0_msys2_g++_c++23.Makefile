@@ -19,7 +19,7 @@ COMPILER = g++
 
 # Value of the --platform-tag argument for 'wheel tags ...' command.
 
-PLATFORM_TAG = mingw_i686
+PLATFORM_TAG = mingw_i686_msvcrt_gnu
 
 # Select value from Mk/dpt30-dptdb_version for DPT30_DPTDB_VERSION.
 
