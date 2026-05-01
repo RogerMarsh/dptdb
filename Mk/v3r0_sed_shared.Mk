@@ -38,7 +38,7 @@
 # edit.  These two edits tackle an application problem rather than
 # a c++ toolchain problem.
 
-SED_STDAFX_H_EDITS = -f sedCommands/extra_h_stdafx_c++14
+SED_STDAFX_H_EDITS = -f sedCommands/extra_h_stdafx_c++98
 SED_SRC_EDITS = -f sedCommands/make_pair \
                 -f sedCommands/access_controller \
                 -f sedCommands/i64_to_ll \
