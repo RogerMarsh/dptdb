@@ -39,8 +39,7 @@
 # a c++ toolchain problem.
 
 SED_STDAFX_H_EDITS = -f sedCommands/extra_h_stdafx_c++14
-SED_SRC_EDITS = -f sedCommands/back_to_forward_slant \
-                -f sedCommands/make_pair \
+SED_SRC_EDITS = -f sedCommands/make_pair \
                 -f sedCommands/access_controller \
                 -f sedCommands/i64_to_ll \
                 -f sedCommands/comment_session \
@@ -48,9 +47,8 @@ SED_SRC_EDITS = -f sedCommands/back_to_forward_slant \
                 -f sedCommands/fastload_no_upper \
                 -f sedCommands/msgini_restore_upper \
                 -f sedCommands/resource_cpp_lockinfo
-SED_INC_EDITS = -f sedCommands/back_to_forward_slant \
-                -f sedCommands/resource_h_lockinfo
-SEDAPI_SRC_EDITS = -f sedCommands/back_to_forward_slant
-SEDAPI_INC_EDITS = -f sedCommands/back_to_forward_slant
-SED_STDAFX_CPP_EDITS = -f sedCommands/back_to_forward_slant
+SED_INC_EDITS = -f sedCommands/resource_h_lockinfo
+SEDAPI_SRC_EDITS = -f /dev/null
+SEDAPI_INC_EDITS = -f /dev/null
+SED_STDAFX_CPP_EDITS = -f /dev/null
 
