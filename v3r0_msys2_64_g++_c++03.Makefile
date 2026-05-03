@@ -26,8 +26,13 @@ include Mk/dpt30-dptdb_version
 DPT30_DPTDB_VERSION = $(DPT30_DPTDB_MSYS2_X64)
 
 # sed '-f' arguments.
+# The *_c++11.Mk file is included because the feature provided by
+# it's #include directive is needed.  Including this file gives a
+# more useful error message than the multitude of error messages
+# when it is absent.
 
 include Mk/v3r0_sed_shared.Mk
+include Mk/v3r0_sed_shared_c++11.Mk
 include Mk/v3r0_sed_shared_64.Mk
 include Mk/v3r0_sed_msys2_64.Mk
 

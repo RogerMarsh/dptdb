@@ -28,6 +28,7 @@ DPT30_DPTDB_VERSION = $(DPT30_DPTDB_MSYS2_X64)
 # sed '-f' arguments.
 
 include Mk/v3r0_sed_shared.Mk
+include Mk/v3r0_sed_shared_c++11.Mk
 include Mk/v3r0_sed_shared_64.Mk
 include Mk/v3r0_sed_msys2_64.Mk
 

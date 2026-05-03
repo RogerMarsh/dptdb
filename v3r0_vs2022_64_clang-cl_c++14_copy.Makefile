@@ -22,6 +22,8 @@ COMPILER = clang-cl
 # sed '-f' arguments.
 
 include Mk/v3r0_vs_sed_64.Mk
+include Mk/v3r0_sed_resource_lockinfo.Mk
+include Mk/v3r0_vs_sed_ord_comp_ptr_int.Mk
 
 # Copy and edit.
 

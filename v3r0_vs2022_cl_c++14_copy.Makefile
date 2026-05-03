@@ -21,6 +21,7 @@ COMPILER = cl
 # sed '-f' arguments.
 
 include Mk/v3r0_vs_sed.Mk
+include Mk/v3r0_sed_resource_lockinfo.Mk
 
 # Copy and edit.
 

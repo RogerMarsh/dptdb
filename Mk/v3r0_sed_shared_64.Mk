@@ -16,7 +16,6 @@
 # feature is not availbale before c++11 so the c++98 and c++03 64-bit
 # builds fail.
 
-SED_STDAFX_H_EDITS += -f sedCommands/extra_h_stdafx_64_c++98
 SED_SRC_EDITS += -f sedCommands/bitmap3_cpp_01\
                  -f sedCommands/bitmap3_cpp_02\
                  -f sedCommands/bitmap3_cpp_03\

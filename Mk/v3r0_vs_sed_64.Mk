@@ -2,6 +2,6 @@
 
 # sed '-f' arguments.
 
-include Mk/v3r0_sed_shared.Mk
+include Mk/v3r0_vs_sed.Mk
 include Mk/v3r0_sed_shared_64.Mk
 
