@@ -8,7 +8,7 @@
 # make -f v3r0_msys2_g++_c++98.Makefile tests
 # builds the C++ tests of DPT.
 
-# Assumes fetch.Makefile has been run.
+DPT_VERSION = v3r0
 
 TOOL_CHAIN = msys2
 TOOL_CHAIN_VERSION = 
@@ -21,16 +21,16 @@ COMPILER = g++
 
 PLATFORM_TAG = mingw_i686_msvcrt_gnu
 
-# Select value from Mk/dpt30-dptdb_version for DPT30_DPTDB_VERSION.
+# Select value from Mk/dpt-dptdb_version for DPT_DPTDB_VERSION.
 
-include Mk/dpt30-dptdb_version
-DPT30_DPTDB_VERSION = $(DPT30_DPTDB_MSYS2_X86)
+include Mk/dpt-dptdb_version
+DPT_DPTDB_VERSION = $(DPT30_DPTDB_MSYS2_X86)
 
 # sed '-f' arguments.
 
-include Mk/v3r0_sed_shared.Mk
+include Mk/sed_shared.Mk
 
 # Copy, edit, and build.
 
-include Mk/v3r0_msys2.Mk
-include Mk/v3r0_copy_swig.Mk
+include Mk/msys2.Mk
+include Mk/copy_swig.Mk

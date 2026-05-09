@@ -1,4 +1,5 @@
-# Build V3R0 with c++ in a Microsoft VS Developer Command Prompt.
+# vs_python.Nmk
+# Build version with c++ in a Microsoft VS Developer Command Prompt.
 
 # Include this file in a makefile that defines these variables:
 # TOOL_CHAIN
@@ -10,7 +11,7 @@
 # PATH_TO_SWIG_WITHOUT_VERSION
 # SWIG_VERSION
 
-# Build Swig interface for V3R0 in Microsoft Visual Studio Command Line.
+# Build Swig interface for version in Microsoft Visual Studio Command Line.
 
 # SWIG wrapper rules.
 # Comments on 'sed' edits for the MinGW (sourceforge.net/projects/mingw),
@@ -42,13 +43,13 @@ PY_MAJOR_MINUS_MINOR_32_OR_64 = $(PYTHON_MAJOR)-$(PYTHON_MINOR)$(PYTHON_32_OR_64
 PATH_TO_SWIG = $(PATH_TO_SWIG_WITHOUT_VERSION)$(SWIG_VERSION)
 SWIG_DPTAPI = dptapi
 PYTHON_API_DLL = _$(SWIG_DPTAPI).pyd
-V3R0SWIG_OBJECT = $(V3R0_OBJECT)\swig\$(PY_MAJOR_MINUS_MINOR_32_OR_64)
+VR_SWIG_OBJECT = $(VR_OBJECT)\swig\$(PY_MAJOR_MINUS_MINOR_32_OR_64)
 SWIG_INTERFACE = dptapi_python.i
-V3R0_SWIG = $(V3R0)\swig
-V3R0SWIG_SOURCE = $(V3R0_SWIG)\$(PY_MAJOR_MINUS_MINOR_32_OR_64)
-V3R0_SWIG_INTERFACE = $(V3R0_SWIG)\$(SWIG_INTERFACE)
-V3R0_PACKAGE = $(V3R0)\package\$(PY_MAJOR_MINUS_MINOR_32_OR_64)
-V3R0_PACKAGE_DPTDB = $(V3R0_PACKAGE)\src\dptdb
+VR_SWIG = $(VR_DIRECTORY)\swig
+VR_SWIG_SOURCE = $(VR_SWIG)\$(PY_MAJOR_MINUS_MINOR_32_OR_64)
+VR_SWIG_INTERFACE = $(VR_SWIG)\$(SWIG_INTERFACE)
+VR_PACKAGE = $(VR_DIRECTORY)\package\$(PY_MAJOR_MINUS_MINOR_32_OR_64)
+VR_PACKAGE_DPTDB = $(VR_PACKAGE)\src\dptdb
 PYTHON_TAG = cp$(PYTHON_MAJOR)$(PYTHON_MINOR)
 ABI_TAG = cp$(PYTHON_MAJOR)$(PYTHON_MINOR)
 
@@ -56,7 +57,7 @@ ABI_TAG = cp$(PYTHON_MAJOR)$(PYTHON_MINOR)
 # Library is python310.dll and header is Python.h for version 3.10 of Python.
 # This is different naming than for unix Pythons.
 # PYTHON_LIBS_DIRECTORY)\python3.lib is assumed equivalent to SYSTEM_LIBRARY
-# in the 'v3r0_msys2_build.Mk' version of this makefile in it's effect on the
+# in the 'msys2_build.Mk' version of this makefile in it's effect on the
 # outcome.
 # '*_wrap.o' like unix is fine too, but everything else is the usual '*.obj'.
 # Keep the 'WRAP_O' name to fit the Msys2 and Msys (mingw.org) versions. 
@@ -78,37 +79,37 @@ PYTHON_INCLUDE = $(PYTHON_INCLUDE_DIRECTORY)\$(PYTHON_HEADER)
 PYTHON_LIBS_DIRECTORY = $(PYTHON_VERSION_DIRECTORY)\libs
 PYTHON_LIBRARY = $(PYTHON_LIBS_DIRECTORY)\$(SWIG_PYTHON)$(PYTHON_MAJOR_MINOR).lib
 
-WRAP_CXX = $(V3R0SWIG_SOURCE)\$(SWIG_DPTAPI)_$(SWIG_PYTHON)_wrap.cxx
-WRAP_O = $(V3R0SWIG_OBJECT)\$(SWIG_DPTAPI)_$(SWIG_PYTHON)_wrap.obj
+WRAP_CXX = $(VR_SWIG_SOURCE)\$(SWIG_DPTAPI)_$(SWIG_PYTHON)_wrap.cxx
+WRAP_O = $(VR_SWIG_OBJECT)\$(SWIG_DPTAPI)_$(SWIG_PYTHON)_wrap.obj
 
-$(WRAP_CXX) : $(V3R0_PACKAGE) $(V3R0SWIG_SOURCE) $(V3R0_SWIG)\$(SWIG_INTERFACE)
-	$(PATH_TO_SWIG)\swig -c++ -$(SWIG_PYTHON) -o $(WRAP_CXX) -outdir $(V3R0_PACKAGE_DPTDB) -I$(V3R0API_INC) $(V3R0_SWIG)\$(SWIG_INTERFACE)
+$(WRAP_CXX) : $(VR_PACKAGE) $(VR_SWIG_SOURCE) $(VR_SWIG_INTERFACE)
+	$(PATH_TO_SWIG)\swig -c++ -$(SWIG_PYTHON) -o $(WRAP_CXX) -outdir $(VR_PACKAGE_DPTDB) -I$(VR_API_INC) $(VR_SWIG_INTERFACE)
 
-$(WRAP_O) : $(V3R0SWIG_OBJECT) $(WRAP_CXX)
-	$(CXX) -c $(CXXEXTRA) $(CXXFLAGS) $(V3R0API_INCLUDE) -I$(PYTHON_INCLUDE_DIRECTORY) -Fo$@ $(WRAP_CXX)
+$(WRAP_O) : $(VR_SWIG_OBJECT) $(WRAP_CXX)
+	$(CXX) -c $(CXXEXTRA) $(CXXFLAGS) $(VR_API_INCLUDE) -I$(PYTHON_INCLUDE_DIRECTORY) -Fo$@ $(WRAP_CXX)
 
 # The .pyd file built from SWIG.
 
-$(V3R0_PACKAGE_DPTDB)\$(PYTHON_API_DLL) : $(OBJECT_DIRECTORIES) $(OBJECT_FILES) $(WRAP_O)
-	link $(V3R0_LDFLAGS) -out:$@ $(WRAP_O) $(API_OBJS) $(OBJS) $(PYTHON_LIBRARY)
+$(VR_PACKAGE_DPTDB)\$(PYTHON_API_DLL) : $(OBJECT_DIRECTORIES) $(OBJECT_FILES) $(WRAP_O)
+	link $(VR_LDFLAGS) -out:$@ $(WRAP_O) $(API_OBJS) $(OBJS) $(PYTHON_LIBRARY)
 
-wrapper : $(V3R0_PACKAGE_DPTDB)\$(PYTHON_API_DLL)
-	py $(PY_MINUS_MAJOR_DOT_MINOR_32_OR_64) -m build --no-isolation $(V3R0_PACKAGE)
-	py $(PY_MINUS_MAJOR_DOT_MINOR_32_OR_64) -m wheel tags --python-tag=$(PYTHON_TAG) --abi-tag=$(ABI_TAG) --platform-tag=$(PLATFORM_TAG) --remove $(V3R0_PACKAGE)\dist\dpt3_0_dptdb-$(DPT30_DPTDB_VERSION)-py3-none-any.whl
-#	py -m wheel tags --python-tag=$(PYTHON_TAG) --abi-tag=$(ABI_TAG) --platform-tag=$(PLATFORM_TAG) --remove $(V3R0_PACKAGE)\dist\dpt3_0_dptdb-$(DPT30_DPTDB_VERSION)-py3-none-any.whl
-#	$(PYTHON_VERSION_DIRECTORY)\scripts\wheel tags --python-tag=$(PYTHON_TAG) --abi-tag=$(ABI_TAG) --platform-tag=$(PLATFORM_TAG) --remove $(V3R0_PACKAGE)\dist\dpt3_0_dptdb-$(DPT30_DPTDB_VERSION)-py3-none-any.whl
+wrapper : $(VR_PACKAGE_DPTDB)\$(PYTHON_API_DLL)
+	py $(PY_MINUS_MAJOR_DOT_MINOR_32_OR_64) -m build --no-isolation $(VR_PACKAGE)
+	py $(PY_MINUS_MAJOR_DOT_MINOR_32_OR_64) -m wheel tags --python-tag=$(PYTHON_TAG) --abi-tag=$(ABI_TAG) --platform-tag=$(PLATFORM_TAG) --remove $(VR_PACKAGE)\dist\dpt3_0_dptdb-$(DPT_DPTDB_VERSION)-py3-none-any.whl
+#	py -m wheel tags --python-tag=$(PYTHON_TAG) --abi-tag=$(ABI_TAG) --platform-tag=$(PLATFORM_TAG) --remove $(VR_PACKAGE)\dist\dpt3_0_dptdb-$(DPT_DPTDB_VERSION)-py3-none-any.whl
+#	$(PYTHON_VERSION_DIRECTORY)\scripts\wheel tags --python-tag=$(PYTHON_TAG) --abi-tag=$(ABI_TAG) --platform-tag=$(PLATFORM_TAG) --remove $(VR_PACKAGE)\dist\dpt3_0_dptdb-$(DPT_DPTDB_VERSION)-py3-none-any.whl
 
 local-install : wrapper
-	py $(PY_MINUS_MAJOR_DOT_MINOR_32_OR_64) -m pip install --user --no-index --find-links $(V3R0_PACKAGE)\dist dpt3.0_dptdb
+	py $(PY_MINUS_MAJOR_DOT_MINOR_32_OR_64) -m pip install --user --no-index --find-links $(VR_PACKAGE)\dist dpt3.0_dptdb
 
-$(V3R0SWIG_SOURCE) : $(V3R0_SWIG)
-	mkdir $(V3R0SWIG_SOURCE)
+$(VR_SWIG_SOURCE) : $(VR_SWIG)
+	mkdir $(VR_SWIG_SOURCE)
 
-$(V3R0SWIG_OBJECT) : $(V3R0_OBJECT)\swig
-	mkdir $(V3R0SWIG_OBJECT)
+$(VR_SWIG_OBJECT) : $(VR_OBJECT)\swig
+	mkdir $(VR_SWIG_OBJECT)
 
-$(V3R0_OBJECT)\swig : $(V3R0_OBJECT)
-	mkdir $(V3R0_OBJECT)\swig
+$(VR_OBJECT)\swig : $(VR_OBJECT)
+	mkdir $(VR_OBJECT)\swig
 
 # Copy package template directory for build and distribution.
 
@@ -125,8 +126,8 @@ $(V3R0_OBJECT)\swig : $(V3R0_OBJECT)
 # So "pythonsed -e [command] [from] > [to]" and overwrite what "xcopy"
 # did with this file.
 
-$(V3R0_PACKAGE) : package-template
-	xcopy /s /e package-template $(V3R0_PACKAGE)\\
-	$(PYTHON_VERSION_DIRECTORY)\Scripts\pythonsed -e /"invalid"/s/invalid/$(DPT30_DPTDB_VERSION)/g package-template\pyproject.toml > $(V3R0_PACKAGE)\pyproject.toml
-#	$(PYTHON_VERSION_DIRECTORY)\Scripts\pythonsed -i '' -e /"invalid"/s/invalid/$(DPT30_DPTDB_VERSION)/g $(V3R0_PACKAGE)\pyproject.toml
-#	$(PYTHON_VERSION_DIRECTORY)\Scripts\pythonsed -i '' -e '/"invalid"/s/invalid/$(DPT30_DPTDB_VERSION)/g' $(V3R0_PACKAGE)\pyproject.toml
+$(VR_PACKAGE) : package-template
+	xcopy /s /e package-template $(VR_PACKAGE)\\
+	$(PYTHON_VERSION_DIRECTORY)\Scripts\pythonsed -e /"invalid"/s/invalid/$(DPT_DPTDB_VERSION)/g package-template\pyproject.toml > $(VR_PACKAGE)\pyproject.toml
+#	$(PYTHON_VERSION_DIRECTORY)\Scripts\pythonsed -i '' -e /"invalid"/s/invalid/$(DPT_DPTDB_VERSION)/g $(VR_PACKAGE)\pyproject.toml
+#	$(PYTHON_VERSION_DIRECTORY)\Scripts\pythonsed -i '' -e '/"invalid"/s/invalid/$(DPT_DPTDB_VERSION)/g' $(VR_PACKAGE)\pyproject.toml

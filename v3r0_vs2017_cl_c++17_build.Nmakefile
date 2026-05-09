@@ -21,6 +21,8 @@
 # Must be same as given in the 'copy' makefile which created the build
 # directory.
 
+DPT_VERSION = v3r0
+
 TOOL_CHAIN = vs
 TOOL_CHAIN_VERSION = 2017
 CPPSTANDARD = c++17
@@ -30,8 +32,8 @@ COMPILER = cl
 
 all : objects
 
-!INCLUDE Mk\v3r0_vs_build.Nmk
+!INCLUDE Mk\vs_build.Nmk
 
 objects : $(OBJECT_DIRECTORIES) $(OBJECT_FILES)
 
-!INCLUDE Mk\v3r0_vs_tests.Nmk
+!INCLUDE Mk\vs_tests.Nmk

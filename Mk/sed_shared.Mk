@@ -1,11 +1,4 @@
-# v3r0_vs_sed.Mk
-# Sed edits V3R0 for build with c++ in a Microsoft Visual Studio environment.
-
-# sed '-f' arguments.
-
-# include Mk/v3r0_sed_shared.Mk
-
-# v3r0_sed_shared.Mk
+# sed_shared.Mk
 # 'sed' '-f' arguments needed in msys2 builds at c++98 and later.
 
 # In MinGW (now sourceforge.net/projects/mingw) the 'sed' arguments were
@@ -33,10 +26,10 @@
 # to building dptdb until it become impossible to run a Python interface
 # to DPT built in the MinGW environment.
 
-SED_STDAFX_H_EDITS = -f /dev/null
-SED_SRC_EDITS = -f sedCommands/make_pair
+SED_STDAFX_H_EDITS = -f sedCommands/extra_h_stdafx_c++98
+SED_SRC_EDITS = -f sedCommands/ord_comp_ptr_int
 SED_INC_EDITS = -f /dev/null
-SEDAPI_SRC_EDITS = -f /dev/null
-SEDAPI_INC_EDITS = -f /dev/null
+SED_API_SRC_EDITS = -f /dev/null
+SED_API_INC_EDITS = -f /dev/null
 SED_STDAFX_CPP_EDITS = -f /dev/null
 

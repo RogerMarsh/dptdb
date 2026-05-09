@@ -1,3 +1,4 @@
+# dpt-dptdb_version
 # This file will be included in make and nmake makefiles.
 
 # The file exists so there is one place where dpt3.0-dptdb version

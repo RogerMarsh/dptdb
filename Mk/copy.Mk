@@ -1,4 +1,5 @@
-# Build V3R0.
+# copy.Mk
+# Copy source to build version.
 
 # Include this file in a makefile that defines these variables:
 # TOOL_CHAIN_VERSION
@@ -7,93 +8,78 @@
 # WINE
 # where COMPILER is mandatory and will usually be 'cl' or 'mingw32-g++'.
 
-# Source is downloaded by fetch.Makefile.
 # V3R0, and therefore BUILD and DPT, are defined in v3r0_copy_targets and
 # v3r0_mingw_targets.
 
 DPT_LICENCE = licence.txt
 
-# DPT extract and build folders.
-
-V3R0_SRC = $(V3R0)/source
-V3R0_INC = $(V3R0)/include
-V3R0API_SRC = $(V3R0_SRC)/dbapi
-V3R0API_INC = $(V3R0_INC)/dbapi
-V3R0_STDAFX = $(V3R0)/stdafx
-SED_SRC = $(V3R0E)/source
-SED_INC = $(V3R0E)/include
-SEDAPI_SRC = $(SED_SRC)/dbapi
-SEDAPI_INC = $(SED_INC)/dbapi
-SED_STDAFX = $(V3R0E)/stdafx
-
 # Tests folders.
 
 BUILD_TESTS = $(BUILD)/$(CPP_TESTS)
-V3R0_TESTS = $(BUILD_TESTS)/$(DPT_VERSION)
+VR_TESTS = $(BUILD_TESTS)/$(DPT_VERSION)
+
+# Download DPT source from copies of zip files from dptoolkit website
+# before it was shut.
+
+# Download site.
+DOWNLOAD_URL = http://solentware.co.uk/files/
+
+# Files at download site.
+# Downloads, or copies obtained otherwise, are kept as siblings of the
+# directory containing this file.
+# EXTRACTED is not appropriate for these two names because the distinction
+# is versions of DPT DBMS, not reference to extract, copy and build.
+# There is a DPT_V3R06_DBMS.ZIP file for example.
+SOURCE_ZIP = DPT_V3R0_DBMS.ZIP
+DOCUMENTATION_ZIP = DPT_V3R0_DOCS.ZIP
+
+DOCS_EXTRACTED = $(EXTRACT)/docs_v3r0
+ATTIC = $(EXTRACTED)/Attic
+EXTRACTED_STDAFX = $(EXTRACTED)/stdafx
 
 # The *.i file defining the SWIG interface.
 SWIG_INTERFACE = dptapi_python.i
-V3R0_SWIG = $(V3R0)/swig
-V3R0_SWIG_INTERFACE = $(V3R0_SWIG)/$(SWIG_INTERFACE)
-COPY_SWIG = $(V3R0E)/$(SWIG_INTERFACE)
+VR_SWIG = $(VR_DIRECTORY)/swig
+VR_SWIG_INTERFACE = $(VR_SWIG)/$(SWIG_INTERFACE)
+COPY_SWIG = $(EXTRACTED)/$(SWIG_INTERFACE)
+
+DIRECTORY_EXTRACT = @mkdir -p $(EXTRACT)
+DIRECTORY_EXTRACTED = @mkdir -p $(EXTRACTED)
+DIRECTORY_EXTRACTED_STDAFX = @mkdir -p $(EXTRACTED_STDAFX)
+
+# 'V3R0' source files reference 'stdafx.h' so put the one in 'HelloWorld'
+# example in a more fitting location and rename to fit references.
+# 'V3R0' is the local name for the stand-alone DBMS available on
+# 'dptoolkit.com' until the site ceased to exist.  DBMS is best used as
+# the name of the 'V3R06' product, a later version broken in recent
+# compliers, copied from
+# https://drive.google.com/drive/folders/0B1GLdfqdwpNQUVE0ekFWalEtVHM0
+
+include Mk/extract_from_zip.Mk
+
+clean-extract :
+	-rm -rf $(DPT)
+
+$(DOCUMENTATION_ZIP) :
+	curl --output $@ $(DOWNLOAD_URL)$(DOCUMENTATION_ZIP)
+
+$(SOURCE_ZIP) :
+	curl --output $@ $(DOWNLOAD_URL)$(SOURCE_ZIP)
+
+extract : $(COPY_SWIG)
+
+# Some files, no examples in V3R0, are redundant and must be removed from
+# the scope of pattern rules.
+
+# Provide an attic for these files.
 
 # Source file names.
 
-SED_NAMES = $(basename $(notdir $(wildcard $(SED_SRC)/*.cpp)))
+include Mk/source_file_names.Mk
 
-SEDAPI_NAMES = $(basename $(notdir $(wildcard $(SEDAPI_SRC)/*.cpp)))
-
-SED_INC_NAMES = $(basename $(notdir $(wildcard $(SED_INC)/*.h)))
-
-SEDAPI_INC_NAMES = $(basename $(notdir $(wildcard $(SEDAPI_INC)/*.h)))
-
-SEDAFX_NAMES = stdafx
-
-SRCS = $(SED_NAMES:%=$(V3R0_SRC)/%.cpp)
-
-API_SRCS = $(SEDAPI_NAMES:%=$(V3R0API_SRC)/%.cpp)
-
-INCS = $(SED_INC_NAMES:%=$(V3R0_INC)/%.h)
-
-API_INCS = $(SEDAPI_INC_NAMES:%=$(V3R0API_INC)/%.h)
-
-AFX_SRCS = $(SEDAFX_NAMES:%=$(V3R0_STDAFX)/%.cpp)
-
-AFX_INCS = $(SEDAFX_NAMES:%=$(V3R0_STDAFX)/%.h)
-
-SOURCE_FILES = $(SRCS) $(INCS) $(API_SRCS) $(API_INCS) $(AFX_SRCS) $(AFX_INCS)
-
-# The build directory parent (dpt/v3r0) is created in fetch.Makefile.
-
-$(V3R0API_SRC) : $(V3R0_SRC)
-	-mkdir $(V3R0API_SRC)
-
-$(V3R0_SRC) : $(V3R0)
-	-mkdir $(V3R0_SRC)
-
-$(V3R0API_INC) : $(V3R0_INC)
-	-mkdir $(V3R0API_INC)
-
-$(V3R0_INC) : $(V3R0)
-	-mkdir $(V3R0_INC)
-
-$(V3R0_STDAFX) : $(V3R0)
-	-mkdir $(V3R0_STDAFX)
-
-$(V3R0_SWIG) : $(V3R0)
-	-mkdir $(V3R0_SWIG)
-
-$(V3R0) : $(BUILD)
-	-mkdir $(V3R0)
-
-$(V3R0_TESTS) : $(BUILD_TESTS)
-	-mkdir $(V3R0_TESTS)
-
-$(BUILD_TESTS) : $(BUILD)
-	-mkdir $(BUILD_TESTS)
-
-$(BUILD) :
-	-mkdir $(BUILD)
+DIRECTORY_VR_TESTS = @mkdir -p $(VR_TESTS)
+DIRECTORY_BUILD_TESTS = @mkdir -p $(BUILD_TESTS)
+DIRECTORY_BUILD = @mkdir -p $(BUILD)
 
 # Copy service initialization parameters for single step deferred update,
 # multi step deferred update, and normal operation.
@@ -102,13 +88,16 @@ PARMS_DU_MULTI = parms_dumulti.ini
 PARMS_DU_SINGLE = parms_dusingle.ini
 PARMS_NORMAL = parms_normal.ini
 
-$(V3R0_TESTS)/$(PARMS_DU_MULTI) : $(CPP_TESTS)/$(PARMS_DU_MULTI)
+$(VR_TESTS)/$(PARMS_DU_MULTI) : $(CPP_TESTS)/$(PARMS_DU_MULTI)
+	$(DIRECTORY_VR_TESTS)
 	cp -p $< $@
 
-$(V3R0_TESTS)/$(PARMS_DU_SINGLE) : $(CPP_TESTS)/$(PARMS_DU_SINGLE)
+$(VR_TESTS)/$(PARMS_DU_SINGLE) : $(CPP_TESTS)/$(PARMS_DU_SINGLE)
+	$(DIRECTORY_VR_TESTS)
 	cp -p $< $@
 
-$(V3R0_TESTS)/$(PARMS_NORMAL) : $(CPP_TESTS)/$(PARMS_NORMAL)
+$(VR_TESTS)/$(PARMS_NORMAL) : $(CPP_TESTS)/$(PARMS_NORMAL)
+	$(DIRECTORY_VR_TESTS)
 	cp -p $< $@
 
 # Pattern rules for editing DPT C++.
@@ -129,19 +118,24 @@ $(V3R0_TESTS)/$(PARMS_NORMAL) : $(CPP_TESTS)/$(PARMS_NORMAL)
 # files.  https://gcc.gnu.org/bugzilla/show_bug.cgi?id=56191 was sufficient
 # as a hint to the edit needed.
 
-$(V3R0_SRC)/%.cpp : $(SED_SRC)/%.cpp
+$(VR_SRC)/%.cpp : $(SED_SRC)/%.cpp
+	$(DIRECTORY_VR_SRC)
 	sed $(SED_SRC_EDITS) $< > $@
 
-$(V3R0_INC)/%.h : $(SED_INC)/%.h
+$(VR_INC)/%.h : $(SED_INC)/%.h
+	$(DIRECTORY_VR_INC)
 	sed $(SED_INC_EDITS) $< > $@
 
-$(V3R0API_SRC)/%.cpp : $(SEDAPI_SRC)/%.cpp
-	sed $(SEDAPI_SRC_EDITS) $< > $@
+$(VR_API_SRC)/%.cpp : $(SED_API_SRC)/%.cpp
+	$(DIRECTORY_VR_API_SRC)
+	sed $(SED_API_SRC_EDITS) $< > $@
 
-$(V3R0API_INC)/%.h : $(SEDAPI_INC)/%.h
-	sed $(SEDAPI_INC_EDITS) $< > $@
+$(VR_API_INC)/%.h : $(SED_API_INC)/%.h
+	$(DIRECTORY_VR_API_INC)
+	sed $(SED_API_INC_EDITS) $< > $@
 
-$(V3R0_STDAFX)/%.cpp : $(SED_STDAFX)/%.cpp
+$(VR_STDAFX)/%.cpp : $(SED_STDAFX)/%.cpp
+	$(DIRECTORY_VR_STDAFX)
 	sed $(SED_STDAFX_CPP_EDITS) $< > $@
 
 # VC6++ and MinGW-3.4.5 do not require explicit #include directives for
@@ -155,7 +149,8 @@ $(V3R0_STDAFX)/%.cpp : $(SED_STDAFX)/%.cpp
 # 'else ifeq' construct, so always doing the '/' normalization helps a lot.
 # (Conditional for sed removed because *345* makefile does other option.)
 
-$(V3R0_STDAFX)/%.h : $(SED_STDAFX)/%.h
+$(VR_STDAFX)/%.h : $(SED_STDAFX)/%.h
+	$(DIRECTORY_VR_STDAFX)
 	sed $(BACK_TO_FORWARD_SLANT) $(SED_STDAFX_H_EDITS) $< > $@
 
 # Copy SWIG interface file from extract directory.

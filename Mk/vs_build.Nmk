@@ -1,41 +1,4 @@
-# v3r06_vs_python.Nmakefile
-# Run in a VS x64 Native Tools Command Prompt on Microsoft Windows.
-
-# nmake -f v3r06_vs_python.Nmakefile
-# builds the default Python interface to DPT.
-
-DPT_VERSION = v3r06
-
-TOOL_CHAIN = vs
-TOOL_CHAIN_VERSION = 
-CPPSTANDARD = 
-COMPILER = clang-cl
-PYTHON_MAJOR = 3
-PYTHON_MINOR = 14
-PYTHON_32_OR_64 = 
-
-# Value of the --platform-tag argument for 'wheel tags ...' command.
-# distutils.util.get_platform() and sysconfig.get_platform() report
-# "win-amd64" but the tag has to be "win_amd64" because "-" is a
-# delimiter here.
-
-PLATFORM_TAG = win_amd64
-
-# Select value for DPT_DPTDB_VERSION.
-
-# This resolves to setting DPT_DPTDB_VERSION one point higher than
-# DPT30_DPTDB_VS_X64 with a dev suffix if appropriate.
-
-DPT_DPTDB_VERSION = 2.0.dev0
-
-# Assume wrappers for all Python versions are built with same SWIG version.
-
-!INCLUDE Mk\swig_version.Nmk
-
-# Build Python wrapper with SWIG.
-
-all : wrapper
-
+# vs_build.Nmk
 # Build version with c++ in a Microsoft VS Developer Command Prompt.
 
 # Compiler settings.
@@ -47,11 +10,11 @@ PATH_TO_CXX =
 # TOOL_CHAIN_VERSION
 # CPPSTANDARD
 
-# V3R06 extract and build folders.
+# Version extract and build folders.
 
 DPT = dpt
 EXTRACT = $(DPT)\extract
-BUILD = $(DPT)\$(TOOL_CHAIN)
+BUILD = $(DPT)\$(TOOL_CHAIN)$(TOOL_CHAIN_VERSION)_$(COMPILER)_$(CPPSTANDARD)
 VR_DIRECTORY = $(BUILD)\$(DPT_VERSION)
 VR_SRC = $(VR_DIRECTORY)\source
 VR_INC = $(VR_DIRECTORY)\include
@@ -70,7 +33,6 @@ OBJS = $(VR_OBJECT)\access.obj \
         $(VR_OBJECT)\atomback.obj \
         $(VR_OBJECT)\audit.obj \
         $(VR_OBJECT)\bbfloat.obj \
-        $(VR_OBJECT)\bbstack.obj \
         $(VR_OBJECT)\bbstdio.obj \
         $(VR_OBJECT)\bbthread.obj \
         $(VR_OBJECT)\bitmap3.obj \
@@ -86,7 +48,6 @@ OBJS = $(VR_OBJECT)\access.obj \
         $(VR_OBJECT)\ctxtdef.obj \
         $(VR_OBJECT)\ctxtopen.obj \
         $(VR_OBJECT)\ctxtspec.obj \
-        $(VR_OBJECT)\custom.obj \
         $(VR_OBJECT)\dataconv.obj \
         $(VR_OBJECT)\dbctxt.obj \
         $(VR_OBJECT)\dbcursor.obj \
@@ -227,7 +188,7 @@ OBJECT_FILES = $(OBJS) $(AFX_OBJS) $(API_OBJS)
 
 # Source file names are implied by 'OBJS', 'AFX_OBS' and API_OBJS.
 
-# The build directory 'v3r06' is created in v3r06_vs_copy.Makefile.
+# The build directory 'V3R0' is created in v3r0_vs_<std>_copy.Makefile.
 
 $(VR_OBJECT) : $(VR_DIRECTORY)
 	mkdir $(VR_OBJECT)
@@ -244,7 +205,7 @@ OBJECT_DIRECTORIES = $(VR_STDAFX_OBJECT) $(VR_API_OBJECT)
 
 CXX = $(PATH_TO_CXX)$(COMPILER)
 DEFOPTS = $(DEFINES) $(OPTIONS)
-CXXEXTRA = -D_BBDBAPI -EHsc -nologo
+CXXEXTRA = -D_BBDBAPI -EHsc -nologo -std:$(CPPSTANDARD)
 VR_LDFLAGS = -dll
 
 # Build includes (-I) options for compiler.
@@ -253,7 +214,7 @@ VR_INCLUDE = -I$(VR_INC) -I$(VR_STDAFX)
 VR_AFX_INCLUDE = -I$(VR_INC) -I$(VR_STDAFX)
 VR_API_INCLUDE = -I$(VR_INC) -I$(VR_API_INC) -I$(VR_STDAFX)
 
-# Pattern rules V3R06 C++.
+# Pattern rules V3R0 C++.
 
 {$(VR_SRC)}.cpp{$(VR_OBJECT)}.obj:
 	@$(CXX) -c $(CXXEXTRA) $(CXXFLAGS) $(VR_INCLUDE) $(DEFOPTS) -Fo$(VR_OBJECT)\ $<
@@ -264,77 +225,3 @@ VR_API_INCLUDE = -I$(VR_INC) -I$(VR_API_INC) -I$(VR_STDAFX)
 {$(VR_API_SRC)}.cpp{$(VR_API_OBJECT)}.obj:
 	@$(CXX) -c $(CXXEXTRA) $(CXXFLAGS) $(VR_API_INCLUDE) $(DEFOPTS) -Fo$(VR_API_OBJECT)\ $<
 
-
-
-objects : $(OBJECT_DIRECTORIES) $(OBJECT_FILES)
-
-
-# Build V3R06 Python interface with c++ in a x64 VS Developer Command Prompt.
-
-# Python wrapper settings.
-
-PYTHON_NAME = Python
-SWIG_PYTHON = python
-PYTHON_MAJOR_MINOR = $(PYTHON_MAJOR)$(PYTHON_MINOR)
-PYTHON_VERSION = $(PYTHON_MAJOR_MINOR)$(PYTHON_32_OR_64)
-PY_MINUS_MAJOR_DOT_MINOR_32_OR_64 = -$(PYTHON_MAJOR).$(PYTHON_MINOR)$(PYTHON_32_OR_64)
-PY_MAJOR_MINUS_MINOR_32_OR_64 = $(PYTHON_MAJOR)-$(PYTHON_MINOR)$(PYTHON_32_OR_64)
-PATH_TO_SWIG = $(PATH_TO_SWIG_WITHOUT_VERSION)$(SWIG_VERSION)
-SWIG_DPTAPI = dptapi
-PYTHON_API_DLL = _$(SWIG_DPTAPI).pyd
-VR_SWIG_OBJECT = $(VR_OBJECT)\swig\$(PY_MAJOR_MINUS_MINOR_32_OR_64)
-SWIG_INTERFACE = dptapi_python.i
-VR_SWIG = $(VR_DIRECTORY)\swig
-VR_SWIG_SOURCE = $(VR_SWIG)\$(PY_MAJOR_MINUS_MINOR_32_OR_64)
-VR_SWIG_INTERFACE = $(VR_SWIG)\$(SWIG_INTERFACE)
-VR_PACKAGE = $(VR_DIRECTORY)\package\$(PY_MAJOR_MINUS_MINOR_32_OR_64)
-VR_PACKAGE_DPTDB = $(VR_PACKAGE)\src\dptdb
-PYTHON_TAG = cp$(PYTHON_MAJOR)$(PYTHON_MINOR)
-ABI_TAG = cp$(PYTHON_MAJOR)$(PYTHON_MINOR)
-
-
-# Library is python310.dll and header is Python.h for version 3.10 of Python.
-# This is different naming than for unix Pythons.
-
-PYTHON_HEADER = $(PYTHON_NAME).h
-PYTHON_VERSION_DIRECTORY = $(LOCALAPPDATA)\Programs\$(PYTHON_NAME)\$(PYTHON_NAME)$(PYTHON_VERSION)
-PYTHON_INCLUDE_DIRECTORY = $(PYTHON_VERSION_DIRECTORY)\include
-PYTHON_INCLUDE = $(PYTHON_INCLUDE_DIRECTORY)\$(PYTHON_HEADER)
-PYTHON_LIBS_DIRECTORY = $(PYTHON_VERSION_DIRECTORY)\libs
-PYTHON_LIBRARY = $(PYTHON_LIBS_DIRECTORY)\$(SWIG_PYTHON)$(PYTHON_MAJOR_MINOR).lib
-
-WRAP_CXX = $(VR_SWIG_SOURCE)\$(SWIG_DPTAPI)_$(SWIG_PYTHON)_wrap.cxx
-WRAP_O = $(VR_SWIG_OBJECT)\$(SWIG_DPTAPI)_$(SWIG_PYTHON)_wrap.obj
-
-$(WRAP_CXX) : $(VR_PACKAGE) $(VR_SWIG_SOURCE) $(VR_SWIG_INTERFACE)
-	$(PATH_TO_SWIG)\swig -c++ -$(SWIG_PYTHON) -o $(WRAP_CXX) -outdir $(VR_PACKAGE_DPTDB) -I$(VR_API_INC) $(VR_SWIG_INTERFACE)
-
-$(WRAP_O) : $(VR_SWIG_OBJECT) $(WRAP_CXX)
-	$(CXX) -c $(CXXEXTRA) $(CXXFLAGS) $(VR_API_INCLUDE) -I$(PYTHON_INCLUDE_DIRECTORY) -Fo$@ $(WRAP_CXX)
-
-# The .pyd file built from SWIG.
-
-$(VR_PACKAGE_DPTDB)\$(PYTHON_API_DLL) : $(OBJECT_DIRECTORIES) $(OBJECT_FILES) $(WRAP_O)
-	link $(VR_LDFLAGS) -out:$@ $(WRAP_O) $(API_OBJS) $(OBJS) $(PYTHON_LIBRARY)
-
-wrapper : $(VR_PACKAGE_DPTDB)\$(PYTHON_API_DLL)
-	py $(PY_MINUS_MAJOR_DOT_MINOR_32_OR_64) -m build --no-isolation $(VR_PACKAGE)
-	py $(PY_MINUS_MAJOR_DOT_MINOR_32_OR_64) -m wheel tags --python-tag=$(PYTHON_TAG) --abi-tag=$(ABI_TAG) --platform-tag=$(PLATFORM_TAG) --remove $(VR_PACKAGE)\dist\dpt3_0_dptdb-$(DPT_DPTDB_VERSION)-py3-none-any.whl
-
-local-install : wrapper
-	py $(PY_MINUS_MAJOR_DOT_MINOR_32_OR_64) -m pip install --user --no-index --find-links $(VR_PACKAGE)\dist dpt3.0_dptdb
-
-$(VR_SWIG_SOURCE) : $(VR_SWIG)
-	mkdir $(VR_SWIG_SOURCE)
-
-$(VR_SWIG_OBJECT) : $(VR_OBJECT)\swig
-	mkdir $(VR_SWIG_OBJECT)
-
-$(VR_OBJECT)\swig : $(VR_OBJECT)
-	mkdir $(VR_OBJECT)\swig
-
-# Copy package template directory for build and distribution.
-
-$(VR_PACKAGE) : package-template
-	xcopy /s /e package-template $(VR_PACKAGE)\\
-	$(PYTHON_VERSION_DIRECTORY)\Scripts\pythonsed -e /"invalid"/s/invalid/$(DPT_DPTDB_VERSION)/g package-template\pyproject.toml > $(VR_PACKAGE)\pyproject.toml

@@ -1,4 +1,4 @@
-# v3r0_sed_shared_c++11.Mk
+# sed_shared_c++11.Mk
 # 'sed' '-f' arguments added to msys builds at c++11 standard.
 
 # In msys64 (now mingw-w64.org), and in the past often referred to as

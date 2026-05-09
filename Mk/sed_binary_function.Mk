@@ -1,3 +1,4 @@
+# sed_binary_function.Mk
 # Additional 'sed' '-f' arguments for binary_function replacement as required.
 
 SED_SRC_EDITS += \

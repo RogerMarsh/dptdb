@@ -13,6 +13,7 @@
 # to the Python element of the name for x86 (32 bit) builds, but '_64' to
 # the Visual Studio element of the name for x64 (64 bit) builds.
 
+DPT_VERSION = v3r0
 
 TOOL_CHAIN = vs
 TOOL_CHAIN_VERSION = 2017_64
@@ -21,10 +22,10 @@ COMPILER = cl
 
 # sed '-f' arguments.
 
-include Mk/v3r0_vs_sed_64.Mk
+include Mk/vs_sed_64.Mk
 
 # Copy and edit.
 
-include Mk/v3r0_vs_copy_64.Mk
-include Mk/v3r0_copy_all.Mk
+include Mk/vs_copy.Mk
+include Mk/copy_all.Mk
 

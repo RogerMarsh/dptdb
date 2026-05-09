@@ -7,48 +7,42 @@ DPT_LDFLAGS = -shared
 
 # Build includes (-I) options for compiler.
 
-V3R0_INCLUDE = -I$(V3R0_INC) -I$(V3R0_STDAFX)
-V3R0API_INCLUDE = -I$(V3R0_INC) -I$(V3R0API_INC) -I$(V3R0_STDAFX)
-DPTAFX_INCLUDE = -I$(V3R0_INC) -I$(V3R0_STDAFX)
+VR_INCLUDE = -I$(VR_INC) -I$(VR_STDAFX)
+VR_API_INCLUDE = -I$(VR_INC) -I$(VR_API_INC) -I$(VR_STDAFX)
+DPTAFX_INCLUDE = -I$(VR_INC) -I$(VR_STDAFX)
+
+# Object directories.
+
+DIRECTORY_VR_OBJECT = @mkdir -p $(VR_OBJECT)
+DIRECTORY_VR_STDAFX_OBJECT = @mkdir -p $(VR_STDAFX_OBJECT)
+DIRECTORY_VR_API_OBJECT = @mkdir -p $(VR_API_OBJECT)
+DIRECTORY_VR_SWIG_OBJECT = @mkdir -p $(VR_SWIG_OBJECT)
 
 # Pattern rules DPT C++.
 
-$(V3R0_OBJECT)/%.o : $(V3R0_SRC)/%.cpp
-	$(WINE) $(CXX) -c $(CXXEXTRA) $(CXXFLAGS) $(V3R0_INCLUDE) $(DEFOPTS) -o $@ $<
+$(VR_OBJECT)/%.o : $(VR_SRC)/%.cpp
+	$(DIRECTORY_VR_OBJECT)
+	$(WINE) $(CXX) -c $(CXXEXTRA) $(CXXFLAGS) $(VR_INCLUDE) $(DEFOPTS) -o $@ $<
 
-$(V3R0API_OBJECT)/%.o : $(V3R0API_SRC)/%.cpp
-	$(WINE) $(CXX) -c $(CXXEXTRA) $(CXXFLAGS) $(V3R0API_INCLUDE) $(DEFOPTS) -o $@ $<
+$(VR_API_OBJECT)/%.o : $(VR_API_SRC)/%.cpp
+	$(DIRECTORY_VR_API_OBJECT)
+	$(WINE) $(CXX) -c $(CXXEXTRA) $(CXXFLAGS) $(VR_API_INCLUDE) $(DEFOPTS) -o $@ $<
 
-$(V3R0STDAFX_OBJECT)/%.o : $(V3R0_STDAFX)/%.cpp
+$(VR_STDAFX_OBJECT)/%.o : $(VR_STDAFX)/%.cpp
+	$(DIRECTORY_VR_STDAFX_OBJECT)
 	$(WINE) $(CXX) -c $(CXXEXTRA) $(CXXFLAGS) $(DPTAFX_INCLUDE) $(DEFOPTS) -o $@ $<
 
 # Object file names.
 
-OBJS = $(SED_NAMES:%=$(V3R0_OBJECT)/%.o)
+OBJS = $(SED_NAMES:%=$(VR_OBJECT)/%.o)
 
-API_OBJS = $(SEDAPI_NAMES:%=$(V3R0API_OBJECT)/%.o)
+API_OBJS = $(SED_API_NAMES:%=$(VR_API_OBJECT)/%.o)
 
-AFX_OBJS = $(SEDAFX_NAMES:%=$(V3R0STDAFX_OBJECT)/%.o)
+AFX_OBJS = $(SED_AFX_NAMES:%=$(VR_STDAFX_OBJECT)/%.o)
 
 OBJECT_FILES = $(OBJS) $(AFX_OBJS) $(API_OBJS)
 
-$(OBJECT_FILES) : $(V3R0_STDAFX)/stdafx.h $(INCS) $(API_INCS)
-
-# Object directories.
-
-$(V3R0_OBJECT) : $(V3R0)
-	-mkdir $(V3R0_OBJECT)
-
-$(V3R0STDAFX_OBJECT) : $(V3R0_OBJECT)
-	-mkdir $(V3R0STDAFX_OBJECT)
-
-$(V3R0API_OBJECT) : $(V3R0_OBJECT)
-	-mkdir $(V3R0API_OBJECT)
-
-$(V3R0SWIG_OBJECT) : $(V3R0_OBJECT)
-	-mkdir $(V3R0SWIG_OBJECT)
-
-OBJECT_DIRECTORIES = $(V3R0STDAFX_OBJECT) $(V3R0API_OBJECT)
+$(OBJECT_FILES) : $(VR_STDAFX)/stdafx.h $(INCS) $(API_INCS)
 
 # Copy package template directory for build and local install.
 
@@ -57,12 +51,12 @@ OBJECT_DIRECTORIES = $(V3R0STDAFX_OBJECT) $(V3R0API_OBJECT)
 # to read a file. So sed then copy without overwrite.
 # Never got to see if same happens in Msys2 MINGW64 terminal.
 
-$(V3R0_PACKAGE) : package-template
+$(VR_PACKAGE) : package-template
 	-mkdir $@
-	sed -e '/"invalid"/s/invalid/$(DPT30_DPTDB_VERSION)/g' $</pyproject.toml > $@/pyproject.toml
+	sed -e '/"invalid"/s/invalid/$(DPT_DPTDB_VERSION)/g' $</pyproject.toml > $@/pyproject.toml
 	cp -nrp $</* $@/
 #	cp -rp $</* $@/
-#	sed -i '' -e '/"invalid"/s/invalid/$(DPT30_DPTDB_VERSION)/g' $@/pyproject.toml
+#	sed -i '' -e '/"invalid"/s/invalid/$(DPT_DPTDB_VERSION)/g' $@/pyproject.toml
 
 # SWIG wrapper rules.
 # Comments on 'sed' edits for the MinGW (sourceforge.net/projects/mingw),
@@ -117,26 +111,27 @@ PYTHON_INCLUDE = $(PYTHON_INCLUDE_DIRECTORY)/$(PYTHON_HEADER)
 PYTHON_LIBRARY = $(SWIG_PYTHON)$(PYTHON_VERSION)
 SYSTEM_LIBRARY = $(MSYSTEM_PREFIX)/bin
 
-WRAP_CXX = $(V3R0_SWIG)/$(SWIG_DPTAPI)_$(SWIG_PYTHON)_wrap.cxx
-WRAP_O = $(V3R0SWIG_OBJECT)/$(SWIG_DPTAPI)_$(SWIG_PYTHON)_wrap.o
+WRAP_CXX = $(VR_SWIG)/$(SWIG_DPTAPI)_$(SWIG_PYTHON)_wrap.cxx
+WRAP_O = $(VR_SWIG_OBJECT)/$(SWIG_DPTAPI)_$(SWIG_PYTHON)_wrap.o
 
-$(WRAP_CXX) : $(V3R0_PACKAGE) $(V3R0_SWIG)/$(SWIG_INTERFACE)
-	swig -c++ -$(SWIG_PYTHON) -o $@ -outdir $(V3R0_PACKAGE_DPTDB) -I$(V3R0API_INC) $(V3R0_SWIG)/$(SWIG_INTERFACE)
+$(WRAP_CXX) : $(VR_PACKAGE) $(VR_SWIG_INTERFACE)
+	swig -c++ -$(SWIG_PYTHON) -o $@ -outdir $(VR_PACKAGE_DPTDB) -I$(VR_API_INC) $(VR_SWIG_INTERFACE)
 
-$(WRAP_O) : $(V3R0SWIG_OBJECT) $(WRAP_CXX)
-	$(WINE) $(CXX) -c $(CXXEXTRA) $(CXXFLAGS) -I$(V3R0API_INC) -I$(V3R0_INC) -I$(PYTHON_INCLUDE) $(DEFOPTS) -o $@ $(WRAP_CXX)
+$(WRAP_O) : $(WRAP_CXX)
+	$(DIRECTORY_VR_SWIG_OBJECT)
+	$(WINE) $(CXX) -c $(CXXEXTRA) $(CXXFLAGS) -I$(VR_API_INC) -I$(VR_INC) -I$(PYTHON_INCLUDE) $(DEFOPTS) -o $@ $(WRAP_CXX)
 
 # The .pyd file built from SWIG.
 
-$(V3R0_PACKAGE_DPTDB)/$(PYTHON_API_DLL) : $(OBJECT_DIRECTORIES) $(OBJECT_FILES) $(WRAP_O)
+$(VR_PACKAGE_DPTDB)/$(PYTHON_API_DLL) : $(OBJECT_FILES) $(WRAP_O)
 	$(WINE) $(CXX) $(DPT_LDFLAGS) -o $@ $(WRAP_O) $(API_OBJS) $(OBJS) -l$(PYTHON_LIBRARY) -L$(SYSTEM_LIBRARY)
 
-wrapper : $(V3R0_PACKAGE_DPTDB)/$(PYTHON_API_DLL)
-	python -m build --wheel --no-isolation $(V3R0_PACKAGE)
-	python -m wheel tags --python-tag=$(PYTHON_TAG) --abi-tag=$(ABI_TAG) --platform-tag=$(PLATFORM_TAG) --remove $(V3R0_PACKAGE)/dist/dpt3_0_dptdb-$(DPT30_DPTDB_VERSION)-py3-none-any.whl
+wrapper : $(VR_PACKAGE_DPTDB)/$(PYTHON_API_DLL)
+	python -m build --wheel --no-isolation $(VR_PACKAGE)
+	python -m wheel tags --python-tag=$(PYTHON_TAG) --abi-tag=$(ABI_TAG) --platform-tag=$(PLATFORM_TAG) --remove $(VR_PACKAGE)/dist/dpt3_0_dptdb-$(DPT_DPTDB_VERSION)-py3-none-any.whl
 
 local-install : wrapper
-	python -m pip install --user --no-index --find-links $(V3R0_PACKAGE)/dist dpt3.0_dptdb
+	python -m pip install --user --no-index --find-links $(VR_PACKAGE)/dist dpt3.0_dptdb
 
 # Build tests with c++ in a Msys2 32-bit or 64-bit environment.
 
@@ -144,25 +139,27 @@ local-install : wrapper
 
 TEST_NAMES = $(basename $(notdir $(wildcard c++-tests/source/*.cpp)))
 
-TEST_OBJS = $(TEST_NAMES:%=$(V3R0_TESTS)/%.o)
+TEST_OBJS = $(TEST_NAMES:%=$(VR_TESTS)/%.o)
 
-TEST_EXES = $(TEST_NAMES:%=$(V3R0_TESTS)/%.exe)
+TEST_EXES = $(TEST_NAMES:%=$(VR_TESTS)/%.exe)
 
 # Includes for c++ builds of tests.
 
-V3R0_TESTS_INCLUDE = -I$(V3R0_INC) -I$(V3R0API_INC)
+VR_TESTS_INCLUDE = -I$(VR_INC) -I$(VR_API_INC)
 
 # Pattern rules C++ tests.
 
-$(V3R0_TESTS)/%.o : c++-tests/source/%.cpp
-	$(WINE) $(CXX) -c $(CXXEXTRA) $(CXXFLAGS) $(V3R0_TESTS_INCLUDE) $(DEFOPTS) -o $@ $<
+$(VR_TESTS)/%.o : c++-tests/source/%.cpp
+	$(DIRECTORY_VR_TESTS)
+	$(WINE) $(CXX) -c $(CXXEXTRA) $(CXXFLAGS) $(VR_TESTS_INCLUDE) $(DEFOPTS) -o $@ $<
 
-$(V3R0_TESTS)/%.exe : $(V3R0_TESTS)/%.o
-	$(WINE) $(CXX) $(CXXEXTRA) $(CXXFLAGS) $(V3R0_TESTS_INCLUDE) $(DEFOPTS) -o $@ $< $(API_OBJS) $(OBJS)
+$(VR_TESTS)/%.exe : $(VR_TESTS)/%.o
+	$(DIRECTORY_VR_TESTS)
+	$(WINE) $(CXX) $(CXXEXTRA) $(CXXFLAGS) $(VR_TESTS_INCLUDE) $(DEFOPTS) -o $@ $< $(API_OBJS) $(OBJS)
 
 # Use tests target if a test module has changed.
 
-tests : $(OBJECT_DIRECTORIES) copy-all $(V3R0_TESTS) $(TEST_EXES) $(V3R0_TESTS)/$(PARMS_DU_SINGLE) $(V3R0_TESTS)/$(PARMS_NORMAL) $(V3R0_TESTS)/$(PARMS_DU_MULTI)
+tests : copy-all $(TEST_EXES) $(VR_TESTS)/$(PARMS_DU_SINGLE) $(VR_TESTS)/$(PARMS_NORMAL) $(VR_TESTS)/$(PARMS_DU_MULTI)
 
 $(TEST_EXES) : $(OBJECT_FILES)
 

@@ -1,0 +1,96 @@
+# vs_tests.Nmk
+# Build V3R0 tests with c++ in a Microsoft VS Developer Command Prompt.
+
+# Include this file in a makefile that includes ./v3r0_vs_build.Nmk so
+# the following variables are defined:
+# TOOL_CHAIN
+# TOOL_CHAIN_VERSION
+# CPPSTANDARD
+# PATH_TO_CXX 
+# COMPILER
+# DPT
+# DPT_VERSION
+# BUILD
+# V3R0
+# VR_INC
+# VR_API_INC
+# OBJS
+# AFX_OBJS
+# API_OBJS
+# OBJECT_FILES
+
+# Version tests folders are created in ./copy.Mk (in the Msys2 copy job).
+
+CPP_TESTS = c++-tests
+VR_TESTS = $(BUILD)\$(CPP_TESTS)\$(DPT_VERSION)
+
+# Executable file names.
+
+TEST_EXES = $(VR_TESTS)\api_database_services.exe \
+            $(VR_TESTS)\api_sequential_services.exe \
+            $(VR_TESTS)\basic-sizes.exe \
+            $(VR_TESTS)\bitmap3-init.exe \
+            $(VR_TESTS)\bitmap3-size_t-shift.exe \
+            $(VR_TESTS)\bitmap3-uint32_t-shift.exe \
+            $(VR_TESTS)\create_fields.exe \
+            $(VR_TESTS)\create_file.exe \
+            $(VR_TESTS)\create_records.exe \
+            $(VR_TESTS)\record_loop.exe \
+            $(VR_TESTS)\index_loop.exe \
+            $(VR_TESTS)\sort_loop.exe \
+            $(VR_TESTS)\find_point.exe \
+            $(VR_TESTS)\unsigned_short.exe \
+            $(VR_TESTS)\create_invisible_fields.exe \
+            $(VR_TESTS)\load_records_01.exe \
+            $(VR_TESTS)\load_records_02.exe \
+            $(VR_TESTS)\load_records_03.exe \
+            $(VR_TESTS)\load_records_04.exe \
+            $(VR_TESTS)\load_records_05.exe \
+            $(VR_TESTS)\load_records_06.exe \
+            $(VR_TESTS)\load_records_07.exe \
+            $(VR_TESTS)\load_records_08.exe \
+            $(VR_TESTS)\load_records_09.exe \
+            $(VR_TESTS)\load_records_10.exe \
+            $(VR_TESTS)\load_records_11.exe \
+            $(VR_TESTS)\load_records_12.exe \
+            $(VR_TESTS)\load_records_13.exe \
+            $(VR_TESTS)\load_records_14.exe \
+            $(VR_TESTS)\load_records_15.exe \
+            $(VR_TESTS)\load_records_16.exe \
+            $(VR_TESTS)\load_records_17.exe \
+            $(VR_TESTS)\load_records_18.exe \
+            $(VR_TESTS)\load_records_19.exe \
+            $(VR_TESTS)\load_records_20.exe \
+            $(VR_TESTS)\load_records_21.exe \
+            $(VR_TESTS)\load_records_22.exe \
+            $(VR_TESTS)\load_records_23.exe \
+            $(VR_TESTS)\load_records_24.exe \
+            $(VR_TESTS)\load_records_25.exe \
+            $(VR_TESTS)\load_records_26.exe \
+            $(VR_TESTS)\load_records_27.exe \
+            $(VR_TESTS)\load_records_28.exe \
+            $(VR_TESTS)\create_file_150000.exe \
+            $(VR_TESTS)\create_file_75000.exe \
+            $(VR_TESTS)\binary_function.exe
+
+# Compiler settings.
+
+# Use settings set in ./vs_build.Nmk except for includes.
+
+# Build tests options for compiler.
+
+# Drop the stdafx include.
+VR_TESTS_INCLUDE = -I$(VR_INC) -I$(VR_API_INC)
+
+# Pattern rules version C++ tests.
+
+# The '-Fe...\ <implied executable file name>' option must be before
+# the list of actual object file names possibly built previously.
+{$(CPP_TESTS)\source}.cpp{$(VR_TESTS)}.exe:
+	@-$(CXX) $(CXXEXTRA) $(CXXFLAGS) $(VR_TESTS_INCLUDE) $(DEFOPTS) -Fo".\\$(VR_TESTS)\\" -Fe$(VR_TESTS)\ $< $(API_OBJS) $(OBJS)
+
+# Build tests executables.
+
+# objects is defined in each
+# ../<version>_vs<toolchain>_<c++ standard>_build.Nmakefile.
+tests : objects $(TEST_EXES)

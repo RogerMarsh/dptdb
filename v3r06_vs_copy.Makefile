@@ -4,7 +4,7 @@
 # make -f v3r06_vs_copy.Makefile
 # copies the source code to build directory.
 
-# Assumes extract-v3r06.Makefile has been run.
+DPT_VERSION = v3r06
 
 TOOL_CHAIN = vs
 TOOL_CHAIN_VERSION = 
@@ -13,11 +13,14 @@ COMPILER =
 
 # sed '-f' arguments.
 
-# Copied from Mk/v3r0_sed_shared.Mk via Mk/v3r0_vs_sed_64.Mk and adjusted.
+# The extra_h_stdafx_64_c++98 edit causes all c++98 and c++03 builds
+# to fail on Msys2 builds; but these standards are not now readily
+# available for VS builds.
 
-SED_STDAFX_H_EDITS = -f sedCommands/extra_h_stdafx_c++14
-SED_SRC_EDITS = -f sedCommands/back_to_forward_slant \
-                -f sedCommands/make_pair \
+SED_STDAFX_H_EDITS = -f sedCommands/extra_h_stdafx_c++98 \
+                     -f sedCommands/extra_h_stdafx_c++11 \
+                     -f sedCommands/extra_h_stdafx_64_c++98
+SED_SRC_EDITS = -f sedCommands/make_pair \
                 -f sedCommands/access_controller \
                 -f sedCommands/i64_to_ll \
                 -f sedCommands/comment_session \
@@ -25,13 +28,10 @@ SED_SRC_EDITS = -f sedCommands/back_to_forward_slant \
                 -f sedCommands/fastload_no_upper \
                 -f sedCommands/msgini_restore_upper \
                 -f sedCommands/resource_cpp_lockinfo
-SED_INC_EDITS = -f sedCommands/back_to_forward_slant \
-                -f sedCommands/resource_h_lockinfo
-SEDAPI_SRC_EDITS = -f sedCommands/back_to_forward_slant
-SEDAPI_INC_EDITS = -f sedCommands/back_to_forward_slant
-SED_STDAFX_CPP_EDITS = -f sedCommands/back_to_forward_slant
-
-# Copied from Mk/v3r0_sed_shared_64.Mk via Mk/v3r0_vs_sed_64.Mk and adjusted.
+SED_INC_EDITS = -f sedCommands/resource_h_lockinfo
+SED_API_SRC_EDITS = -f /dev/null
+SED_API_INC_EDITS = -f /dev/null
+SED_STDAFX_CPP_EDITS = -f /dev/null
 
 SED_SRC_EDITS += -f sedCommands/bitmap3_cpp_01\
                  -f sedCommands/bitmap3_cpp_02\
@@ -108,8 +108,6 @@ SED_INC_EDITS += -f sedCommands/bitmap3_h_01\
                  -f sedCommands/du1seginvlist_02\
                  -f sedCommands/du1seginvlist_03
 
-# Copied from Mk/v3r0_sed_binary_function.Mk and adjusted.
-
 SED_SRC_EDITS += \
                 -f sedCommands/LeafInfoLessThanPredicate
 
@@ -119,162 +117,101 @@ SED_INC_EDITS += \
 
 # Copy and edit.
 
-# Copied from Mk/v3r0_vs_copy_64.Mk and adjusted.
-
 PATH_TO_CXX =
 WINE =
 
-# Copied from Mk/v3r0_copy_targets.Mk and adjusted.
+# File containing the v3r06 source code.
+SOURCE_ZIP = DPT_V3R06_DBMS.ZIP
+
+# File containing the v3r0 documentation.
+DOCUMENTATION_ZIP = DPT_V3R0_DOCS.ZIP
 
 # DPT extract and build folders.
-# Most are defined in v3r0_copy.Mk but some are needed here.
 
-include Mk/v3r06_dpt.Mk
+include Mk/dpt.Mk
+
+# For specific files which have to be renamed or moved to attic.
+ATTIC = $(EXTRACTED)/Attic
+
+DOCS_EXTRACTED = $(EXTRACT)/docs_v3r0
+EXTRACTED_STDAFX = $(EXTRACTED)/stdafx
+
+# The *.i file defining the SWIG interface.
+SWIG_INTERFACE = dptapi_python.i
+COPY_SWIG = $(EXTRACTED)/$(SWIG_INTERFACE)
+
+DIRECTORY_EXTRACT = @mkdir -p $(EXTRACT)
+DIRECTORY_EXTRACTED = @mkdir -p $(EXTRACTED)
+DIRECTORY_EXTRACTED_STDAFX = @mkdir -p $(EXTRACTED_STDAFX)
 
 BUILD = $(DPT)/$(TOOL_CHAIN)
-V3R06 = $(BUILD)/$(DPT_VERSION)
+VR_DIRECTORY = $(BUILD)/$(DPT_VERSION)
 
 # Main targets (phony copy targets are defined near the real targets).
 
-.PHONY : all clean copy-all clean-objects
+.PHONY : all clean copy-all clean-objects clean-extract extract
 
 all : copy-all
 
 clean :
-	-rm -r $(V3R06)
+	-rm -r $(VR_DIRECTORY)
 
 clean-objects :
-	-rm -r $(V3R06)/object
+	-rm -r $(VR_DIRECTORY)/object
 
-# Copied from include Mk/v3r0_copy.Mk and adjusted.
+extract : $(COPY_SWIG)
 
 DPT_LICENCE = licence.txt
 
-# DPT extract and build folders.
+clean-extract :
+	-rm -rf $(DPT)
 
-V3R06_SRC = $(V3R06)/source
-V3R06_INC = $(V3R06)/include
-V3R06API_SRC = $(V3R06_SRC)/dbapi
-V3R06API_INC = $(V3R06_INC)/dbapi
-V3R06_STDAFX = $(V3R06)/stdafx
-SED_SRC = $(V3R06E)/source
-SED_INC = $(V3R06E)/include
-SEDAPI_SRC = $(SED_SRC)/dbapi
-SEDAPI_INC = $(SED_INC)/dbapi
-SED_STDAFX = $(V3R06E)/stdafx
+include Mk/extract_from_zip.Mk
 
 # The *.i file defining the SWIG interface.
-SWIG_INTERFACE = dptapi_python.i
-V3R06_SWIG = $(V3R06)/swig
-V3R06_SWIG_INTERFACE = $(V3R06_SWIG)/$(SWIG_INTERFACE)
-COPY_SWIG = $(V3R06E)/$(SWIG_INTERFACE)
+VR_SWIG = $(VR_DIRECTORY)/swig
+VR_SWIG_INTERFACE = $(VR_SWIG)/$(SWIG_INTERFACE)
 
 # Source file names.
 
-SED_NAMES = $(basename $(notdir $(wildcard $(SED_SRC)/*.cpp)))
-
-SEDAPI_NAMES = $(basename $(notdir $(wildcard $(SEDAPI_SRC)/*.cpp)))
-
-SED_INC_NAMES = $(basename $(notdir $(wildcard $(SED_INC)/*.h)))
-
-SEDAPI_INC_NAMES = $(basename $(notdir $(wildcard $(SEDAPI_INC)/*.h)))
-
-SEDAFX_NAMES = stdafx
-
-SRCS = $(SED_NAMES:%=$(V3R06_SRC)/%.cpp)
-
-API_SRCS = $(SEDAPI_NAMES:%=$(V3R06API_SRC)/%.cpp)
-
-INCS = $(SED_INC_NAMES:%=$(V3R06_INC)/%.h)
-
-API_INCS = $(SEDAPI_INC_NAMES:%=$(V3R06API_INC)/%.h)
-
-AFX_SRCS = $(SEDAFX_NAMES:%=$(V3R06_STDAFX)/%.cpp)
-
-AFX_INCS = $(SEDAFX_NAMES:%=$(V3R06_STDAFX)/%.h)
-
-SOURCE_FILES = $(SRCS) $(INCS) $(API_SRCS) $(API_INCS) $(AFX_SRCS) $(AFX_INCS)
-
-# The build directory parent (dpt/v3r0) is created in extract-v3r06.Makefile.
-
-$(V3R06API_SRC) : $(V3R06_SRC)
-	-mkdir $(V3R06API_SRC)
-
-$(V3R06_SRC) : $(V3R06)
-	-mkdir $(V3R06_SRC)
-
-$(V3R06API_INC) : $(V3R06_INC)
-	-mkdir $(V3R06API_INC)
-
-$(V3R06_INC) : $(V3R06)
-	-mkdir $(V3R06_INC)
-
-$(V3R06_STDAFX) : $(V3R06)
-	-mkdir $(V3R06_STDAFX)
-
-$(V3R06_SWIG) : $(V3R06)
-	-mkdir $(V3R06_SWIG)
-
-$(V3R06) : $(BUILD)
-	-mkdir $(V3R06)
-
-$(BUILD) :
-	-mkdir $(BUILD)
+include Mk/source_file_names.Mk
 
 # Pattern rules for editing DPT C++.
 
-$(V3R06_SRC)/%.cpp : $(SED_SRC)/%.cpp
+$(VR_SRC)/%.cpp : $(SED_SRC)/%.cpp
+	$(DIRECTORY_VR_SRC)
 	sed $(SED_SRC_EDITS) $< > $@
 
-$(V3R06_INC)/%.h : $(SED_INC)/%.h
+$(VR_INC)/%.h : $(SED_INC)/%.h
+	$(DIRECTORY_VR_INC)
 	sed $(SED_INC_EDITS) $< > $@
 
-$(V3R06API_SRC)/%.cpp : $(SEDAPI_SRC)/%.cpp
-	sed $(SEDAPI_SRC_EDITS) $< > $@
+$(VR_API_SRC)/%.cpp : $(SED_API_SRC)/%.cpp
+	$(DIRECTORY_VR_API_SRC)
+	sed $(SED_API_SRC_EDITS) $< > $@
 
-$(V3R06API_INC)/%.h : $(SEDAPI_INC)/%.h
-	sed $(SEDAPI_INC_EDITS) $< > $@
+$(VR_API_INC)/%.h : $(SED_API_INC)/%.h
+	$(DIRECTORY_VR_API_INC)
+	sed $(SED_API_INC_EDITS) $< > $@
 
-$(V3R06_STDAFX)/%.cpp : $(SED_STDAFX)/%.cpp
+$(VR_STDAFX)/%.cpp : $(SED_STDAFX)/%.cpp
+	$(DIRECTORY_VR_STDAFX)
 	sed $(SED_STDAFX_CPP_EDITS) $< > $@
 
-$(V3R06_STDAFX)/%.h : $(SED_STDAFX)/%.h
+$(VR_STDAFX)/%.h : $(SED_STDAFX)/%.h
+	$(DIRECTORY_VR_STDAFX)
 	sed $(BACK_TO_FORWARD_SLANT) $(SED_STDAFX_H_EDITS) $< > $@
 
 # The *.i file defining the SWIG interface.
-SWIG_INTERFACE = dptapi_python.i
-V3R06_SWIG = $(V3R06)/swig
-V3R06_SWIG_INTERFACE = $(V3R06_SWIG)/$(SWIG_INTERFACE)
-COPY_SWIG = $(V3R06E)/$(SWIG_INTERFACE)
+VR_SWIG = $(VR_DIRECTORY)/swig
 
-# Source file names.
-
-# The build directory parent (dpt/v3r0) is created in fetch.Makefile.
-
-$(V3R06_SWIG) : $(V3R06)
-	-mkdir $(V3R06_SWIG)
-
-# Copied from Mk/v3r0_copy_swig.Mk and adjusted.
-
-$(V3R06_SWIG)/$(SWIG_INTERFACE) : $(COPY_SWIG)
-	-mkdir $(V3R06_SWIG)
+$(VR_SWIG_INTERFACE) : $(COPY_SWIG)
+	$(DIRECTORY_VR_SWIG)
 	cp -p $< $@
 
-# Copied from Mk/v3r0_source_targets.Mk and adjusted.
-
-$(SRCS) : $(V3R06_SRC)
-
-$(INCS) : $(V3R06_INC)
-
-$(API_SRCS) : $(V3R06API_SRC)
-
-$(API_INCS) : $(V3R06API_INC)
-
-$(AFX_SRCS) : $(V3R06_STDAFX)
-
-$(AFX_INCS) : $(V3R06_STDAFX)
-
-# Copied from Mk/v3r0_copy_all.Mk and adjusted.
-
-copy-all : $(SOURCE_FILES) $(V3R06_SWIG)/$(SWIG_INTERFACE)
+copy-all : $(VR_SWIG_INTERFACE) $(SOURCE_FILES)
+ifeq ($(strip $(wildcard $(EXTRACTED))),)
+	$(error Extract from zip file completed: rerun this job to continue)
+endif
+	$(error Copy to build directory completed: run matching nmake in correct Visual Studio shell to continue)
 

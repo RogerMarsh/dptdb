@@ -1,3 +1,4 @@
+# sed_msys2_64.Mk
 # Additional 'sed' '-f' arguments used in Msys2 64 bit environment.
 
 # The edits needed so far are not necessary in msys2 32-bit or any vs
@@ -16,5 +17,5 @@ SED_SRC_EDITS += \
                 -f sedCommands/fperm_winutil_gul \
                 -f sedCommands/fperm_winutil_addr
 
-SEDAPI_SRC_EDITS += \
+SED_API_SRC_EDITS += \
                 -f sedCommands/fperm_findspec_api
