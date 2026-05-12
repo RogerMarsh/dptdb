@@ -18,12 +18,13 @@ The default output is Python packages in wheel (*.whl) format.
 
 The makefiles are able to install the Python packages on the box on which they are run.
 
-Makefiles are provided for several, but not all, combinations of Msys2, Visual Studio, clang++, clang-cl, cl, g++, 32-bit, and 64-bit.  The primary combination is Visual Studio cl, but the others prove useful by comparing outcomes.
+Makefiles are provided for several, but not all, combinations of Msys2, Visual Studio, Mingw-w64, Wine, clang++, clang-cl, cl, g++, 32-bit, and 64-bit.  The primary combination is Visual Studio cl, but the others prove useful by comparing outcomes.
 
 The Visual Studio build succeeds at the c++14, c++17, and c++20, standards where available on the 2017, 2019, 2022, and 2026, versions.
 
 The Msys2 build succeeds at the c++98, c++03, c++11, c++14, c++17, c++20, and c++23, standards except the 64-bit builds for c++98 and c++03 which need a feature added at c++11.
 
+The Mingw-w64 build with Wine succeeds at the c++11, c++14, c++17, c++20, and c++23, standards with the x86_64-w64-mingw32-g++-win32 compiler on Debian Trixie.  It is assumed some other combinations of c++ standard, Mingw-w64 compiler, and Linux or BSD OS, succeed too.
 
 
 Documentation
@@ -36,11 +37,11 @@ The DPT documentation is extracted from DPT_V3R0_DOCS.ZIP and placed at dpt/extr
 Using the Makefiles
 ===================
 
-Five sets of makefiles exist.  Four prefixed with 'v3r0_msys2', 'v3r0_msys2_64', 'v3r0_vs<year>' and 'v3r0_vs<year>_64'.  The fifth set is 'v3r06_vs_copy.Makefile', and 'v3r06_vs_python.Nmakefile'.
+Six sets of makefiles exist.  Four prefixed with 'v3r0_msys2', 'v3r0_msys2_64', 'v3r0_vs<year>' and 'v3r0_vs<year>_64'.  The fifth set is 'v3r06_vs_copy.Makefile', and 'v3r06_vs_python.Nmakefile'.  The sixth set is 'v3r0_mingw-w64.Makefile'.
 
-The 'v3r0_vs2017_c++14', 'v3r0_vs2017_64_c++14', and all the 'msys2' builds succeed.
+The 'v3r0_vs2017_c++14', 'v3r0_vs2017_64_c++14', 'v3r0_mingw-w64', and all the 'msys2' builds succeed.
 
-The other *vs* makefiles were created while figuring what worked: all encounter the same compilation error and my c++ knowledge is not enough to craft a solution.
+The other *vs* makefiles were created while figuring what worked: all used to encounter the same compilation errors but solutions have been found.
 
 
 
@@ -64,6 +65,8 @@ and then do 'nmake -f v3r0_vs2017_c++14_pyX-Y_32.Nmakefile' in a 'x86 Native Too
 For 64-bit Visual Studio builds use 'x64 Native Tools Command Prompt for VS 2017'. 
 
 The Msys2 environment is needed, even for Visual Studio builds, to use the 'sed' utility to patch the DPT DBMS source code.
+
+Mingw-w64 builds with v3r0_mingw-64.Makefile follow the same pattern as Msys2 builds, but in a BSD or Linux shell.
 
 
 

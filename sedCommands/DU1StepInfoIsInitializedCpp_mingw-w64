@@ -1,0 +1,1 @@
+/void DeferredUpdate1StepInfo::DestroyLocalHeaps(/s/void/\n\/\/Implementation moved from du1step.h to avoid\n\/\/'error: arithmetic on a pointer to an incomplete type ...'\n\/\/first seen in 64-bit clang c++20 compilation.\nbool DeferredUpdate1StepInfo::IsInitialized()\n{\n	return info.size() != 0;\n}\n\nvoid/g
