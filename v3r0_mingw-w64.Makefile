@@ -18,6 +18,18 @@ PATH_TO_CXX =
 # alternative environments.
 COMPILER = x86_64-w64-mingw32-g++-win32
 
+# Python statement 'import dptdb.dptapi' will report these dlls cannot
+# be found if links are not provided in the Python package. 
+# Links are created in site-packages/dptdb but boxes other than Debian
+# may need different names, and on Debian some, or all, of these names
+# will become wrong when later versions of compiler become the default.
+OTHER_DLLS_DIRECTORY = /usr/lib/gcc/x86_64-w64-mingw32/14-win32
+LIBSTDC = libstdc++-6.dll
+LIBGCC_S_SEH = libgcc_s_seh-1.dll
+
+# Used when creating symbolic links to extra DLLs.
+USER_SITE_PACKAGES = ~/.wine/drive_c/users/$(USER)/AppData/Roaming/$(PYTHON_NAME)/$(PYTHON_NAME)$(PYTHON_VERSION)/site-packages/dptdb
+
 # Invoked by Wine in BSD or Linux environment.
 # Assume default locations.
 SWIG_COMMAND = ~/.wine/drive_c/swigwin-4.4.1/swig.exe

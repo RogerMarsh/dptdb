@@ -118,6 +118,8 @@ wrapper : $(VR_PACKAGE_DPTDB)/$(PYTHON_API_DLL)
 
 local-install : wrapper
 	$(WINE) python -m pip install --user --no-index --find-links $(VR_PACKAGE)/dist dpt3.0_dptdb
+	ln --symbolic $(OTHER_DLLS_DIRECTORY)/$(LIBSTDC) $(USER_SITE_PACKAGES)/$(LIBSTDC)
+	ln --symbolic $(OTHER_DLLS_DIRECTORY)/$(LIBGCC_S_SEH) $(USER_SITE_PACKAGES)/$(LIBGCC_S_SEH)
 
 # Build tests with c++ in a mingw-w64 32-bit or 64-bit environment.
 
