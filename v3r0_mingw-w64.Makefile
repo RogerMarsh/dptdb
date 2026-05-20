@@ -14,9 +14,14 @@ CPPSTANDARD = c++23
 WINE = wine
 PATH_TO_CXX =
 
-# Replace win32 by posix and, or, replace x86_64 by i686 for
-# alternative environments.
-COMPILER = x86_64-w64-mingw32-g++-win32
+# Replace x86_64 by i686 for 32-bit builds.
+# This name is for the msvcrt version of the g++ compiler advertized on
+# mingw-w64 website home page in 'Getting started' section.
+# (After replacing 'gcc' with 'g++'.)
+# The other option is the ucrt version named 'x86_64-w64-mingw32ucrt-g++'.
+# The package on a BSD or Linux may call them something else.
+# This name is offered by Debian.
+COMPILER = x86_64-w64-mingw32-g++
 
 # Python statement 'import dptdb.dptapi' will report these dlls cannot
 # be found if links are not provided in the Python package. 
