@@ -1,7 +1,7 @@
-# v3r0_mingw-w64_g++_c++23.Makefile
+# v3r0_mingw-w64.Makefile
 # Run in a shell on a BSD or Linux with Wine installed.
 
-# make -f v3r0_mingw-w64_g++_c++23.Makefile
+# make -f v3r0_mingw-w64.Makefile
 # builds the Python interface to DPT.
 
 # On a BSD usually replace 'make' by 'gmake' in such commands.
