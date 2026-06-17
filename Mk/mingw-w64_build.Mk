@@ -55,7 +55,11 @@ $(OBJECT_FILES) : $(VR_STDAFX)/stdafx.h $(INCS) $(API_INCS)
 $(VR_PACKAGE) : package-template
 	-mkdir $@
 	sed -e '/"invalid"/s/invalid/$(DPT_DPTDB_VERSION)/g' $</pyproject.toml > $@/pyproject.toml
-	cp -nrp $</* $@/
+	cp -p $</LICENCE $@/
+	cp -p $</MANIFEST.in $@/
+	cp -p $</README.rst $@/
+	cp -Rp $</src $@/
+	cp -Rp $</tests $@/
 #	cp -rp $</* $@/
 #	sed -i '' -e '/"invalid"/s/invalid/$(DPT_DPTDB_VERSION)/g' $@/pyproject.toml
 
